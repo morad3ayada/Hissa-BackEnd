@@ -1,0 +1,175 @@
+PaseUrl= https://localhost:7057/api
+
+/Auth/register
+POST 
+{
+  "email": "user@example.com",
+  "password": "P@ssword123",
+  "fullName": "Ahmed Mohamed"
+}
+
+/Auth/Login
+POST 
+
+{
+    "email": "mahmoudashrafrashed@gmail.com",
+    "password": "Mahmoud@15112001"
+}
+
+ /Auth/admin/create-user  
+دى بيتبعتلها اوبجكت زى الريجستر بس بتبعت معاه ان الرول بتاعته انستركتور ودى معموله للادمن علشان يطيف منها حساب مدرس 
+
+POST 
+{
+  "fullName": "Ahmed Mohamed",
+  "email": "ahmed@example.com",
+  "password": "P@ssword123",
+  "role": "Instructor"
+}
+
+
+/Courses/CreateCourse
+
+POST
+
+{
+  "title": "ASP.NET Core Web API Masterclass",
+  "shortDescription": "Learn ASP.NET Core Web API from beginner to advanced.",
+  "description": "Complete course covering Clean Architecture, JWT Authentication, Entity Framework, Repository Pattern, and Deployment.",
+  "thumbnailUrl": "https://example.com/images/course-thumbnail.jpg",
+  "price": 1999.99
+}
+
+/CourseSections/CreateCourseSection
+
+POST
+
+{
+  "title": "Introduction to ASP.NET Core",
+  "order": 1,
+  "courseId": 1
+}
+
+ POST: /lesson/create  
+
+دى اندبوينت اضافه الدرس ورفع القيديو الى وريتهالك ودى مش بتبقى جيسون دى بتبقى فورم داتا  
+
+هبعتلك اسكرين لشكل الفورم 
+
+
+دى لجلب الكورسات الى هتتعرض للطالب مثلا فى الصفحه الرئيسيه 
+/Courses/GetAllCourses
+Get
+[
+    {
+        "title": "C# Masterclass",
+        "shortDescription": "Learn C# from scratch",
+        "description": "Full course covering basics to advanced topics.",
+        "thumbnailUrl": "thumbnails/csharp.png",
+        "price": 49.99,
+        "isPublished": true,
+        "status": 2,
+        "totalDurationInSeconds": 0,
+        "createdAt": "2026-05-23T15:18:34.7513209",
+        "instructorId": "137808d7-ced0-45f7-88a0-e0ed8e0bbbfd",
+        "sections": [
+            {
+                "title": "Getting Started",
+                "order": 1,
+                "courseId": 1,
+                "lessons": [
+                    {
+                        "title": "Introduction to Dependency Injection",
+                        "description": "شرح مفهوم Dependency Injection في ASP.NET Core",
+                        "videoUrl": "/api/lessons/1/stream",
+                        "videoFileName": "Introduction_to_Dependency_Injection.mp4",
+                        "videoRelativePath": "C#_Masterclass/Getting_Started/Introduction_to_Dependency_Injection.mp4",
+                        "videoExtension": ".mp4",
+                        "videoFileSize": 137338213,
+                        "duration": 0,
+                        "isPreview": false,
+                        "order": 1,
+                        "uploadedAt": "2026-05-23T15:31:21.0527201",
+                        "hasVideo": true,
+                        "courseSectionId": 1,
+                        "quizzes": [
+                            {
+                                "scope": 0,
+                                "lessonId": 1,
+                                "title": "Dependency Injection Quiz",
+                                "passingScore": 70,
+                                "timeLimitInMinutes": 0,
+                                "maxAttempts": 1,
+                                "isPublished": false,
+                                "questions": [],
+                                "results": [],
+                                "id": 1,
+                                "createdAt": "2026-05-25T01:37:38.470347"
+                            }
+                        ],
+                        "id": 1,
+                        "createdAt": "2026-05-23T15:31:20.1058125"
+                    },
+                    {
+                        "title": "Introduction to Dependency Injection_2",
+                        "description": "شرح مفهوم Dependency Injection في ASP.NET Core",
+                        "videoUrl": "/api/lessons/4/stream",
+                        "videoFileName": "Introduction_to_Dependency_Injection_2.mp4",
+                        "videoRelativePath": "C#_Masterclass/Getting_Started/Introduction_to_Dependency_Injection_2.mp4",
+                        "videoExtension": ".mp4",
+                        "videoFileSize": 137338213,
+                        "duration": 0,
+                        "isPreview": false,
+                        "order": 2,
+                        "uploadedAt": "2026-05-23T22:17:44.5150061",
+                        "hasVideo": true,
+                        "courseSectionId": 1,
+                        "quizzes": [],
+                        "id": 4,
+                        "createdAt": "2026-05-23T22:17:42.8215012"
+                    }
+                ],
+                "id": 1,
+                "createdAt": "2026-05-23T15:28:38.6130699"
+            }
+        ],
+        "enrollments": [],
+        "reviews": [],
+        "payments": [],
+        "courseProgresses": [],
+        "id": 1
+    }
+]
+
+/Courses/GetCoursesForAdmin
+دى نفس الى قبلها بس الفرق ان دى للادمن يعنى بتعرض الكورسات الى اتوافق عليها والى متوافقش عليها لكن الى فوق بتعرض الى وافق عليهم الادمن بس 
+
+
+
+/Courses/SetState
+دى علشان الادمن يعمل نشر للكورس ويظهر للطالب بيتبعتلها id  الكورس وعنوانه والحاله زى م انت شايف كدا 
+
+POST
+
+{
+  "title": "C# Masterclass",
+  "state": "Active",
+  "id": 1
+}
+
+
+/Courses/GetCourseById/1
+
+GET 
+
+دى للطالب برضو وبترجع بيانات الكورس زى الى قبلها بس بتاخد id الكورس وبترجع كورس واحد مش كل الكورسات 
+
+
+
+
+
+
+
+
+
+

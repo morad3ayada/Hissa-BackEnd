@@ -1,0 +1,6 @@
+@LearningPlatform.API_HostAddress = http://localhost:5267
+
+GET {{LearningPlatform.API_HostAddress}}/health
+Accept: application/json
+
+###
