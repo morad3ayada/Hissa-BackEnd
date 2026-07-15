@@ -25,7 +25,7 @@ public class AcceptChallengeCommandHandler(IUnitOfWork unitOfWork, ICurrentUserS
             .FirstOrDefaultAsync(c => c.Id == request.ChallengeId, cancellationToken)
             ?? throw new NotFoundException(nameof(Challenge), request.ChallengeId);
 
-        if (challenge.OpponentId != studentId)
+        if (challenge.OpponentId != studentId && !currentUser.IsInRole(nameof(UserRole.Instructor)))
             throw new ForbiddenException("Only the invited opponent can accept this challenge.");
 
         if (challenge.Status != ChallengeStatus.NotStarted)

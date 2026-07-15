@@ -39,12 +39,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     // Live sessions
     public DbSet<LiveSession> LiveSessions => Set<LiveSession>();
+    public DbSet<LiveSessionAttendance> LiveSessionAttendances => Set<LiveSessionAttendance>();
 
     // Parent system
     public DbSet<ParentStudent> ParentStudents => Set<ParentStudent>();
     public DbSet<ParentTest> ParentTests => Set<ParentTest>();
     public DbSet<ParentTestQuestion> ParentTestQuestions => Set<ParentTestQuestion>();
     public DbSet<ParentTestResult> ParentTestResults => Set<ParentTestResult>();
+
+    // Reports
+    public DbSet<StudentReport> StudentReports => Set<StudentReport>();
 
     // Platform / account meta
     public DbSet<Notification> Notifications => Set<Notification>();

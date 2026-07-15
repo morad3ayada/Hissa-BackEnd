@@ -57,16 +57,24 @@ public class PaymentsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("GetPendingPayments")]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Instructor)}")]
     [ProducesResponseType(typeof(PaginatedResponse<PaymentDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPendingPayments([FromQuery] GetPendingPaymentsQuery query)
     {
+        if (User.IsInRole(nameof(UserRole.Instructor)))
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userIdStr, out var userId))
+            {
+                query = query with { InstructorId = userId };
+            }
+        }
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
     [HttpPost("Approve")]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Instructor)}")]
     [ProducesResponseType(typeof(ApiResponse<PaymentDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Approve([FromBody] ApprovePaymentCommand command)
     {
@@ -75,7 +83,7 @@ public class PaymentsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("Reject")]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Instructor)}")]
     [ProducesResponseType(typeof(ApiResponse<PaymentDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Reject([FromBody] RejectPaymentCommand command)
     {

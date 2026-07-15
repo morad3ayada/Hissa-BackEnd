@@ -33,6 +33,15 @@ public class QuizzesController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("AddQuestions")]
+    [Authorize(Roles = $"{nameof(UserRole.Instructor)},{nameof(UserRole.Admin)}")]
+    [ProducesResponseType(typeof(ApiResponse<List<QuestionDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddQuestions([FromBody] AddQuestionsCommand command)
+    {
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
     [HttpPut("UpdateQuestion")]
     [Authorize(Roles = $"{nameof(UserRole.Instructor)},{nameof(UserRole.Admin)}")]
     [ProducesResponseType(typeof(ApiResponse<QuestionDto>), StatusCodes.Status200OK)]
@@ -73,6 +82,33 @@ public class QuizzesController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetLessonQuizzes(Guid lessonId)
     {
         var result = await mediator.Send(new GetLessonQuizzesQuery(lessonId));
+        return Ok(result);
+    }
+
+    [HttpGet("GetCourseQuizzes/{courseId:guid}")]
+    [Authorize(Roles = $"{nameof(UserRole.Instructor)},{nameof(UserRole.Admin)}")]
+    [ProducesResponseType(typeof(ApiResponse<List<QuizSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseQuizzes(Guid courseId)
+    {
+        var result = await mediator.Send(new GetCourseQuizzesQuery(courseId));
+        return Ok(result);
+    }
+
+    [HttpGet("GetAllPublishedQuizzes/{courseId:guid}")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<List<QuizSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllPublishedCourseQuizzes(Guid courseId)
+    {
+        var result = await mediator.Send(new GetAllPublishedCourseQuizzesQuery(courseId));
+        return Ok(result);
+    }
+
+    [HttpGet("GetLessonQuizzes")]
+    [Authorize(Roles = nameof(UserRole.Student))]
+    [ProducesResponseType(typeof(ApiResponse<List<EnrolledCourseQuizSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEnrolledCoursesQuizzes()
+    {
+        var result = await mediator.Send(new GetEnrolledCoursesQuizzesQuery());
         return Ok(result);
     }
 

@@ -70,6 +70,15 @@ public class AuthController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("change-password")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+    {
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
     [HttpPost("admin/create-user")]
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(typeof(ApiResponse<UserDto>), StatusCodes.Status200OK)]

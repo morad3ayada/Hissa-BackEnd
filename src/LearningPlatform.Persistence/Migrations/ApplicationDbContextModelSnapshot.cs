@@ -240,7 +240,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000001"),
                             Category = "Base",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/base/boy.png",
+                            ImageUrl = "https://i.ibb.co/s9MYjpp8/image.png",
                             IsDefault = true,
                             IsDeleted = false,
                             Name = "Boy Avatar",
@@ -251,7 +251,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000002"),
                             Category = "Base",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/base/girl.png",
+                            ImageUrl = "https://i.ibb.co/mV5hyVVP/image.png",
                             IsDefault = true,
                             IsDeleted = false,
                             Name = "Girl Avatar",
@@ -262,7 +262,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000003"),
                             Category = "Hair",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/hair/short.png",
+                            ImageUrl = "https://i.ibb.co/7dXKTqvn/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Short Hair",
@@ -273,7 +273,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000004"),
                             Category = "Hair",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/hair/long.png",
+                            ImageUrl = "https://i.ibb.co/93YVcFhc/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Long Hair",
@@ -284,7 +284,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000005"),
                             Category = "Hair",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/hair/curly.png",
+                            ImageUrl = "https://i.ibb.co/fd7MBrjZ/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Curly Hair",
@@ -295,7 +295,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000006"),
                             Category = "Clothes",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/clothes/tshirt.png",
+                            ImageUrl = "https://i.ibb.co/chJTNqW2/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "T-Shirt",
@@ -306,7 +306,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000007"),
                             Category = "Clothes",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/clothes/hoodie.png",
+                            ImageUrl = "https://i.ibb.co/hGBqw7S/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Hoodie",
@@ -317,7 +317,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000008"),
                             Category = "Clothes",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/clothes/suit.png",
+                            ImageUrl = "https://i.ibb.co/cKwbQGjw/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Suit",
@@ -328,7 +328,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-000000000009"),
                             Category = "Glasses",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/glasses/round.png",
+                            ImageUrl = "https://i.ibb.co/5XtVbtTc/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Round Glasses",
@@ -339,7 +339,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-00000000000a"),
                             Category = "Glasses",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/glasses/sun.png",
+                            ImageUrl = "https://i.ibb.co/TDnmsf06/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Sunglasses",
@@ -350,7 +350,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-00000000000b"),
                             Category = "Hats",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/hats/cap.png",
+                            ImageUrl = "https://i.ibb.co/DgDg4P0M/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Cap",
@@ -361,7 +361,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-00000000000c"),
                             Category = "Hats",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/hats/wizard.png",
+                            ImageUrl = "https://i.ibb.co/Hf03zhMf/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Wizard Hat",
@@ -372,7 +372,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-00000000000d"),
                             Category = "Accessories",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/accessories/necklace.png",
+                            ImageUrl = "https://i.ibb.co/Pz5kYSy2/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Necklace",
@@ -383,7 +383,7 @@ namespace LearningPlatform.Persistence.Migrations
                             Id = new Guid("c0000000-0000-0000-0000-00000000000e"),
                             Category = "Accessories",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "/avatars/accessories/watch.png",
+                            ImageUrl = "https://i.ibb.co/7x7fBJt3/image.png",
                             IsDefault = false,
                             IsDeleted = false,
                             Name = "Watch",
@@ -1168,6 +1168,46 @@ namespace LearningPlatform.Persistence.Migrations
                         .HasDatabaseName("IX_LiveSessions_InstructorId_StartDateTime");
 
                     b.ToTable("LiveSessions", (string)null);
+                });
+
+            modelBuilder.Entity("LearningPlatform.Domain.Entities.LiveSessionAttendance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LiveSessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LiveSessionId")
+                        .HasDatabaseName("IX_LiveSessionAttendances_LiveSessionId");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_LiveSessionAttendances_UserId");
+
+                    b.ToTable("LiveSessionAttendances", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Domain.Entities.Notification", b =>
@@ -2142,6 +2182,50 @@ namespace LearningPlatform.Persistence.Migrations
                     b.ToTable("StudentChallenges", (string)null);
                 });
 
+            modelBuilder.Entity("LearningPlatform.Domain.Entities.StudentReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("InstructorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstructorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentReports", (string)null);
+                });
+
             modelBuilder.Entity("LearningPlatform.Domain.Entities.StudentReward", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2727,6 +2811,25 @@ namespace LearningPlatform.Persistence.Migrations
                     b.Navigation("Instructor");
                 });
 
+            modelBuilder.Entity("LearningPlatform.Domain.Entities.LiveSessionAttendance", b =>
+                {
+                    b.HasOne("LearningPlatform.Domain.Entities.LiveSession", "LiveSession")
+                        .WithMany("Attendances")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearningPlatform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("LiveSessionAttendances")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LearningPlatform.Domain.Entities.Notification", b =>
                 {
                     b.HasOne("LearningPlatform.Domain.Entities.ApplicationUser", "User")
@@ -3002,6 +3105,25 @@ namespace LearningPlatform.Persistence.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("LearningPlatform.Domain.Entities.StudentReport", b =>
+                {
+                    b.HasOne("LearningPlatform.Domain.Entities.ApplicationUser", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LearningPlatform.Domain.Entities.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instructor");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("LearningPlatform.Domain.Entities.StudentReward", b =>
                 {
                     b.HasOne("LearningPlatform.Domain.Entities.Reward", "Reward")
@@ -3137,6 +3259,8 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.Navigation("InstructorCourses");
 
+                    b.Navigation("LiveSessionAttendances");
+
                     b.Navigation("LiveSessionsHosted");
 
                     b.Navigation("Notifications");
@@ -3220,6 +3344,11 @@ namespace LearningPlatform.Persistence.Migrations
                     b.Navigation("ErrorBankEntries");
 
                     b.Navigation("Quizzes");
+                });
+
+            modelBuilder.Entity("LearningPlatform.Domain.Entities.LiveSession", b =>
+                {
+                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("LearningPlatform.Domain.Entities.ParentTest", b =>

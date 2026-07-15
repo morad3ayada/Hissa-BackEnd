@@ -35,6 +35,7 @@ public class CourseProgressCalculator(IUnitOfWork unitOfWork, IMapper mapper) : 
             TotalLessons = summary.TotalLessons,
             CompletedLessons = summary.CompletedLessons,
             CompletionPercentage = summary.CompletionPercentage,
+            OverallWatchPercentage = summary.OverallWatchPercentage,
             TotalWatchedSeconds = summary.TotalWatchedSeconds,
             LastWatchedAt = summary.LastWatchedAt,
             Lessons = mapper.Map<List<LessonProgressDto>>(progresses)
@@ -85,9 +86,19 @@ public class CourseProgressCalculator(IUnitOfWork unitOfWork, IMapper mapper) : 
             StudentName = $"{student.FirstName} {student.LastName}",
             TotalLessons = totalLessons,
             CompletedLessons = completedLessons,
+            // Strict "how many lessons are fully done" ratio — this is what gamification/
+            // certificate logic keys off of (>=100 means every lesson individually crossed
+            // the completion threshold), so it must stay a completed-lesson count, not an
+            // average of in-progress watch percentages.
             CompletionPercentage = totalLessons == 0
                 ? 0
                 : Math.Round(completedLessons * 100m / totalLessons, 2),
+            // Smoother "how much of the course have you engaged with" figure for progress
+            // bars — includes partial watch progress on not-yet-completed lessons, so it
+            // isn't stuck at 0% until a lesson crosses the 95% completion threshold.
+            OverallWatchPercentage = totalLessons == 0
+                ? 0
+                : Math.Round(progresses.Sum(p => p.WatchPercentage) / totalLessons, 2),
             TotalWatchedSeconds = progresses.Sum(p => p.CurrentSecond),
             LastWatchedAt = progresses.Count == 0 ? null : progresses.Max(p => p.LastWatchedAt)
         };

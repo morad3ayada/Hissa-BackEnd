@@ -75,4 +75,13 @@ public class EnrollmentsController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(query);
         return Ok(result);
     }
+
+    [HttpGet("ByStudent/{studentId:guid}")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<List<EnrollmentDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetStudentEnrollments(Guid studentId)
+    {
+        var result = await mediator.Send(new GetStudentEnrollmentsQuery(studentId));
+        return Ok(result);
+    }
 }

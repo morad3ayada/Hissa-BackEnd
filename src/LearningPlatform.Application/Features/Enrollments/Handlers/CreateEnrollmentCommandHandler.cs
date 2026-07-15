@@ -22,9 +22,6 @@ public class CreateEnrollmentCommandHandler(
         var course = await unitOfWork.Repository<Course>().GetByIdAsync(request.CourseId, cancellationToken)
             ?? throw new NotFoundException(nameof(Course), request.CourseId);
 
-        if (course.Status != CourseStatus.Published)
-            throw new BadRequestException("You can only enroll in a published course.");
-
         var studentId = currentUser.UserId!.Value;
         var enrollmentRepository = unitOfWork.Repository<Enrollment>();
 

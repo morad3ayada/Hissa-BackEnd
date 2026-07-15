@@ -13,7 +13,7 @@ namespace LearningPlatform.API.Controllers;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-[Authorize(Roles = nameof(UserRole.Student))]
+[Authorize(Roles = $"{nameof(UserRole.Student)},{nameof(UserRole.Instructor)}")]
 public class GamificationController(IMediator mediator) : ControllerBase
 {
     [HttpGet("Profile")]
@@ -61,6 +61,14 @@ public class GamificationController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> AcceptChallenge([FromBody] AcceptChallengeCommand command)
     {
         var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPost("MigrateAvatarImages")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> MigrateAvatarImages()
+    {
+        var result = await mediator.Send(new MigrateAvatarImagesCommand());
         return Ok(result);
     }
 

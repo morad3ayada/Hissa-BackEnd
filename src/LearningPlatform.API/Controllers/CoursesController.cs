@@ -53,19 +53,37 @@ public class CoursesController(IMediator mediator) : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(PaginatedResponse<CourseSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllCourses([FromQuery] GetAllCoursesQuery query)
+    [ProducesResponseType(typeof(ApiResponse<List<CourseSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllCourses()
     {
-        var result = await mediator.Send(query);
+        var result = await mediator.Send(new GetAllCoursesQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("MyChildren")]
+    [Authorize(Roles = nameof(UserRole.Parent))]
+    [ProducesResponseType(typeof(ApiResponse<List<CourseSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyChildrenCourses()
+    {
+        var result = await mediator.Send(new GetMyChildrenCoursesQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("MyEnrolled")]
+    [Authorize(Roles = nameof(UserRole.Student))]
+    [ProducesResponseType(typeof(ApiResponse<List<CourseSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyEnrolledCourses()
+    {
+        var result = await mediator.Send(new GetMyEnrolledCoursesQuery());
         return Ok(result);
     }
 
     [HttpGet("admin")]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(typeof(PaginatedResponse<CourseSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCoursesForAdmin([FromQuery] GetCoursesForAdminQuery query)
+    [ProducesResponseType(typeof(ApiResponse<List<CourseSummaryDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCoursesForAdmin()
     {
-        var result = await mediator.Send(query);
+        var result = await mediator.Send(new GetCoursesForAdminQuery());
         return Ok(result);
     }
 

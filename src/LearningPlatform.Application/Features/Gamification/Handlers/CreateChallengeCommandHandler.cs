@@ -24,6 +24,11 @@ public class CreateChallengeCommandHandler(
     {
         var challengerId = currentUser.UserId!.Value;
 
+        if (currentUser.IsInRole(nameof(UserRole.Instructor)) && request.ChallengerId.HasValue)
+        {
+            challengerId = request.ChallengerId.Value;
+        }
+
         if (request.OpponentId == challengerId)
             throw new BadRequestException("You can't challenge yourself.");
 
@@ -32,6 +37,15 @@ public class CreateChallengeCommandHandler(
 
         if (opponent.Role != UserRole.Student)
             throw new BadRequestException("You can only challenge another student.");
+
+        if (currentUser.IsInRole(nameof(UserRole.Instructor)) && request.ChallengerId.HasValue)
+        {
+            var challenger = await userManager.FindByIdAsync(challengerId.ToString())
+                ?? throw new NotFoundException(nameof(ApplicationUser), challengerId);
+            
+            if (challenger.Role != UserRole.Student)
+                throw new BadRequestException("Challenger must be a student.");
+        }
 
         var quiz = await unitOfWork.Repository<Quiz>().GetByIdAsync(request.QuizId, cancellationToken)
             ?? throw new NotFoundException(nameof(Quiz), request.QuizId);

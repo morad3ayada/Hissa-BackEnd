@@ -35,6 +35,7 @@ public class QuizResultsSummaryDto
     public int TotalAttempts { get; set; }
     public int PassedCount { get; set; }
     public decimal PassRate { get; set; }
+    public decimal AverageScore { get; set; }
 }
 
 public class UpcomingSessionDto

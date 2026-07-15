@@ -23,6 +23,7 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public ICollection<LiveSession> LiveSessionsHosted { get; set; } = [];
 
     // As Student
+    public ICollection<LiveSessionAttendance> LiveSessionAttendances { get; set; } = [];
     public ICollection<Enrollment> Enrollments { get; set; } = [];
     public ICollection<Payment> Payments { get; set; } = [];
     public ICollection<Review> Reviews { get; set; } = [];

@@ -34,6 +34,12 @@ public class GetQuizQueryHandler(
                 throw new NotFoundException(nameof(Quiz), request.Id);
 
             await quizAuthorization.EnsureCanTakeQuizAsync(quiz, cancellationToken);
+
+            var previousAttempts = await unitOfWork.Repository<QuizResult>()
+                .FindAsync(r => r.QuizId == quiz.Id && r.StudentId == currentUser.UserId, cancellationToken);
+
+            if (previousAttempts.Count >= (quiz.MaxAttempts ?? 1))
+                throw new BadRequestException("You have already submitted this quiz and cannot enter it again.");
         }
 
         var dto = QuizDtoBuilder.Build(quiz, includeAnswerKey: isManager);

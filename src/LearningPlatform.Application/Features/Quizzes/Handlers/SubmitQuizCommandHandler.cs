@@ -41,7 +41,7 @@ public class SubmitQuizCommandHandler(
         var previousAttempts = await unitOfWork.Repository<QuizResult>()
             .FindAsync(r => r.QuizId == quiz.Id && r.StudentId == studentId, cancellationToken);
 
-        if (quiz.MaxAttempts.HasValue && previousAttempts.Count >= quiz.MaxAttempts.Value)
+        if (previousAttempts.Count >= (quiz.MaxAttempts ?? 1))
             throw new BadRequestException("You have reached the maximum number of attempts allowed for this quiz.");
 
         if (quiz.TimeLimitInMinutes.HasValue)

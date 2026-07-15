@@ -68,11 +68,16 @@ public class GetInstructorDashboardQueryHandler(IUnitOfWork unitOfWork, ICurrent
         var passedCount = await unitOfWork.Repository<QuizResult>().AsQueryable()
             .CountAsync(r => quizIds.Contains(r.QuizId) && r.IsPassed, cancellationToken);
 
+        var averageScore = await unitOfWork.Repository<QuizResult>().AsQueryable()
+            .Where(r => quizIds.Contains(r.QuizId))
+            .AverageAsync(r => (decimal?)r.Score, cancellationToken) ?? 0;
+
         var quizResultsSummary = new QuizResultsSummaryDto
         {
             TotalAttempts = totalAttempts,
             PassedCount = passedCount,
-            PassRate = totalAttempts == 0 ? 0 : Math.Round(passedCount * 100m / totalAttempts, 2)
+            PassRate = totalAttempts == 0 ? 0 : Math.Round(passedCount * 100m / totalAttempts, 2),
+            AverageScore = Math.Round(averageScore, 2)
         };
 
         var now = DateTime.UtcNow;

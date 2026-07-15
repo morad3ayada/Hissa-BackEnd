@@ -31,7 +31,7 @@ public class RegisterCommandHandler(
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            Role = UserRole.Student,
+            Role = request.Role,
             IsActive = true
         };
 
@@ -39,11 +39,11 @@ public class RegisterCommandHandler(
         if (!createResult.Succeeded)
             throw new BadRequestException(string.Join(" ", createResult.Errors.Select(e => e.Description)));
 
-        await userManager.AddToRoleAsync(user, UserRole.Student.ToString());
+        await userManager.AddToRoleAsync(user, request.Role.ToString());
 
         await SendEmailConfirmationAsync(user, cancellationToken);
 
-        var accessToken = jwtTokenService.GenerateAccessToken(user, [UserRole.Student.ToString()]);
+        var accessToken = jwtTokenService.GenerateAccessToken(user, [request.Role.ToString()]);
         var refreshToken = jwtTokenService.GenerateRefreshToken();
 
         await unitOfWork.Repository<RefreshToken>().AddAsync(new RefreshToken

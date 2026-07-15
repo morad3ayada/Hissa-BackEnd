@@ -45,6 +45,14 @@ public class LessonsController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<List<LessonDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSectionLessons(Guid sectionId)
+    {
+        var result = await mediator.Send(new GetSectionLessonsQuery(sectionId));
+        return Ok(result);
+    }
+
     [HttpGet("{lessonId:guid}")]
     [ProducesResponseType(typeof(ApiResponse<LessonDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLesson(Guid sectionId, Guid lessonId)

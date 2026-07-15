@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using LearningPlatform.API.Extensions;
 using LearningPlatform.API.Middleware;
+using Microsoft.Extensions.FileProviders;
 using LearningPlatform.API.Swagger;
 using LearningPlatform.API.Versioning;
 using LearningPlatform.Application;
@@ -46,6 +47,12 @@ try
 
     builder.Services.AddJwtAuthentication(builder.Configuration);
 
+    builder.Services.AddCors(options =>
+        options.AddDefaultPolicy(policy =>
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()));
+
     var app = builder.Build();
 
     using (var scope = app.Services.CreateScope())
@@ -57,11 +64,20 @@ try
 
     app.UseSwaggerDocumentation();
 
+    app.UseCors();
+
     app.UseSerilogRequestLogging();
 
     app.UseExceptionHandler();
 
     app.UseHttpsRedirection();
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(app.Environment.ContentRootPath, "AppData")),
+        RequestPath = "/uploads"
+    });
 
     app.UseAuthentication();
     app.UseAuthorization();

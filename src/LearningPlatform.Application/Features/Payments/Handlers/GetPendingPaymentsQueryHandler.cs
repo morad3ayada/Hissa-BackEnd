@@ -22,6 +22,11 @@ public class GetPendingPaymentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapp
             .Include(p => p.Enrollment).ThenInclude(e => e.Course)
             .Where(p => p.Status == PaymentStatus.Pending);
 
+        if (request.InstructorId.HasValue)
+        {
+            query = query.Where(p => p.Enrollment.Course.InstructorId == request.InstructorId.Value);
+        }
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query

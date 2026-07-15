@@ -23,6 +23,16 @@ public class CertificatesController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("MyCertificates")]
+    [HttpPost("Issue")]
+    [Authorize(Roles = $"{nameof(UserRole.Instructor)},{nameof(UserRole.Admin)}")]
+    [ProducesResponseType(typeof(ApiResponse<CertificateDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> IssueCertificate([FromBody] LearningPlatform.Application.Features.Certificates.Commands.IssueCertificateCommand command)
+    {
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
     [HttpGet("{id:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<CertificateDto>), StatusCodes.Status200OK)]

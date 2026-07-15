@@ -14,6 +14,7 @@ public class CourseProgressSummaryDto
     public int TotalLessons { get; set; }
     public int CompletedLessons { get; set; }
     public decimal CompletionPercentage { get; set; }
+    public decimal OverallWatchPercentage { get; set; }
     public int TotalWatchedSeconds { get; set; }
     public DateTime? LastWatchedAt { get; set; }
 }

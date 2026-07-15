@@ -21,4 +21,6 @@ public class LiveSession : BaseEntity
 
     public Guid InstructorId { get; set; }
     public ApplicationUser Instructor { get; set; } = null!;
+
+    public ICollection<LiveSessionAttendance> Attendances { get; set; } = new List<LiveSessionAttendance>();
 }

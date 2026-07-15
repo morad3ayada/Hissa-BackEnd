@@ -84,11 +84,22 @@ public class LiveSessionsController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("Join/{id:guid}")]
+    // POST: Record student join
+    [HttpPost("Join/{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<LiveSessionDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Join(Guid id)
     {
-        var result = await mediator.Send(new JoinLiveSessionQuery(id));
+        var result = await mediator.Send(new JoinLiveSessionCommand(id));
+        return Ok(result);
+    }
+
+    // GET: Attendance list (Instructor/Admin only)
+    [HttpGet("{id:guid}/Attendance")]
+    [Authorize(Roles = $"{nameof(UserRole.Instructor)},{nameof(UserRole.Admin)}")]
+    [ProducesResponseType(typeof(ApiResponse<List<LiveSessionAttendanceDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAttendance(Guid id)
+    {
+        var result = await mediator.Send(new GetLiveSessionAttendanceQuery(id));
         return Ok(result);
     }
 }
