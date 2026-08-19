@@ -37,6 +37,23 @@ public static class JwtAuthenticationExtensions
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
+
+                // SignalR clients connecting over WebSockets cannot set an Authorization
+                // header, so they pass the token via the "access_token" query string
+                // (the documented SignalR JWT pattern). Only accept it on /hubs paths.
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            context.Token = accessToken;
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddAuthorization();

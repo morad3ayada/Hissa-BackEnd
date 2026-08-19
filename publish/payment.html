@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>الدفع | Corexion Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(145deg, #0a0f1f 0%, #0f172a 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(250,204,21,0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease;
+        }
+        .payment-header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fff, #facc15);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .payment-header h1 i {
+            color: #facc15;
+            background: none;
+            font-size: 1.8rem;
+        }
+        .payment-header p {
+            color: #cbd5e1;
+            margin-top: 8px;
+            font-size: 1rem;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            border: 1px solid rgba(250,204,21,0.25);
+            padding: 28px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease backwards;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #facc15;
+            border-right: 4px solid #facc15;
+            padding-right: 15px;
+        }
+        .card-title i {
+            font-size: 1.4rem;
+        }
+
+        .methods-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .method-item {
+            flex: 1;
+            min-width: 110px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 60px;
+            padding: 12px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-weight: 600;
+        }
+        .method-item i {
+            font-size: 1.5rem;
+            color: #facc15;
+        }
+        .method-item.active {
+            border-color: #facc15;
+            background: rgba(250,204,21,0.15);
+            transform: scale(1.02);
+        }
+        .method-item:hover {
+            background: rgba(250,204,21,0.1);
+            transform: translateY(-3px);
+        }
+
+        .field { margin-top: 18px; }
+        .field label { display: block; font-size: 0.9rem; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
+        .field input[type="text"], .field textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(250,204,21,0.25);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #f1f5f9;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+        }
+        .field input[type="text"]:focus, .field textarea:focus { outline: none; border-color: #facc15; }
+        .field textarea { resize: vertical; min-height: 70px; }
+        .field .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 6px; }
+
+        .file-drop {
+            border: 2px dashed rgba(250,204,21,0.35);
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .file-drop:hover { border-color: #facc15; background: rgba(250,204,21,0.06); }
+        .file-drop i { font-size: 1.8rem; color: #facc15; display: block; margin-bottom: 8px; }
+        .receipt-preview { margin-top: 14px; text-align: center; }
+        .receipt-preview img { max-width: 100%; max-height: 220px; border-radius: 14px; border: 1px solid rgba(250,204,21,0.3); }
+
+        .summary-card {
+            background: rgba(0,0,0,0.35);
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(250,204,21,0.3);
+            font-size: 1rem;
+        }
+        .summary-row.total {
+            border-bottom: none;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #facc15;
+            padding-top: 15px;
+        }
+        .btn-pay {
+            width: 100%;
+            margin-top: 25px;
+            background: linear-gradient(95deg, #facc15, #ffdf5e);
+            border: none;
+            padding: 16px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            font-family: 'Cairo', sans-serif;
+            color: #0f172a;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(250,204,21,0.3);
+        }
+        .btn-pay:hover:not(:disabled) {
+            transform: translateY(-3px);
+            background: #ffe066;
+            box-shadow: 0 12px 25px rgba(250,204,21,0.5);
+        }
+        .btn-pay:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-bottom: 25px;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #facc15;
+            transform: translateX(-5px);
+        }
+
+        .status-screen { text-align: center; padding: 30px 10px; }
+        .status-screen i { font-size: 3.2rem; margin-bottom: 16px; display: block; }
+        .status-screen h2 { font-size: 1.4rem; margin-bottom: 10px; }
+        .status-screen p { color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.7; }
+        .status-screen.success i { color: #22c55e; }
+        .status-screen.pending i { color: #facc15; }
+        .status-screen.rejected-banner { text-align: right; padding: 16px 20px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.35); border-radius: 18px; margin-bottom: 20px; }
+        .status-screen.rejected-banner i { font-size: 1.3rem; color: #ef4444; display: inline; margin-left: 8px; }
+        .btn-outline-gold {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: transparent; border: 1.5px solid #facc15; color: #facc15;
+            padding: 10px 24px; border-radius: 50px; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; font-family: 'Cairo', sans-serif; text-decoration: none;
+        }
+        .btn-outline-gold:hover { background: rgba(250,204,21,0.1); }
+
+        .floating-icon {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2rem;
+            color: rgba(250,204,21,0.2);
+            pointer-events: none;
+            animation: spinSlow 20s linear infinite;
+            z-index: 0;
+        }
+        .floating-icon-right {
+            right: 20px;
+            left: auto;
+            top: 15%;
+            animation-duration: 25s;
+        }
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.3);
+            border-radius: 50%;
+            border-top-color: #0f172a;
+            animation: spinSlow 0.8s linear infinite;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 25px 15px; }
+            .container { max-width: 100%; }
+            .card { padding: 20px; }
+            .card-title { font-size: 1.3rem; }
+            .methods-grid { flex-direction: column; gap: 12px; }
+            .method-item { justify-content: center; }
+            .btn-pay { font-size: 1rem; padding: 14px; }
+        }
+        @media (max-width: 480px) {
+            .payment-header h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="floating-icon">
+    <i class="fas fa-credit-card"></i>
+</div>
+<div class="floating-icon floating-icon-right">
+    <i class="fas fa-lock"></i>
+</div>
+
+<div class="container">
+    <a href="student/getallcourses.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للكورسات</a>
+
+    <div class="payment-header">
+        <h1><i class="fas fa-wallet"></i> إتمام الدفع</h1>
+        <p id="courseInfoText">تأكيد اشتراكك في الكورس</p>
+    </div>
+
+    <div id="screenLoading" class="card">
+        <div class="status-screen"><i class="fas fa-spinner fa-spin" style="color:#facc15;"></i><h2>جارٍ التحميل...</h2></div>
+    </div>
+
+    <div id="screenError" class="card" style="display:none;">
+        <div class="status-screen"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i>
+            <h2 id="errorTitle">حدث خطأ</h2>
+            <p id="errorMessage"></p>
+            <a href="student/getallcourses.html" class="btn-outline-gold"><i class="fas fa-arrow-right"></i> رجوع للكورسات</a>
+        </div>
+    </div>
+
+    <div id="screenAlreadyEnrolled" class="card" style="display:none;">
+        <div class="status-screen success"><i class="fas fa-circle-check"></i>
+            <h2>أنت مسجَّل بالفعل في هذا الكورس</h2>
+            <p>مفيش داعي تدفع تاني، تقدر تفتح الكورس وتكمل مباشرة.</p>
+            <a href="#" id="goToCourseBtn" class="btn-outline-gold"><i class="fas fa-play"></i> فتح الكورس</a>
+        </div>
+    </div>
+
+    <div id="screenPendingReview" class="card" style="display:none;">
+        <div class="status-screen pending"><i class="fas fa-hourglass-half"></i>
+            <h2>طلب الدفع قيد المراجعة</h2>
+            <p>استلمنا إيصال الدفع بتاعك، وهيتم تفعيل اشتراكك في الكورس بعد ما الإدارة تراجع الطلب.</p>
+            <a href="student/getallcourses.html" class="btn-outline-gold"><i class="fas fa-book-open"></i> رجوع للكورسات</a>
+        </div>
+    </div>
+
+    <div id="screenPaymentForm" class="card" style="display:none;">
+        <div id="rejectedBanner" class="status-screen rejected-banner" style="display:none;">
+            <i class="fas fa-circle-xmark"></i><span id="rejectedReasonText"></span>
+        </div>
+
+        <div class="card-title">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>وسيلة الدفع</span>
+        </div>
+        <div class="methods-grid" id="methodsContainer"></div>
+
+        <div class="field">
+            <label for="transactionNumberInput"><i class="fas fa-hashtag"></i> رقم العملية / رقم التحويل</label>
+            <input type="text" id="transactionNumberInput" placeholder="اكتب رقم العملية اللي ظهرلك بعد التحويل">
+        </div>
+
+        <div class="field">
+            <label><i class="fas fa-receipt"></i> صورة إيصال الدفع</label>
+            <div class="file-drop" id="fileDropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div id="fileDropText">اضغط لرفع صورة الإيصال</div>
+                <div class="hint">jpg, jpeg, png أو webp — بحد أقصى 5 ميجابايت</div>
+            </div>
+            <input type="file" id="receiptImageInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+            <div class="receipt-preview" id="receiptPreview" style="display:none;"><img id="receiptPreviewImg" alt="معاينة الإيصال"></div>
+        </div>
+
+        <div class="field">
+            <label for="notesInput"><i class="fas fa-note-sticky"></i> ملاحظات (اختياري)</label>
+            <textarea id="notesInput" placeholder="أي ملاحظات إضافية عن عملية الدفع"></textarea>
+        </div>
+
+        <div class="summary-card">
+            <div style="font-weight: 700; margin-bottom: 12px;"><i class="fas fa-receipt"></i> ملخص الطلب</div>
+            <div class="summary-row">
+                <span>الكورس:</span>
+                <span id="summaryCourse">—</span>
+            </div>
+            <div class="summary-row">
+                <span>طريقة الدفع:</span>
+                <span id="summaryMethod">—</span>
+            </div>
+            <div class="summary-row total">
+                <span>المبلغ المطلوب:</span>
+                <span id="summaryPrice">0 ج.م</span>
+            </div>
+        </div>
+
+        <button class="btn-pay" id="confirmPayBtn">
+            <i class="fas fa-paper-plane"></i> إرسال طلب الدفع
+        </button>
+    </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+const MAX_RECEIPT_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RECEIPT_EXT = ['.jpg', '.jpeg', '.png', '.webp'];
+
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('id');
+
+function getToken() { return localStorage.getItem('token'); }
+function authHeaders() {
+  return { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' };
+}
+function headers() { return { 'Content-Type': 'application/json' }; }
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  const baseHeaders = opts.isMultipart ? { 'Authorization': `Bearer ${getToken()}` } : authHeaders();
+  opts.headers = { ...baseHeaders, ...(opts.headers || {}) };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...baseHeaders, ...(opts.headers || {}) };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = 'login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+if (!getToken()) {
+  alert('يرجى تسجيل الدخول أولاً');
+  window.location.href = 'login.html';
+}
+if (!courseId) {
+  alert('بيانات الكورس غير مكتملة، يرجى العودة لصفحة الكورسات');
+  window.location.href = 'student/getallcourses.html';
+}
+
+const methods = [
+    { id: 'vodafone', name: 'Vodafone Cash', icon: 'fas fa-mobile-alt' },
+    { id: 'fawry', name: 'Fawry', icon: 'fas fa-receipt' },
+    { id: 'instapay', name: 'InstaPay', icon: 'fas fa-university' },
+    { id: 'paypal', name: 'PayPal', icon: 'fab fa-paypal' }
+];
+
+let course = null;
+let selectedMethod = null;
+let selectedFile = null;
+
+function showScreen(id) {
+  ['screenLoading', 'screenError', 'screenAlreadyEnrolled', 'screenPendingReview', 'screenPaymentForm']
+    .forEach(s => document.getElementById(s).style.display = s === id ? '' : 'none');
+}
+
+function showError(title, message) {
+  document.getElementById('errorTitle').innerText = title;
+  document.getElementById('errorMessage').innerText = message;
+  showScreen('screenError');
+}
+
+async function loadCourse() {
+  const res = await api(`${API_BASE}/v1/Courses/${courseId}`);
+  const data = await res.json();
+  if (!res.ok || !data.data) throw new Error(data.message || 'تعذر تحميل بيانات الكورس');
+  return data.data;
+}
+
+async function getOrCreateEnrollment() {
+  const createRes = await api(`${API_BASE}/v1/Enrollments/CreateEnrollment`, {
+    method: 'POST',
+    body: JSON.stringify({ courseId })
+  });
+  const createData = await createRes.json();
+  if (createRes.ok && createData.succeeded) return createData.data;
+
+  // Conflict (already enrolled) is expected on a second visit — fetch the existing enrollment.
+  const getRes = await api(`${API_BASE}/v1/Enrollments/GetEnrollment/${courseId}`);
+  const getData = await getRes.json();
+  if (getRes.ok && getData.succeeded) return getData.data;
+  throw new Error(createData.message || getData.message || 'تعذر التحقق من حالة التسجيل في الكورس');
+}
+
+async function findMyPaymentForCourse() {
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/MyPayments?pageNumber=1&pageSize=50`);
+    const data = await res.json();
+    const payments = data.data || [];
+    return payments.find(p => p.courseId === courseId) || null;
+  } catch { return null; }
+}
+
+function renderMethods() {
+  const container = document.getElementById('methodsContainer');
+  container.innerHTML = '';
+  methods.forEach(method => {
+    const el = document.createElement('div');
+    el.className = 'method-item';
+    el.innerHTML = `<i class="${method.icon}"></i><span>${method.name}</span>`;
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.method-item').forEach(m => m.classList.remove('active'));
+      el.classList.add('active');
+      selectedMethod = method;
+      updateSummary();
+    });
+    container.appendChild(el);
+  });
+  container.firstElementChild?.click();
+}
+
+function updateSummary() {
+  document.getElementById('summaryCourse').innerText = course?.title || 'كورس غير محدد';
+  document.getElementById('summaryMethod').innerText = selectedMethod ? selectedMethod.name : '—';
+  const price = course?.discountPrice != null && course.discountPrice < course.price ? course.discountPrice : course?.price;
+  document.getElementById('summaryPrice').innerText = `${(price || 0).toFixed ? price.toFixed(2) : price} ج.م`;
+}
+
+function setupFileInput() {
+  const dropZone = document.getElementById('fileDropZone');
+  const fileInput = document.getElementById('receiptImageInput');
+  dropZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!ALLOWED_RECEIPT_EXT.includes(ext)) {
+      alert('صيغة الصورة غير مدعومة، لازم تكون jpg أو jpeg أو png أو webp');
+      fileInput.value = '';
+      return;
+    }
+    if (file.size > MAX_RECEIPT_BYTES) {
+      alert('حجم الصورة أكبر من 5 ميجابايت');
+      fileInput.value = '';
+      return;
+    }
+    selectedFile = file;
+    document.getElementById('fileDropText').innerText = file.name;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('receiptPreviewImg').src = e.target.result;
+      document.getElementById('receiptPreview').style.display = '';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitPayment() {
+  if (!selectedMethod) { alert('⚠️ يرجى اختيار وسيلة دفع'); return; }
+  const transactionNumber = document.getElementById('transactionNumberInput').value.trim();
+  if (!transactionNumber) { alert('⚠️ من فضلك أدخل رقم العملية'); return; }
+  if (!selectedFile) { alert('⚠️ من فضلك ارفع صورة إيصال الدفع'); return; }
+
+  const confirmBtn = document.getElementById('confirmPayBtn');
+  const originalHtml = confirmBtn.innerHTML;
+  confirmBtn.disabled = true;
+  confirmBtn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
+
+  const formData = new FormData();
+  formData.append('courseId', courseId);
+  formData.append('paymentMethod', selectedMethod.name);
+  formData.append('transactionNumber', transactionNumber);
+  formData.append('notes', document.getElementById('notesInput').value.trim());
+  formData.append('receiptImage', selectedFile);
+
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/CreatePayment`, {
+      method: 'POST',
+      isMultipart: true,
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok || !data.succeeded) {
+      alert(data.message || 'تعذر إرسال طلب الدفع، حاول مرة أخرى');
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = originalHtml;
+      return;
+    }
+    showScreen('screenPendingReview');
+  } catch (err) {
+    alert(`❌ حدث خطأ: ${err.message}`);
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = originalHtml;
+  }
+}
+
+async function init() {
+  try {
+    course = await loadCourse();
+    document.getElementById('courseInfoText').innerText = `الدفع مقابل: ${course.title}`;
+    document.getElementById('goToCourseBtn').href = `watch-courses.html?id=${courseId}`;
+
+    const enrollment = await getOrCreateEnrollment();
+
+    if (enrollment.status === 'Active' || enrollment.status === 'Completed') {
+      showScreen('screenAlreadyEnrolled');
+      return;
+    }
+
+    const myPayment = await findMyPaymentForCourse();
+    if (myPayment && myPayment.status === 'Pending') {
+      showScreen('screenPendingReview');
+      return;
+    }
+
+    if (myPayment && myPayment.status === 'Failed') {
+      document.getElementById('rejectedReasonText').innerText =
+        `تم رفض محاولة الدفع السابقة${myPayment.rejectionReason ? ': ' + myPayment.rejectionReason : ''}. تقدر تبعت طلب جديد تحت.`;
+      document.getElementById('rejectedBanner').style.display = '';
+    }
+
+    renderMethods();
+    setupFileInput();
+    updateSummary();
+    document.getElementById('confirmPayBtn').addEventListener('click', submitPayment);
+    showScreen('screenPaymentForm');
+  } catch (err) {
+    showError('تعذر تحميل صفحة الدفع', err.message || 'حدث خطأ غير متوقع، حاول مرة أخرى.');
+  }
+}
+
+init();
+</script>
+</body>
+</html>

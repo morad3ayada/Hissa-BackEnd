@@ -19,8 +19,10 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public bool IsDeleted { get; set; }
 
     // As Instructor
+    public TeacherProfile? TeacherProfile { get; set; }
     public ICollection<Course> InstructorCourses { get; set; } = [];
     public ICollection<LiveSession> LiveSessionsHosted { get; set; } = [];
+    public ICollection<InstructorSubscription> InstructorSubscriptions { get; set; } = [];
 
     // As Student
     public ICollection<LiveSessionAttendance> LiveSessionAttendances { get; set; } = [];
@@ -53,4 +55,14 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public ICollection<UserActivity> Activities { get; set; } = [];
     public ICollection<UserDevice> Devices { get; set; } = [];
     public UserSettings? Settings { get; set; }
+
+    // Chat
+    public ICollection<ConversationParticipant> ConversationParticipations { get; set; } = [];
+    public ICollection<ChatMessage> SentChatMessages { get; set; } = [];
+    public ICollection<BlockedUser> BlockedUsers { get; set; } = [];
+    public ICollection<BlockedUser> BlockedByUsers { get; set; } = [];
+
+    // Wallet
+    public Wallet? Wallet { get; set; }
+    public ICollection<WalletRequest> WalletRequests { get; set; } = [];
 }

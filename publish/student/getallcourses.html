@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | كل الكورسات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --success: #10b981;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px;
+}
+
+/* ===== COURSE CARD ===== */
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.page-title { font-size:22px; font-weight:900; display:flex;align-items:center;gap:12px; }
+.search-box { position:relative; width:280px; max-width:100%; }
+.search-box input {
+  width:100%; padding:10px 40px 10px 14px; border-radius:10px; border:1.5px solid var(--border);
+  font-size:13px; font-family:'Cairo',sans-serif; background:var(--card);
+}
+.search-box input:focus { outline:none; border-color:var(--primary); }
+.search-box i { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); }
+
+.grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+@media(max-width:900px){ .grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .grid { grid-template-columns:1fr; } }
+
+.course-card {
+  background:var(--card); border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+  transition:transform 0.2s,box-shadow 0.2s; position:relative;
+}
+.course-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.course-img { width:100%; height:150px; object-fit:cover; }
+.enrolled-tag {
+  position:absolute; top:10px; right:10px; background:var(--success); color:#fff;
+  font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+  display:flex; align-items:center; gap:4px;
+}
+.price-tag {
+  position:absolute; top:10px; left:10px; background:rgba(15,23,42,0.85); color:#fff;
+  font-size:12px; font-weight:800; padding:4px 10px; border-radius:20px;
+}
+.course-body { padding:16px; }
+.course-body h3 { font-size:15px; font-weight:800; margin-bottom:4px; }
+.course-body .meta { font-size:12px; color:var(--text-muted); margin-bottom:10px; display:flex; gap:8px; flex-wrap:wrap; }
+.course-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.btn {
+  padding:8px 18px; border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;
+  background:var(--primary); color:#fff; text-decoration:none; display:inline-flex;align-items:center;gap:6px;
+  font-family:'Cairo',sans-serif;
+}
+.btn:hover { opacity:0.9; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-success { background:var(--success); }
+.btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+.empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); grid-column:1/-1; }
+.empty-state i { font-size:50px; margin-bottom:16px; display:block; }
+.empty-state h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+  .search-box { width:100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">القائمة</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div><span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div><span>كورساتي</span>
+    </a>
+    <a href="getallcourses.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-store"></i></div><span>كل الكورسات</span>
+    </a>
+    <a href="../quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div><span>الاختبارات</span>
+    </a>
+    <a href="../final-exam.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div><span>الامتحان النهائي</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div><span>البث المباشر</span>
+    </a>
+    <a href="gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-trophy"></i></div><span>الألعاب والتحديات</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>شهاداتي</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div><span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">طالب</div>
+        <div class="role">طالب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title">كل <span>الكورسات</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div style="position:relative;cursor:pointer;" onclick="showNotifications()">
+          <i class="fas fa-bell" style="font-size:20px;color:var(--text-muted);"></i>
+          <span id="notifBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;display:none;">0</span>
+        </div>
+        <div class="user-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+          <span class="uname" id="topbarUserName">طالب</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title"><i class="fas fa-store" style="color:var(--primary);"></i> كل الكورسات المتاحة</div>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="ابحث عن كورس...">
+          <i class="fas fa-search"></i>
+        </div>
+      </div>
+      <div class="grid" id="coursesGrid">
+        <div class="empty-state"><i class="fas fa-spinner fa-spin" style="font-size:30px;"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() { return { 'Content-Type': 'application/json' }; }
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+if (!localStorage.getItem('token')) { window.location.href = '../login.html'; }
+
+function updateUserUI() {
+  const name = localStorage.getItem('userName') || 'طالب';
+  document.getElementById('sidebarUserName').innerText = name;
+  document.getElementById('topbarUserName').innerText = name.split(' ')[0];
+  const av = localStorage.getItem('avatarUrl');
+  if (av) document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = av);
+}
+updateUserUI();
+
+async function loadProfileAvatar() {
+  try {
+    const res = await api(`${API_BASE}/v1/Profile`);
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      const url = data.data.profilePictureUrl;
+      if (url) {
+        localStorage.setItem('avatarUrl', url);
+        document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = url);
+      }
+    }
+  } catch {}
+}
+loadProfileAvatar();
+
+// ============ COURSES ============
+let allCourses = [];
+let enrolledIds = new Set();
+
+async function fetchMyEnrolledIds() {
+  try {
+    const res = await api(`${API_BASE}/v1/Courses/MyEnrolled`);
+    const data = await res.json();
+    const courses = Array.isArray(data) ? data : (data.data || []);
+    return new Set(courses.map(c => c.id));
+  } catch { return new Set(); }
+}
+
+async function loadCourses() {
+  const grid = document.getElementById('coursesGrid');
+  try {
+    const [coursesRes, myIds] = await Promise.all([
+      api(`${API_BASE}/v1/Courses`),
+      fetchMyEnrolledIds()
+    ]);
+    const data = await coursesRes.json();
+    if (!coursesRes.ok) {
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i><h3>${data.message || 'تعذر تحميل الكورسات'}</h3></div>`;
+      return;
+    }
+    enrolledIds = myIds;
+    allCourses = Array.isArray(data) ? data : (data.data || []);
+
+    renderCourses(allCourses);
+  } catch {
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i><h3>حدث خطأ</h3><p>تعذر تحميل الكورسات. حاول مرة أخرى.</p></div>`;
+  }
+}
+
+function renderCourses(courses) {
+  const grid = document.getElementById('coursesGrid');
+  if (!courses.length) {
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-book-open"></i><h3>لا توجد كورسات مطابقة</h3></div>`;
+    return;
+  }
+
+  grid.innerHTML = courses.map(c => {
+    const isEnrolled = enrolledIds.has(c.id);
+    const price = c.discountPrice != null && c.discountPrice < c.price ? c.discountPrice : c.price;
+    const priceLabel = !price || price <= 0 ? 'مجاني' : `${price} ج.م`;
+    let actionBtn;
+    if (isEnrolled) {
+      actionBtn = `<a href="../watch-courses.html?id=${c.id}" class="btn btn-success"><i class="fas fa-play"></i> متابعة</a>`;
+    } else if (!price || price <= 0) {
+      actionBtn = `<button class="btn enroll-btn" data-id="${c.id}"><i class="fas fa-plus"></i> اشتراك مجاني</button>`;
+    } else {
+      actionBtn = `<button class="btn enroll-btn" data-id="${c.id}"><i class="fas fa-shopping-cart"></i> اشترك</button>`;
+    }
+    return `
+      <div class="course-card">
+        <div style="position:relative;">
+          <img class="course-img" src="${c.thumbnailUrl || 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=150&fit=crop'}" alt="${c.title}">
+          <span class="price-tag">${priceLabel}</span>
+          ${isEnrolled ? '<span class="enrolled-tag"><i class="fas fa-check"></i> مسجَّل</span>' : ''}
+        </div>
+        <div class="course-body">
+          <h3>${c.title || 'بدون عنوان'}</h3>
+          <div class="meta">
+            <span><i class="fas fa-chalkboard-teacher"></i> ${c.instructorName || 'مدرب'}</span>
+            ${c.level ? `<span><i class="fas fa-layer-group"></i> ${c.level}</span>` : ''}
+            ${c.status && c.status !== 'Published' ? `<span class="status-badge">${c.status}</span>` : ''}
+          </div>
+          <div class="course-footer">
+            <span style="font-size:12px;color:var(--text-muted);">${c.category || ''}</span>
+            ${actionBtn}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('.enroll-btn').forEach(btn => {
+    btn.addEventListener('click', () => enrollInCourse(btn.dataset.id, btn));
+  });
+}
+
+async function enrollInCourse(courseId, btn) {
+  const course = allCourses.find(c => c.id === courseId);
+  const price = course && course.discountPrice != null && course.discountPrice < course.price ? course.discountPrice : course?.price;
+
+  // Paid courses go through the payment flow, which creates the enrollment itself.
+  if (price && price > 0) {
+    window.location.href = `payment.html?id=${courseId}`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الاشتراك...';
+  try {
+    const res = await api(`${API_BASE}/v1/Enrollments/CreateEnrollment`, {
+      method: 'POST',
+      body: JSON.stringify({ courseId })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.succeeded) {
+      alert(data.message || 'تعذر الاشتراك في الكورس');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-plus"></i> اشتراك مجاني';
+      return;
+    }
+    window.location.href = `watch-courses.html?id=${courseId}`;
+  } catch {
+    alert('حدث خطأ أثناء الاشتراك');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-plus"></i> اشتراك مجاني';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  const filtered = !q ? allCourses : allCourses.filter(c =>
+    (c.title || '').toLowerCase().includes(q) ||
+    (c.instructorName || '').toLowerCase().includes(q) ||
+    (c.category || '').toLowerCase().includes(q)
+  );
+  renderCourses(filtered);
+});
+
+loadCourses();
+
+document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = '../index.html'; });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').style.display='none'; } });
+</script>
+
+<!-- Notifications Modal -->
+<div id="notifModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;">
+  <div style="background:#1e293b;border-radius:16px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto;border:1px solid #334155;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155;position:sticky;top:0;background:#1e293b;z-index:1;">
+      <h3 style="font-size:16px;font-weight:800;color:#fff;"><i class="fas fa-bell" style="color:var(--primary);margin-left:8px;"></i>الإشعارات</h3>
+      <div style="display:flex;gap:8px;">
+        <button onclick="markAllAsRead()" style="padding:4px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif;">قراءة الكل</button>
+        <button onclick="closeNotifModal()" style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+      </div>
+    </div>
+    <div id="notifList" style="padding:16px;">
+      <div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NOTIFICATIONS =====
+async function loadUnreadCount() {
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/UnreadCount`);
+    const data = await res.json();
+    const count = data.data || 0;
+    const badge = document.getElementById('notifBadge');
+    if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; }
+    else { badge.style.display = 'none'; }
+  } catch {}
+}
+
+async function showNotifications() {
+  document.getElementById('notifModal').style.display = 'flex';
+  document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/MyNotifications`);
+    const data = await res.json();
+    const notifs = data.data || data || [];
+    const list = document.getElementById('notifList');
+
+    if (!notifs.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;"><i class="fas fa-bell-slash" style="font-size:40px;display:block;margin-bottom:10px;"></i>لا توجد إشعارات</div>';
+      return;
+    }
+
+    list.innerHTML = notifs.map(n => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #334155;border-radius:10px;margin-bottom:8px;${n.isRead ? 'opacity:0.6;' : 'background:rgba(37,99,235,0.08);border-color:#2563eb;'}"
+           onclick="${n.isRead ? '' : `markAsRead('${n.id}')`}">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:#fff;">${n.title || ''}</div>
+          <div style="font-size:12px;color:#94a3b8;">${n.message || n.body || ''}</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+        </div>
+        <button onclick="event.stopPropagation();deleteNotif('${n.id}')" style="background:none;border:none;color:#ef4444;font-size:14px;cursor:pointer;padding:4px;"><i class="fas fa-trash"></i></button>
+      </div>
+    `).join('');
+  } catch {
+    document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ فشل تحميل الإشعارات</div>';
+  }
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal').style.display = 'none';
+}
+
+async function markAsRead(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAsRead/${id}`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function markAllAsRead() {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAllAsRead`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function deleteNotif(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/Delete/${id}`, { method: 'DELETE' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+document.getElementById('notifModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+
+loadUnreadCount();
+setInterval(loadUnreadCount, 30000);
+</script>
+</body>
+</html>

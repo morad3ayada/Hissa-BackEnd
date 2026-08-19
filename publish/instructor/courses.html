@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | كورساتي - المدرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; }
+
+/* ===== BUTTONS ===== */
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { opacity:0.9; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; border:none; font-weight:600; cursor:pointer; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-success:hover { opacity:0.9; }
+.btn-danger { background:var(--danger); color:#fff; }
+.btn-danger:hover { background:#dc2626; }
+
+/* ===== COURSE LIST ===== */
+.course-card {
+  background:var(--card); border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+  transition:transform 0.2s,box-shadow 0.2s;
+  display:flex; flex-direction:column;
+}
+.course-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+.course-img { width:100%; height:160px; object-fit:cover; }
+.course-body { padding:16px; flex:1; display:flex; flex-direction:column; }
+.course-title { font-size:16px; font-weight:800; margin-bottom:6px; color:var(--primary-dark); }
+.course-meta { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+.course-price { font-size:14px; font-weight:700; color:var(--success); margin-top:auto; margin-bottom:12px; }
+.course-actions { display:flex; gap:8px; border-top:1px solid var(--border); padding-top:12px; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.5); z-index:999;
+  display:none; justify-content:center; align-items:center;
+}
+.modal {
+  background:var(--card); border-radius:var(--radius); width:90%; max-width:500px;
+  max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg);
+}
+.modal-header {
+  padding:20px; border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.modal-title { font-size:18px; font-weight:800; }
+.modal-close { background:none; border:none; font-size:24px; color:var(--text-muted); cursor:pointer; }
+.modal-body { padding:20px; }
+.modal-footer { padding:20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:12px; }
+
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--text); }
+.form-control {
+  width:100%; padding:10px 14px; border:1px solid var(--border);
+  border-radius:var(--radius-sm); font-size:14px; font-family:'Cairo',sans-serif;
+  background:#f8fafc; transition:all 0.2s; outline:none;
+}
+.form-control:focus { border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">لوحة المدرب</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+      <span>كورساتي</span>
+    </a>
+    <a href="sections.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-list"></i></div>
+      <span>الأقسام والدروس</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div>
+      <span>البث المباشر</span>
+    </a>
+    <a href="quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div>
+      <span>الاختبارات</span>
+    </a>
+    <a href="exams.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span>الامتحانات النهائية</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+      <span>الاشتراكات والمحافظ</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>الشهادات والتكريمات</span>
+    </a>
+    <a href="gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+      <span>إدارة التحديات</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div>
+      <span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">مدرب</div>
+        <div class="role">مدرب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title" id="pageTitle">كورساتي <span>المدرب</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-book-open" style="color:var(--primary);"></i> كورساتي التعليمية</div>
+          <button class="btn-sm btn-primary" onclick="openCreateModal()"><i class="fas fa-plus"></i> إضافة كورس جديد</button>
+        </div>
+        <div id="coursesContainer" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px;">
+          <div class="text-center text-muted" style="grid-column:1/-1;padding:40px;">جارٍ تحميل الكورسات...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Create Course -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">إضافة كورس جديد</div>
+      <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>عنوان الكورس</label>
+        <input type="text" id="courseTitle" class="form-control" placeholder="أدخل عنوان الكورس">
+      </div>
+      <div class="form-group">
+        <label>الوصف</label>
+        <textarea id="courseDesc" class="form-control" rows="3" placeholder="أدخل وصف الكورس"></textarea>
+      </div>
+      <div class="form-group">
+        <label>القسم (Category)</label>
+        <input type="text" id="courseCategory" class="form-control" placeholder="برمجة، تصميم...">
+      </div>
+      <div style="display:flex; gap:16px;">
+        <div class="form-group" style="flex:1;">
+          <label>السعر الأساسي</label>
+          <input type="number" id="coursePrice" class="form-control" placeholder="0">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>السعر بعد الخصم</label>
+          <input type="number" id="courseDiscount" class="form-control" placeholder="0">
+        </div>
+      </div>
+      <div style="display:flex; gap:16px;">
+        <div class="form-group" style="flex:1;">
+          <label>المستوى</label>
+          <select id="courseLevel" class="form-control">
+            <option value="1">مبتدئ</option>
+            <option value="2">متوسط</option>
+            <option value="3">متقدم</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>اللغة</label>
+          <select id="courseLang" class="form-control">
+            <option value="ar">العربية</option>
+            <option value="en">الإنجليزية</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeCreateModal()">إلغاء</button>
+      <button class="btn-sm btn-primary" onclick="submitCreateCourse()" id="btnSubmitCreate">إنشاء الكورس</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Edit Image -->
+<div class="modal-overlay" id="imageModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">تغيير صورة الكورس</div>
+      <button class="modal-close" onclick="closeImageModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="imageCourseId">
+      <input type="hidden" id="imageCourseData">
+      <!-- Preview -->
+      <div id="imgPreviewWrap" style="display:none;text-align:center;margin-bottom:14px;">
+        <img id="imgPreview" src="" alt="Preview" style="max-width:100%;max-height:200px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+      </div>
+      <div class="form-group">
+        <label>اختر صورة من جهازك</label>
+        <input type="file" id="courseImageFile" class="form-control" accept="image/*" onchange="previewImage(this)">
+      </div>
+      <div id="imgUploadStatus" style="font-size:13px;color:var(--text-muted);text-align:center;min-height:20px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeImageModal()">إلغاء</button>
+      <button class="btn-sm btn-success" onclick="submitCourseImage()" id="btnSubmitImage"><i class="fas fa-cloud-upload-alt"></i> رفع الصورة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() {
+  return { 'Content-Type': 'application/json' };
+}
+
+// ===== API HELPERS =====
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  const isFormData = opts.body instanceof FormData;
+  if(!isFormData){
+      opts.headers = { ...authHeaders(), ...opts.headers };
+  } else {
+      opts.headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+  }
+
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      if(!isFormData){
+          opts.headers = { ...authHeaders(), ...opts.headers };
+      } else {
+          opts.headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+      }
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+
+// ===== INIT =====
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '../login.html'; }
+const userId = localStorage.getItem('userId');
+let currentUserName = localStorage.getItem('userName') || 'مدرب';
+
+document.getElementById('sidebarUserName').innerText = currentUserName;
+
+// ===== LOAD COURSES =====
+async function loadCourses() {
+  const container = document.getElementById('coursesContainer');
+  try {
+    const res = await api(`${API_BASE}/v1/Courses`);
+    const data = await res.json();
+    let courses = data.data || [];
+    
+    // فلترة لإظهار كورسات هذا المدرس فقط
+    if (userId) {
+      courses = courses.filter(c => c.instructorId === userId);
+    }
+
+    if (courses.length === 0) {
+      container.innerHTML = '<div class="text-center text-muted" style="grid-column:1/-1;padding:40px;">لا توجد كورسات خاصة بك حتى الآن. قم بإنشاء كورس جديد.</div>';
+      return;
+    }
+
+    container.innerHTML = courses.map(c => `
+      <div class="course-card">
+        <img class="course-img" src="${c.thumbnailUrl || 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=140&fit=crop'}" alt="${c.title}">
+        <div class="course-body">
+          <div class="course-title">${c.title}</div>
+          <div class="course-meta">
+            <i class="fas fa-tag"></i> ${c.category || 'عام'} • <i class="fas fa-layer-group"></i> ${c.level}
+          </div>
+          <div class="course-meta" style="margin-bottom:0;">
+            <i class="fas fa-info-circle"></i> حالة: <strong>${c.status}</strong>
+          </div>
+          <div class="course-price">
+            ${c.discountPrice ? `<span style="text-decoration:line-through;color:#94a3b8;font-size:11px;">$${c.price}</span> $${c.discountPrice}` : `$${c.price}`}
+          </div>
+          <div class="course-actions">
+            <button class="btn-sm btn-outline" style="flex:1;" onclick="openImageModal('${c.id}')"><i class="fas fa-image"></i> صورة</button>
+            <button class="btn-sm btn-outline" style="flex:1;color:var(--primary);border-color:var(--primary);" onclick="window.location.href='instructor-sections.html?courseId=${c.id}'"><i class="fas fa-edit"></i> الأقسام</button>
+            <button class="btn-sm btn-danger" style="padding:6px 10px;" onclick="deleteCourse('${c.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = '<div class="text-center text-muted" style="color:var(--danger);grid-column:1/-1;padding:40px;">حدث خطأ في تحميل الكورسات</div>';
+  }
+}
+loadCourses();
+
+// ===== CREATE COURSE =====
+function openCreateModal() {
+  document.getElementById('courseTitle').value = '';
+  document.getElementById('courseDesc').value = '';
+  document.getElementById('courseCategory').value = '';
+  document.getElementById('coursePrice').value = '';
+  document.getElementById('courseDiscount').value = '';
+  document.getElementById('createModal').style.display = 'flex';
+}
+function closeCreateModal() {
+  document.getElementById('createModal').style.display = 'none';
+}
+async function submitCreateCourse() {
+  const title = document.getElementById('courseTitle').value.trim();
+  const desc = document.getElementById('courseDesc').value.trim();
+  const category = document.getElementById('courseCategory').value.trim();
+  const price = parseFloat(document.getElementById('coursePrice').value) || 0;
+  let discount = parseFloat(document.getElementById('courseDiscount').value);
+  if (isNaN(discount) || discount <= 0) discount = null;
+  const level = parseInt(document.getElementById('courseLevel').value) || 1;
+  const lang = document.getElementById('courseLang').value;
+
+  if (!title) { alert('يرجى إدخال عنوان الكورس'); return; }
+
+  const btn = document.getElementById('btnSubmitCreate');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Courses`, {
+      method: 'POST',
+      body: JSON.stringify({
+        title: title,
+        description: desc,
+        category: category,
+        price: price,
+        discountPrice: discount,
+        level: level,
+        language: lang
+      })
+    });
+    
+    if (res.ok) {
+      closeCreateModal();
+      loadCourses();
+    } else {
+      alert('حدث خطأ أثناء الإنشاء');
+    }
+  } catch (e) {
+    alert('حدث خطأ بالاتصال');
+  }
+  btn.disabled = false; btn.innerText = 'إنشاء الكورس';
+}
+
+// ===== DELETE COURSE =====
+async function deleteCourse(id) {
+  if (!confirm('هل أنت متأكد من حذف هذا الكورس بالكامل؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+  try {
+    const res = await api(`${API_BASE}/v1/Courses/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadCourses();
+    } else {
+      alert('لا يمكن حذف الكورس.');
+    }
+  } catch(e) { alert('حدث خطأ'); }
+}
+
+// ===== UPLOAD THUMBNAIL (via ImgBB) =====
+const IMGBB_API_KEY = '5abc6898bb7d32e0c38c9e0d16a2a9ab'; // مفتاح ImgBB مجاني
+
+function previewImage(input) {
+  const wrap = document.getElementById('imgPreviewWrap');
+  const img  = document.getElementById('imgPreview');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; wrap.style.display = 'block'; };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function openImageModal(courseId) {
+  // store full course data for PUT later
+  document.getElementById('imageCourseId').value = courseId;
+  document.getElementById('imageCourseData').value = courseId;
+  document.getElementById('courseImageFile').value = '';
+  document.getElementById('imgPreviewWrap').style.display = 'none';
+  document.getElementById('imgUploadStatus').innerText = '';
+  document.getElementById('imageModal').style.display = 'flex';
+}
+function closeImageModal() {
+  document.getElementById('imageModal').style.display = 'none';
+}
+
+async function submitCourseImage() {
+  const courseId  = document.getElementById('imageCourseId').value;
+  const fileInput = document.getElementById('courseImageFile');
+  const statusEl  = document.getElementById('imgUploadStatus');
+
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert('يرجى اختيار صورة أولاً'); return;
+  }
+
+  const btn = document.getElementById('btnSubmitImage');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع على ImgBB...';
+  statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> يتم رفع الصورة...';
+
+  try {
+    // ── 1. رفع الصورة على ImgBB ──
+    const imgForm = new FormData();
+    imgForm.append('image', fileInput.files[0]);
+
+    const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: 'POST',
+      body: imgForm
+    });
+    const imgbbData = await imgbbRes.json();
+
+    if (!imgbbData.success) {
+      statusEl.innerHTML = '<span style="color:var(--danger);">فشل رفع الصورة على ImgBB</span>';
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> رفع الصورة';
+      return;
+    }
+
+    const imageUrl = imgbbData.data.url; // URL العام للصورة
+    statusEl.innerHTML = `<span style="color:var(--success);"><i class="fas fa-check"></i> تم رفع الصورة، جاري الحفظ...</span>`;
+
+    // ── 2. جلب بيانات الكورس الحالية أولاً ──
+    const courseRes  = await api(`${API_BASE}/v1/Courses/${courseId}`);
+    const courseData = await courseRes.json();
+    const c = courseData.data || {};
+
+    // ── 3. إرسال URL للـ API عبر UpdateCourse ──
+    const updateRes = await api(`${API_BASE}/v1/Courses/${courseId}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        title:         c.title         || 'بدون عنوان',
+        description:   c.description   || '',
+        category:      c.category      || '',
+        price:         c.price         || 0,
+        discountPrice: c.discountPrice || null,
+        level:         c.level         || 1,
+        language:      c.language      || 'ar',
+        thumbnailUrl:  imageUrl          // ← الـ URL الجديد
+      })
+    });
+
+    if (updateRes.ok) {
+      statusEl.innerHTML = `<span style="color:var(--success);"><i class="fas fa-check-circle"></i> تم حفظ الصورة بنجاح!</span>`;
+      setTimeout(() => { closeImageModal(); loadCourses(); }, 900);
+    } else {
+      statusEl.innerHTML = '<span style="color:var(--danger);">تم رفع الصورة ولكن فشل حفظ الرابط في السيرفر</span>';
+    }
+  } catch(e) {
+    statusEl.innerHTML = '<span style="color:var(--danger);">حدث خطأ في الاتصال</span>';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> رفع الصورة';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = '../index.html';
+});
+</script>
+</body>
+</html>

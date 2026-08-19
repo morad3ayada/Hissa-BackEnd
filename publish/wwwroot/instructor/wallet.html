@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | الاشتراكات والمحافظ - المدرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; margin-bottom:16px; }
+
+/* ===== FORM ===== */
+.form-control {
+  width:100%; padding:10px 14px; border:1px solid var(--border);
+  border-radius:var(--radius-sm); font-size:14px; font-family:'Cairo',sans-serif;
+  background:#f8fafc; transition:all 0.2s; outline:none;
+}
+.form-control:focus { border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--text); }
+
+/* ===== TABLE ===== */
+.table-responsive { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th, td { padding:12px 16px; text-align:right; border-bottom:1px solid var(--border); }
+th { background:#f8fafc; font-weight:700; color:var(--text-muted); }
+tr:hover { background:#f1f5f9; }
+
+.badge {
+  padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700;
+}
+.badge-success { background:#dcfce7; color:#16a34a; }
+.badge-warning { background:#fef3c7; color:#d97706; }
+
+/* ===== MODAL ===== */
+.modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.5); z-index:999; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(2px); }
+.modal { background:#fff; border-radius:12px; width:100%; max-width:500px; box-shadow:0 10px 25px rgba(0,0,0,0.1); overflow:hidden; }
+.modal-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:#f8fafc; }
+.modal-title { font-size:16px; font-weight:800; color:var(--text); }
+.modal-close { cursor:pointer; color:var(--text-muted); font-size:20px; transition:0.2s; }
+.modal-close:hover { color:#ef4444; }
+.modal-body { padding:20px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">لوحة المدرب</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+      <span>كورساتي</span>
+    </a>
+    <a href="sections.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-list"></i></div>
+      <span>الأقسام والدروس</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div>
+      <span>البث المباشر</span>
+    </a>
+    <a href="quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div>
+      <span>الاختبارات</span>
+    </a>
+    <a href="exams.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span>الامتحانات النهائية</span>
+    </a>
+    <a href="wallet.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+      <span>الاشتراكات والمحافظ</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>الشهادات والتكريمات</span>
+    </a>
+    <a href="gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+      <span>إدارة التحديات</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div>
+      <span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">مدرب</div>
+        <div class="role">مدرب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title" id="pageTitle">الاشتراكات <span>والمحافظ</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><i class="fas fa-filter" style="color:var(--primary);"></i> تصفية اشتراكات الطلاب</div>
+        <div class="form-group" style="margin-bottom:0; max-width:400px;">
+          <label>اختر الكورس لعرض المشتركين</label>
+          <select id="courseSelect" class="form-control" onchange="loadSubscribers()">
+            <option value="">-- يرجى اختيار الكورس --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" id="subscribersCard" style="display:none;">
+        <div class="card-title"><i class="fas fa-users" style="color:var(--primary);"></i> الطلاب المشتركون</div>
+        <div class="table-responsive">
+          <table id="subscribersTable">
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>البريد الإلكتروني</th>
+                <th>تاريخ الاشتراك</th>
+                <th>حالة الاشتراك</th>
+                <th>التقدم</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="subscribersBody">
+              <!-- Data -->
+            </tbody>
+          </table>
+        </div>
+        <div id="subscribersEmpty" style="display:none; text-align:center; padding:30px; color:var(--text-muted);">
+          لا يوجد طلاب مشتركون في هذا الكورس بعد.
+        </div>
+      </div>
+
+      <div class="card" id="pendingPaymentsCard">
+        <div class="card-title"><i class="fas fa-clock" style="color:#eab308;"></i> المدفوعات المعلقة <span id="pendingCountBadge" class="badge" style="background:#eab308;color:#fff;">0</span></div>
+        <div class="table-responsive">
+          <table id="pendingTable">
+            <thead>
+              <tr>
+                <th>الطالب</th>
+                <th>الكورس</th>
+                <th>طريقة الدفع</th>
+                <th>رقم العملية</th>
+                <th>الإيصال</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="pendingBody">
+              <!-- Data -->
+            </tbody>
+          </table>
+        </div>
+        <div id="pendingEmpty" style="display:none; text-align:center; padding:30px; color:var(--text-muted);">
+          لا توجد مدفوعات معلقة حالياً.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() {
+  return { 'Content-Type': 'application/json' };
+}
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() { return { json: async () => ({}), ok: false, status: 0 }; }
+
+// ===== INIT =====
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '../login.html'; }
+const userId = localStorage.getItem('userId');
+document.getElementById('sidebarUserName').innerText = localStorage.getItem('userName') || 'مدرب';
+
+// Dropdown
+async function initCourses() {
+  const select = document.getElementById('courseSelect');
+  try {
+    const res = await api(`${API_BASE}/v1/Courses`);
+    const data = await res.json();
+    let courses = data.data || [];
+    if (userId) courses = courses.filter(c => c.instructorId === userId);
+    
+    courses.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id; opt.textContent = c.title;
+      select.appendChild(opt);
+    });
+  } catch(e) {}
+}
+initCourses();
+
+async function loadSubscribers() {
+  const courseId = document.getElementById('courseSelect').value;
+  if (!courseId) {
+    document.getElementById('subscribersCard').style.display = 'none';
+    return;
+  }
+  
+  document.getElementById('subscribersCard').style.display = 'block';
+  const tbody = document.getElementById('subscribersBody');
+  const emptyMsg = document.getElementById('subscribersEmpty');
+  const table = document.getElementById('subscribersTable');
+  
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">جارٍ التحميل...</td></tr>';
+  table.style.display = 'table';
+  emptyMsg.style.display = 'none';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Enrollments/CourseStudents/${courseId}?pageNumber=1&pageSize=100`);
+    const data = await res.json();
+    const students = data.data || [];
+
+    if (students.length === 0) {
+      table.style.display = 'none';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+
+    tbody.innerHTML = students.map(s => {
+      const date = new Date(s.enrollmentDate).toLocaleDateString('ar-EG');
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:700;font-size:12px;">
+                ${s.studentName.charAt(0)}
+              </div>
+              <div>${s.studentName}</div>
+            </div>
+          </td>
+          <td>${s.studentEmail}</td>
+          <td>${date}</td>
+          <td><span class="badge badge-success">نشط</span></td>
+          <td>${s.progressPercentage || 0}%</td>
+          <td>
+            <button class="btn-sm btn-outline" style="color:#ef4444;border-color:#ef4444;font-size:11px;" onclick="openReportModal('${s.studentId}', '${s.studentName}')">
+              <i class="fas fa-flag"></i> تقرير
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:red;">حدث خطأ في التحميل</td></tr>';
+  }
+}
+
+async function loadPendingPayments() {
+  const tbody = document.getElementById('pendingBody');
+  const emptyMsg = document.getElementById('pendingEmpty');
+  const table = document.getElementById('pendingTable');
+  
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جارٍ التحميل...</td></tr>';
+  table.style.display = 'table';
+  emptyMsg.style.display = 'none';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/GetPendingPayments?pageNumber=1&pageSize=100`);
+    const data = await res.json();
+    const payments = data.data?.items || [];
+    
+    document.getElementById('pendingCountBadge').innerText = payments.length;
+
+    if (payments.length === 0) {
+      table.style.display = 'none';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+
+    tbody.innerHTML = payments.map(p => {
+      const receiptLink = p.receiptImageUrl ? `<a href="${API_BASE}/v1/Payments/GetReceiptImage/${p.id}" target="_blank" class="badge badge-info"><i class="fas fa-image"></i> عرض الإيصال</a>` : '<span class="text-muted">لا يوجد</span>';
+      
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:700;">${p.studentName || 'طالب'}</div>
+            <div style="font-size:12px;color:var(--text-muted);">${new Date(p.createdAt).toLocaleDateString('ar-EG')}</div>
+          </td>
+          <td>${p.courseTitle || 'غير محدد'}</td>
+          <td>${p.paymentMethod}</td>
+          <td>${p.transactionNumber || '-'}</td>
+          <td>${receiptLink}</td>
+          <td>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-sm btn-success" onclick="approvePayment('${p.id}')"><i class="fas fa-check"></i> قبول</button>
+              <button class="btn-sm btn-danger" onclick="rejectPayment('${p.id}')"><i class="fas fa-times"></i> رفض</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">حدث خطأ في التحميل</td></tr>';
+  }
+}
+
+async function approvePayment(paymentId) {
+  if (!confirm('هل أنت متأكد من قبول هذا الدفع وتفعيل اشتراك الطالب؟')) return;
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/Approve`, {
+      method: 'POST',
+      body: JSON.stringify({ paymentId, adminNotes: 'تم القبول بواسطة المدرب' })
+    });
+    if (res.ok) {
+      alert('تم قبول الدفع بنجاح');
+      loadPendingPayments();
+      // Reload subscribers if course is selected
+      if (document.getElementById('courseSelect').value) loadSubscribers();
+    } else {
+      const err = await res.json();
+      alert('فشل قبول الدفع: ' + (err.message || ''));
+    }
+  } catch (e) {
+    alert('حدث خطأ بالاتصال');
+  }
+}
+
+async function rejectPayment(paymentId) {
+  const reason = prompt('يرجى إدخال سبب الرفض:');
+  if (reason === null) return; // User cancelled
+
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/Reject`, {
+      method: 'POST',
+      body: JSON.stringify({ paymentId, rejectionReason: reason || 'مرفوض من قبل المدرب' })
+    });
+    if (res.ok) {
+      alert('تم رفض الدفع بنجاح');
+      loadPendingPayments();
+    } else {
+      const err = await res.json();
+      alert('فشل رفض الدفع: ' + (err.message || ''));
+    }
+  } catch (e) {
+    alert('حدث خطأ بالاتصال');
+  }
+}
+
+loadPendingPayments();
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = '../index.html';
+});
+
+// ===== REPORT MODAL =====
+function openReportModal(studentId, studentName) {
+  document.getElementById('reportStudentId').value = studentId;
+  document.getElementById('reportTitle').value = `تقرير بشأن الطالب: ${studentName}`;
+  document.getElementById('reportContent').value = '';
+  document.getElementById('reportModalOverlay').style.display = 'flex';
+}
+
+function closeReportModal() {
+  document.getElementById('reportModalOverlay').style.display = 'none';
+}
+
+async function submitReport() {
+  const studentId = document.getElementById('reportStudentId').value;
+  const title = document.getElementById('reportTitle').value.trim();
+  const content = document.getElementById('reportContent').value.trim();
+  
+  if (!title || !content) {
+    alert('يرجى كتابة عنوان التقرير والتفاصيل.');
+    return;
+  }
+  
+  try {
+    const res = await api(`${API_BASE}/v1/StudentReports/Create`, {
+      method: 'POST',
+      body: JSON.stringify({ studentId, title, content })
+    });
+    if (res.ok) {
+      alert('تم إرسال التقرير بنجاح.');
+      closeReportModal();
+    } else {
+      const err = await res.json();
+      alert('فشل الإرسال: ' + (err.message || ''));
+    }
+  } catch(e) {
+    alert('حدث خطأ بالاتصال');
+  }
+}
+</script>
+
+<!-- Report Modal HTML -->
+<div class="modal-overlay" id="reportModalOverlay" style="display:none;">
+  <div class="modal" id="reportModal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-flag" style="color:#ef4444;"></i> إرسال تقرير عن طالب</div>
+      <div class="modal-close" onclick="closeReportModal()"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="reportStudentId">
+      <div class="form-group">
+        <label>عنوان التقرير</label>
+        <input type="text" id="reportTitle" class="form-control" placeholder="أدخل عنوان التقرير">
+      </div>
+      <div class="form-group">
+        <label>التفاصيل والمشكلة</label>
+        <textarea id="reportContent" class="form-control" rows="4" placeholder="اكتب تفاصيل التقرير هنا..."></textarea>
+      </div>
+      <button class="btn-sm btn-primary" onclick="submitReport()" style="width:100%;"><i class="fas fa-paper-plane"></i> إرسال التقرير</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

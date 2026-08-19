@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | لوحة المشرف (Admin)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #2563eb; --primary-light: #dbeafe; --primary-dark: #1e40af;
+  --accent: #f59e0b; --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --sidebar-bg: #0f172a; --sidebar-text: #94a3b8; --sidebar-hover: #1e293b; --sidebar-active: #2563eb;
+  --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --text-muted: #64748b;
+  --border: #e2e8f0; --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius: 16px; --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar { width:260px; min-width:260px; background:var(--sidebar-bg); display:flex; flex-direction:column; height:100vh; overflow-y:auto; transition:width 0.3s; z-index:100; scrollbar-width:thin; }
+.sidebar-logo { padding:24px 20px 20px; border-bottom:1px solid #1e293b; display:flex; align-items:center; gap:12px; }
+.logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--primary),#7c3aed); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.logo-text { color:white; font-size:18px; font-weight:800; }
+.logo-text span { color:var(--accent); }
+.sidebar-section { padding:16px 12px 4px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--sidebar-text); cursor:pointer; transition:0.2s; margin-bottom:4px; font-size:14px; font-weight:600; text-decoration:none; }
+.nav-item:hover { background:var(--sidebar-hover); color:#e2e8f0; }
+.nav-item.active { background:linear-gradient(135deg,rgba(37,99,235,0.25),rgba(124,58,237,0.15)); color:white; border-right:3px solid var(--primary); }
+.nav-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; background:rgba(255,255,255,0.05); }
+.nav-item.active .nav-icon { background:rgba(37,99,235,0.3); color:#93c5fd; }
+.sidebar-user { margin-top:auto; padding:16px 12px; border-top:1px solid #1e293b; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.sidebar-user img { width:36px; height:36px; border-radius:50%; border:2px solid #334155; object-fit:cover; }
+.sidebar-user-info .name { color:#e2e8f0; font-size:13px; font-weight:700; }
+.sidebar-user-info .role { color:#64748b; font-size:11px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar { background:white; border-bottom:1px solid var(--border); padding:0 28px; height:64px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.topbar-title { font-size:18px; font-weight:800; color:var(--text); }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:16px; }
+.user-avatar { display:flex; align-items:center; gap:8px; cursor:pointer; }
+.user-avatar img { width:36px; height:36px; border-radius:50%; border:2px solid var(--primary); object-fit:cover; }
+.logout-btn { background:#fee2e2; color:var(--danger); border:none; padding:8px 14px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:6px; }
+.logout-btn:hover { background:var(--danger); color:white; }
+.content { flex:1; overflow-y:auto; padding:28px; scrollbar-width:thin; }
+
+/* ===== SECTIONS ===== */
+.section { display:none; animation:fadeIn 0.3s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== CARDS ===== */
+.card { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; border:1px solid rgba(0,0,0,0.04); margin-bottom:20px; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.section-title { font-size:22px; font-weight:800; display:flex; align-items:center; gap:10px; }
+.section-title i { color:var(--primary); }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+
+/* ===== STATS ===== */
+.stat-card { background:var(--card); border-radius:14px; padding:20px; box-shadow:var(--shadow); border:1px solid var(--border); display:flex; align-items:center; gap:16px; }
+.stat-icon { width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+.stat-card.blue .stat-icon { background:#eff6ff; color:#3b82f6; }
+.stat-card.green .stat-icon { background:#f0fdf4; color:#10b981; }
+.stat-card.amber .stat-icon { background:#fffbeb; color:#f59e0b; }
+.stat-card.purple .stat-icon { background:#faf5ff; color:#a855f7; }
+.stat-info .value { font-size:24px; font-weight:900; }
+.stat-info .label { font-size:13px; color:var(--text-muted); font-weight:600; }
+
+/* ===== TABLE ===== */
+.table-wrap { overflow-x:auto; border-radius:var(--radius-sm); border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+thead tr { background:#f8fafc; }
+th { padding:12px 16px; text-align:right; font-weight:700; color:var(--text-muted); font-size:12px; text-transform:uppercase; border-bottom:1px solid var(--border); }
+td { padding:12px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+tr:hover td { background:#f8fafc; }
+.badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:800; }
+.badge-green { background:#d1fae5; color:#065f46; }
+.badge-amber { background:#fef3c7; color:#92400e; }
+.badge-red { background:#fee2e2; color:#991b1b; }
+.badge-blue { background:#dbeafe; color:#1e40af; }
+
+/* ===== BTN ===== */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; border:none; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Cairo',sans-serif; }
+.btn-primary { background:var(--primary); color:white; }
+.btn-primary:hover { background:var(--primary-dark); }
+.btn-success { background:var(--success); color:white; }
+.btn-success:hover { background:#059669; }
+.btn-danger { background:var(--danger); color:white; }
+.btn-danger:hover { background:#dc2626; }
+.btn-outline { background:transparent; color:var(--text); border:1.5px solid var(--border); }
+.btn-outline:hover { background:var(--bg); }
+.btn-sm { padding:6px 12px; font-size:12px; border-radius:8px; }
+
+/* Course Picker */
+.course-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px; }
+.course-pick-card { border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; cursor:pointer; transition:0.2s; background:var(--card); }
+.course-pick-card:hover { border-color:var(--primary); box-shadow:var(--shadow); transform:translateY(-2px); }
+.course-pick-img { width:100%; height:110px; object-fit:cover; background:var(--bg); }
+.course-pick-body { padding:14px; }
+.course-pick-body h3 { font-size:14px; font-weight:800; margin-bottom:6px; }
+
+/* Exam View */
+.exam-meta-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px; }
+.exam-meta-bar h2 { font-size:19px; font-weight:800; }
+.exam-stats { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--text-muted); margin-bottom:20px; }
+.q-card { border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:14px; }
+.q-header { font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between; }
+.q-text { font-size:15px; font-weight:700; margin-bottom:14px; }
+.q-options { display:flex; flex-direction:column; gap:8px; }
+.q-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:14px; }
+.q-option.correct { border-color:var(--success); background:#f0fdf4; color:#065f46; font-weight:700; }
+.q-explain { font-size:12px; color:#92400e; background:#fef3c7; padding:8px 10px; border-radius:8px; margin-top:10px; }
+
+.empty-state { text-align:center; padding:40px 20px; color:var(--text-muted); }
+.empty-state i { font-size:42px; margin-bottom:14px; display:block; color:var(--border); }
+.empty-state h3 { font-weight:800; font-size:18px; }
+
+.hamburger { display:none; width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background:white; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:var(--text); }
+@media(max-width:768px) {
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:flex; }
+  .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="logo-text">Corexion <span>Admin</span></div>
+    </div>
+    
+    <div class="sidebar-section">
+      <div class="nav-item active" data-target="sec-overview">
+        <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+        <span>نظرة عامة</span>
+      </div>
+      <div class="nav-item" data-target="sec-approvals">
+        <div class="nav-icon"><i class="fas fa-check-double"></i></div>
+        <span>اعتماد الكورسات</span>
+        <span class="badge badge-amber" id="pendingCoursesBadge" style="display:none;margin-right:auto;">0</span>
+      </div>
+      <div class="nav-item" data-target="sec-exams">
+        <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span>الامتحانات النهائية</span>
+      </div>
+      <div class="nav-item" data-target="sec-users">
+        <div class="nav-icon"><i class="fas fa-users"></i></div>
+        <span>إدارة المستخدمين</span>
+      </div>
+      <div class="nav-item" data-target="sec-payments">
+        <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+        <span>المدفوعات والمحافظ</span>
+      </div>
+      <div class="nav-item" data-target="sec-enrollments">
+        <div class="nav-icon"><i class="fas fa-user-graduate"></i></div>
+        <span>إدارة الاشتراكات</span>
+      </div>
+      <div class="nav-item" data-target="sec-reports">
+        <div class="nav-icon"><i class="fas fa-chart-line"></i></div>
+        <span>التقارير الشاملة</span>
+      </div>
+    </div>
+    
+    <div class="sidebar-section">
+      <div style="padding:12px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">أدوات متقدمة</div>
+      <a href="instructor/dashboard.html" class="nav-item" style="color:var(--primary);">
+        <div class="nav-icon" style="background:var(--primary-light);color:var(--primary);"><i class="fas fa-chalkboard"></i></div>
+        <span>أدوات المدرب الكاملة</span>
+      </a>
+    </div>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">المدير</div>
+        <div class="role">مشرف عام</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title">لوحة <span>المشرف</span></div>
+      </div>
+      <div class="topbar-actions" style="display:flex;align-items:center;gap:20px;">
+        <!-- Notifications Dropdown -->
+        <div class="notifications-wrapper" style="position:relative;">
+          <div class="notif-icon" onclick="toggleNotifications()" style="cursor:pointer;position:relative;font-size:20px;color:var(--text-muted);">
+            <i class="fas fa-bell"></i>
+            <span id="notifBadge" style="position:absolute;top:-6px;right:-6px;background:var(--danger);color:white;font-size:10px;font-weight:bold;padding:2px 6px;border-radius:10px;display:none;">0</span>
+          </div>
+          <div id="notifDropdown" class="card" style="display:none;position:absolute;left:0;top:40px;width:320px;z-index:1000;box-shadow:0 10px 25px rgba(0,0,0,0.1);padding:0;max-height:400px;overflow-y:auto;border:1px solid var(--border);">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#f8fafc;position:sticky;top:0;">
+              <span style="font-weight:bold;font-size:14px;">الإشعارات</span>
+              <button class="btn btn-sm" onclick="markAllNotificationsAsRead()" style="background:transparent;color:var(--primary);font-size:12px;padding:0;"><i class="fas fa-check-double"></i> تحديد كـ مقروء</button>
+            </div>
+            <div id="notifList" style="padding:8px 0;">
+              <div class="text-center text-muted" style="padding:20px 10px;font-size:13px;">جارٍ التحميل...</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="user-avatar" onclick="window.location.href='profile.html'">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="topbarAvatar">
+          <span style="font-weight:700;font-size:14px;" id="topbarUserName">المدير</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ================= OVERVIEW ================= -->
+      <div class="section active" id="sec-overview">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-chart-pie"></i> نظرة عامة وإحصائيات</div>
+          <button class="btn btn-outline btn-sm" onclick="loadAdminDashboard()"><i class="fas fa-sync-alt"></i> تحديث</button>
+        </div>
+
+        <div class="grid-4 mb-6">
+          <div class="stat-card blue"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><div class="value" id="statTotalUsers">...</div><div class="label">إجمالي المستخدمين</div></div></div>
+          <div class="stat-card green"><div class="stat-icon"><i class="fas fa-book-open"></i></div><div class="stat-info"><div class="value" id="statTotalCourses">...</div><div class="label">إجمالي الكورسات</div></div></div>
+          <div class="stat-card purple"><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><div class="value" id="statTotalEnrollments">...</div><div class="label">عمليات الاشتراك</div></div></div>
+          <div class="stat-card amber"><div class="stat-icon"><i class="fas fa-clipboard-question"></i></div><div class="stat-info"><div class="value" id="statTotalQuizzes">...</div><div class="label">إجمالي الاختبارات</div></div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;"><i class="fas fa-users-cog"></i> توزيع المستخدمين</h3>
+            <div style="height:250px;"><canvas id="usersChart"></canvas></div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;"><i class="fas fa-fire"></i> الكورسات الأكثر تسجيلاً</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>الكورس</th><th>المدرب</th><th>الاشتراكات</th></tr></thead>
+                <tbody id="topCoursesTbody">
+                  <tr><td colspan="3" class="text-center">جارٍ التحميل...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= COURSE APPROVALS ================= -->
+      <div class="section" id="sec-approvals">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-check-double"></i> اعتماد الكورسات</div>
+          <button class="btn btn-outline btn-sm" onclick="loadPendingCourses()"><i class="fas fa-sync-alt"></i> تحديث القائمة</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">الكورسات بانتظار الاعتماد</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>الكورس</th><th>السعر</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إجراءات</th></tr></thead>
+              <tbody id="pendingCoursesTbody">
+                <tr><td colspan="5" class="text-center">جارٍ التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= FINAL EXAMS ================= -->
+      <div class="section" id="sec-exams">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-graduation-cap"></i> إدارة الامتحانات النهائية</div>
+        </div>
+
+        <!-- Course Picker for Exams -->
+        <div id="examCoursePicker">
+          <div class="card">
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;">اختر كورسًا لعرض امتحانه النهائي</h3>
+            <p style="color:var(--text-muted);font-size:13px;margin-bottom:20px;">يمكنك استعراض الامتحان النهائي المرتبط بكل كورس</p>
+            <div id="examCourseList">
+              <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>جارٍ تحميل الكورسات...</h3></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam View -->
+        <div id="examViewArea" class="card" style="display:none;">
+          <div id="examViewBody"></div>
+        </div>
+      </div>
+
+      <!-- ================= PAYMENTS & WALLETS ================= -->
+      <div class="section" id="sec-payments">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-wallet"></i> المدفوعات والمحافظ (الاشتراكات)</div>
+          <button class="btn btn-outline btn-sm" onclick="loadPendingPayments()"><i class="fas fa-sync-alt"></i> تحديث المدفوعات</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">المدفوعات بانتظار المراجعة</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>الطالب</th><th>الكورس</th><th>المدرب</th><th>رقم العملية</th><th>المبلغ</th><th>تاريخ الدفع</th><th>إجراءات</th></tr></thead>
+              <tbody id="pendingPaymentsTbody">
+                <tr><td colspan="7" class="text-center">جارٍ التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= ENROLLMENTS ================= -->
+      <div class="section" id="sec-enrollments">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-user-graduate"></i> إدارة الاشتراكات الكلية</div>
+          <button class="btn btn-outline btn-sm" onclick="loadAllEnrollments()"><i class="fas fa-sync-alt"></i> تحديث الاشتراكات</button>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>الطالب</th><th>الكورس</th><th>حالة الاشتراك</th><th>تاريخ التسجيل</th><th>تاريخ الانتهاء</th></tr></thead>
+              <tbody id="enrollmentsTbody">
+                <tr><td colspan="5" class="text-center">جارٍ التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= REPORTS ================= -->
+      <div class="section" id="sec-reports">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-chart-line"></i> التقارير الشاملة</div>
+          <button class="btn btn-outline btn-sm" onclick="loadAllReports()"><i class="fas fa-sync-alt"></i> تحديث التقارير</button>
+        </div>
+
+        <!-- Payments Report -->
+        <div class="card" style="margin-bottom:20px;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:10px;"><i class="fas fa-money-bill-wave"></i> تقرير الأرباح والمدفوعات</h3>
+          <div style="font-size:24px;font-weight:900;color:var(--success);margin-bottom:14px;" id="reportTotalRevenue">0.00 EGP</div>
+          <div class="grid-2">
+            <div><h4 style="font-size:14px;margin-bottom:8px;">حسب الحالة</h4><ul id="reportPaymentsByStatus" style="list-style:none;padding:0;font-size:13px;color:var(--text-muted);"></ul></div>
+            <div><h4 style="font-size:14px;margin-bottom:8px;">حسب طريقة الدفع</h4><ul id="reportPaymentsByMethod" style="list-style:none;padding:0;font-size:13px;color:var(--text-muted);"></ul></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Courses Report -->
+          <div class="card">
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:10px;"><i class="fas fa-book-open"></i> تقرير الكورسات</h3>
+            <h4 style="font-size:14px;margin-top:10px;margin-bottom:6px;">الأكثر تسجيلاً</h4>
+            <ul id="reportTopCourses" style="list-style:none;padding:0;font-size:13px;color:var(--text-muted);"></ul>
+            <h4 style="font-size:14px;margin-top:10px;margin-bottom:6px;">الأكثر مشاهدة</h4>
+            <ul id="reportTopViewedCourses" style="list-style:none;padding:0;font-size:13px;color:var(--text-muted);"></ul>
+          </div>
+          <!-- Quizzes Report -->
+          <div class="card">
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:10px;"><i class="fas fa-clipboard-check"></i> تقرير الامتحانات</h3>
+            <div style="margin-bottom:14px;font-size:13px;color:var(--text-muted);">
+              نسبة النجاح: <strong id="reportPassRate" style="color:var(--success);">0%</strong> | نسبة الرسوب: <strong id="reportFailRate" style="color:var(--danger);">0%</strong>
+            </div>
+            <h4 style="font-size:14px;margin-bottom:6px;">أصعب الامتحانات</h4>
+            <ul id="reportDifficultQuizzes" style="list-style:none;padding:0;font-size:13px;color:var(--text-muted);"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= USERS MANAGEMENT ================= -->
+      <div class="section" id="sec-users">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-users-cog"></i> إدارة المستخدمين</div>
+        </div>
+        
+        <div class="card" style="max-width:600px;margin:auto;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;">إنشاء مستخدم جديد</h3>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">قم بإنشاء حسابات جديدة للمدربين أو المديرين من هنا</p>
+          <form id="createUserForm" onsubmit="handleCreateUser(event)" style="display:flex;flex-direction:column;gap:14px;">
+            <div class="grid-2">
+              <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;">الاسم الأول</label><input type="text" id="cuFirstName" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;"></div>
+              <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;">اسم العائلة</label><input type="text" id="cuLastName" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;"></div>
+            </div>
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;">البريد الإلكتروني</label><input type="email" id="cuEmail" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;"></div>
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;">كلمة المرور</label><input type="password" id="cuPassword" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;"></div>
+            <div>
+              <label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;">نوع الحساب (الصلاحية)</label>
+              <select id="cuRole" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;">
+                <option value="1">مدرب (Instructor)</option>
+                <option value="0">مشرف عام (Admin)</option>
+                <option value="2">طالب (Student)</option>
+                <option value="3">ولي أمر (Parent)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="justify-content:center;margin-top:10px;" id="cuSubmitBtn"><i class="fas fa-plus"></i> إنشاء المستخدم</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function getToken() { return localStorage.getItem('token'); }
+function authHeaders() { return { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' }; }
+function headers() { return { 'Content-Type': 'application/json' }; }
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, { method: 'POST', headers: headers(), body: JSON.stringify({ refreshToken: rt }) });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = 'login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() { return { json: async () => ({}), ok: false, status: 0 }; }
+
+// Authentication check
+if (!getToken()) { window.location.href = 'login.html'; }
+const currentUserRole = localStorage.getItem('userRole');
+if (currentUserRole !== 'Admin') {
+  alert('هذه الصفحة متاحة لمديري النظام فقط');
+  window.location.href = 'index.html';
+}
+
+// UI Initialization
+const name = localStorage.getItem('userName') || 'المدير';
+document.getElementById('topbarUserName').innerText = name.split(' ')[0];
+document.getElementById('sidebarUserName').innerText = name;
+const av = localStorage.getItem('avatarUrl');
+if (av) document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = av);
+document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'index.html'; });
+
+// Navigation
+document.querySelectorAll('.nav-item').forEach(item => {
+  if (item.hasAttribute('href')) return; // Ignore regular links
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const target = item.getAttribute('data-target');
+    if (target) {
+      document.getElementById(target).classList.add('active');
+      
+      // Load specific data based on tab
+      if(target === 'sec-approvals') loadPendingCourses();
+      if(target === 'sec-exams') loadCoursesForExams();
+      if(target === 'sec-payments') loadPendingPayments();
+      if(target === 'sec-enrollments') loadAllEnrollments();
+      if(target === 'sec-reports') loadAllReports();
+    }
+  });
+});
+
+let usersChartObj = null;
+
+// ================= OVERVIEW LOGIC =================
+async function loadAdminDashboard() {
+  try {
+    const res = await api(`${API_BASE}/v1/Dashboard/Admin`);
+    const data = await res.json();
+    if (data.succeeded) {
+      const d = data.data;
+      document.getElementById('statTotalUsers').innerText = d.totalUsers;
+      document.getElementById('statTotalCourses').innerText = d.totalCourses;
+      document.getElementById('statTotalEnrollments').innerText = d.totalEnrollments;
+      document.getElementById('statTotalQuizzes').innerText = d.totalQuizzes;
+
+      if(d.pendingCourses > 0) {
+        const badge = document.getElementById('pendingCoursesBadge');
+        badge.innerText = d.pendingCourses;
+        badge.style.display = 'inline-block';
+      } else {
+        document.getElementById('pendingCoursesBadge').style.display = 'none';
+      }
+
+      // Render Users Chart
+      const ctx = document.getElementById('usersChart').getContext('2d');
+      if(usersChartObj) usersChartObj.destroy();
+      usersChartObj = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['طلاب', 'مدربون', 'أولياء أمور'],
+          datasets: [{
+            data: [d.totalStudents, d.totalInstructors, d.totalParents],
+            backgroundColor: ['#2563eb', '#10b981', '#f59e0b'],
+            borderWidth: 0
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+
+      // Render Top Courses
+      const topTbody = document.getElementById('topCoursesTbody');
+      if(d.topEnrolledCourses && d.topEnrolledCourses.length > 0) {
+        topTbody.innerHTML = d.topEnrolledCourses.map(c => `
+          <tr>
+            <td><div style="font-weight:700;">${c.title}</div><div style="font-size:11px;color:var(--text-muted);">${c.category||'عام'}</div></td>
+            <td>${c.instructorName || '—'}</td>
+            <td><span class="badge badge-green">${c.enrollmentsCount} طالب</span></td>
+          </tr>
+        `).join('');
+      } else {
+        topTbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">لا توجد بيانات</td></tr>';
+      }
+    }
+  } catch (err) {
+    console.error("Dashboard error", err);
+  }
+}
+
+// ================= COURSE APPROVAL LOGIC =================
+let allAdminCourses = [];
+async function loadPendingCourses() {
+  const tbody = document.getElementById('pendingCoursesTbody');
+  tbody.innerHTML = '<tr><td colspan="5" class="text-center">جارٍ التحميل...</td></tr>';
+  try {
+    const res = await api(`${API_BASE}/v1/Courses/admin`);
+    const data = await res.json();
+    if (data.succeeded) {
+      allAdminCourses = data.data || [];
+      const pending = allAdminCourses.filter(c => c.status === 'Pending' || c.status === 'Draft');
+      
+      if(pending.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">لا توجد كورسات بانتظار الاعتماد</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = pending.map(c => `
+        <tr>
+          <td><div style="font-weight:700;">${c.title}</div><div style="font-size:11px;color:var(--text-muted);">${c.category||'عام'}</div></td>
+          <td>${c.price} ${c.currency}</td>
+          <td><span class="badge badge-amber">${c.status}</span></td>
+          <td style="font-size:12px;">${new Date(c.createdAt).toLocaleDateString('ar-EG')}</td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-success btn-sm" onclick="setCourseState('${c.id}', 'Published')"><i class="fas fa-check"></i> اعتماد</button>
+              <button class="btn btn-danger btn-sm" onclick="setCourseState('${c.id}', 'Rejected')"><i class="fas fa-times"></i> رفض</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  } catch {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">خطأ في التحميل</td></tr>';
+  }
+}
+
+async function setCourseState(id, status) {
+  if(!confirm(`هل أنت متأكد من تغيير حالة الكورس إلى ${status}؟`)) return;
+  try {
+    const res = await api(`${API_BASE}/v1/Courses/${id}/state`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status })
+    });
+    if(res.ok) {
+      alert('تم تغيير حالة الكورس بنجاح');
+      loadPendingCourses();
+      loadAdminDashboard();
+    } else {
+      const d = await res.json();
+      alert(d.message || 'فشلت العملية');
+    }
+  } catch {
+    alert('فشلت العملية');
+  }
+}
+
+// ================= FINAL EXAMS LOGIC =================
+async function loadCoursesForExams() {
+  const container = document.getElementById('examCourseList');
+  container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>جارٍ التحميل...</h3></div>';
+  try {
+    if(allAdminCourses.length === 0) {
+      const res = await api(`${API_BASE}/v1/Courses/admin`);
+      const data = await res.json();
+      if(data.succeeded) allAdminCourses = data.data || [];
+    }
+    
+    if (allAdminCourses.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-book-open"></i><h3>لا توجد كورسات بالنظام</h3></div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="course-grid">${allAdminCourses.map(c => `
+      <div class="course-pick-card" onclick="viewFinalExam('${c.id}')">
+        <img class="course-pick-img" src="${c.thumbnailUrl || 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=300&h=110&fit=crop'}" alt="${c.title}">
+        <div class="course-pick-body">
+          <h3>${c.title}</h3>
+          <div style="font-size:12px;color:var(--text-muted);">المُدرب: ${c.instructorName || '—'}</div>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } catch {
+    container.innerHTML = `<div class="empty-state" style="color:var(--danger);"><i class="fas fa-exclamation-triangle"></i><h3>حدث خطأ أثناء تحميل الكورسات</h3></div>`;
+  }
+}
+
+async function viewFinalExam(courseId) {
+  document.getElementById('examCoursePicker').style.display = 'none';
+  document.getElementById('examViewArea').style.display = 'block';
+  const body = document.getElementById('examViewBody');
+  body.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>جارٍ تحميل الامتحان...</h3></div>';
+
+  try {
+    const res = await api(`${API_BASE}/v1/FinalExam/${courseId}`);
+    const data = await res.json();
+    if (!res.ok || !data.data) {
+      body.innerHTML = `
+        <div class="empty-state"><i class="fas fa-file-circle-xmark"></i><h3>لا يوجد امتحان نهائي لهذا الكورس بعد</h3></div>
+        <button class="btn btn-outline" onclick="backToExamPicker()"><i class="fas fa-arrow-right"></i> رجوع لاختيار كورس</button>
+      `;
+      return;
+    }
+    
+    const exam = data.data;
+    body.innerHTML = `
+      <div class="exam-meta-bar">
+        <h2><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> ${exam.title}</h2>
+        <button class="btn btn-outline btn-sm" onclick="backToExamPicker()"><i class="fas fa-arrow-right"></i> كورس آخر</button>
+      </div>
+      <div class="exam-stats">
+        <span><i class="fas fa-list-ol"></i> ${exam.questions.length} سؤال</span>
+        ${exam.timeLimitInMinutes ? `<span><i class="fas fa-clock"></i> ${exam.timeLimitInMinutes} دقيقة</span>` : ''}
+        <span><i class="fas fa-star"></i> درجة النجاح ${exam.passingScore}%</span>
+        <span><i class="fas fa-trophy"></i> إجمالي النقاط ${exam.totalPoints}</span>
+        <span><i class="fas fa-${exam.isPublished ? 'check-circle' : 'pen'}"></i> ${exam.isPublished ? 'منشور' : 'مسودة'}</span>
+      </div>
+      <div>
+        ${exam.questions.map((q, idx) => `
+          <div class="q-card">
+            <div class="q-header"><span>سؤال ${idx + 1}</span><span>${q.points} نقطة</span></div>
+            <div class="q-text">${q.text}</div>
+            <div class="q-options">
+              ${q.answers.map(a => `
+                <div class="q-option ${a.isCorrect ? 'correct' : ''}">
+                  ${a.isCorrect ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-circle" style="opacity:0.2;"></i>'}
+                  <span>${a.text}</span>
+                </div>
+              `).join('')}
+            </div>
+            ${q.explanation ? `<div class="q-explain"><i class="fas fa-lightbulb"></i> ${q.explanation}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch {
+    body.innerHTML = `
+      <div class="empty-state" style="color:var(--danger);"><i class="fas fa-exclamation-triangle"></i><h3>حدث خطأ</h3></div>
+      <button class="btn btn-outline" onclick="backToExamPicker()"><i class="fas fa-arrow-right"></i> رجوع</button>
+    `;
+  }
+}
+
+function backToExamPicker() {
+  document.getElementById('examViewArea').style.display = 'none';
+  document.getElementById('examCoursePicker').style.display = 'block';
+}
+
+// ================= PAYMENTS LOGIC =================
+async function loadPendingPayments() {
+  const tbody = document.getElementById('pendingPaymentsTbody');
+  tbody.innerHTML = '<tr><td colspan="7" class="text-center">جارٍ التحميل...</td></tr>';
+  try {
+    const res = await api(`${API_BASE}/v1/Payments/GetPendingPayments?PageNumber=1&PageSize=50`);
+    const data = await res.json();
+    if (data.succeeded) {
+      const payments = data.data.data || [];
+      if (payments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">لا توجد مدفوعات معلقة</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = payments.map(p => `
+        <tr>
+          <td>
+            <div style="font-weight:700;">${p.studentName || 'طالب'}</div>
+          </td>
+          <td><div style="font-weight:600;color:var(--primary);">${p.courseTitle || 'كورس'}</div></td>
+          <td>${p.instructorName || '—'}</td>
+          <td>
+            <div style="font-size:12px;font-family:monospace;background:var(--bg);padding:4px;border-radius:4px;display:inline-block;">${p.transactionNumber || '—'}</div>
+          </td>
+          <td><span style="font-weight:700;color:var(--success);">${p.amount} ${p.currency}</span></td>
+          <td style="font-size:12px;">${new Date(p.createdAt).toLocaleDateString('ar-EG')}</td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-success btn-sm" onclick="handlePayment('${p.id}', 'approve')"><i class="fas fa-check"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="handlePayment('${p.id}', 'reject')"><i class="fas fa-times"></i></button>
+              ${p.receiptImageUrl ? `<a href="${p.receiptImageUrl}" target="_blank" class="btn btn-outline btn-sm" title="عرض الإيصال"><i class="fas fa-image"></i></a>` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  } catch {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">خطأ في التحميل</td></tr>';
+  }
+}
+
+async function handlePayment(id, action) {
+  if(!confirm(`هل أنت متأكد من ${action === 'approve' ? 'قبول' : 'رفض'} هذا الدفع؟`)) return;
+  try {
+    const endpoint = action === 'approve' ? 'Approve' : 'Reject';
+    const res = await api(`${API_BASE}/v1/Payments/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentId: id })
+    });
+    if(res.ok) {
+      alert('تم تحديث حالة الدفع بنجاح');
+      loadPendingPayments();
+    } else {
+      const d = await res.json();
+      alert(d.message || 'فشلت العملية');
+    }
+  } catch {
+    alert('فشلت العملية');
+  }
+}
+
+// ================= NOTIFICATIONS LOGIC =================
+async function loadUnreadCount() {
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/UnreadCount`);
+    const data = await res.json();
+    if(data.succeeded) {
+      const b = document.getElementById('notifBadge');
+      if(data.data > 0) { b.innerText = data.data; b.style.display = 'block'; }
+      else { b.style.display = 'none'; }
+    }
+  } catch(e){}
+}
+async function toggleNotifications() {
+  const d = document.getElementById('notifDropdown');
+  if(d.style.display === 'none') {
+    d.style.display = 'block';
+    loadNotifications();
+  } else {
+    d.style.display = 'none';
+  }
+}
+async function loadNotifications() {
+  const list = document.getElementById('notifList');
+  list.innerHTML = '<div class="text-center text-muted" style="padding:20px;font-size:13px;">جارٍ التحميل...</div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/MyNotifications`);
+    const data = await res.json();
+    if(data.succeeded) {
+      if(!data.data || data.data.length === 0) {
+        list.innerHTML = '<div class="text-center text-muted" style="padding:20px;font-size:13px;">لا توجد إشعارات</div>';
+        return;
+      }
+      list.innerHTML = data.data.map(n => `
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);${!n.isRead ? 'background:#f0fdf4;' : ''}">
+          <div style="font-size:13px;font-weight:700;color:var(--text);">${n.title}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">${n.message}</div>
+          ${!n.isRead ? `<div style="font-size:11px;color:var(--primary);margin-top:6px;cursor:pointer;" onclick="markAsRead('${n.id}')">تحديد كمقروء</div>` : ''}
+        </div>
+      `).join('');
+    }
+  } catch(e){ list.innerHTML = '<div class="text-center text-danger" style="padding:20px;">خطأ في تحميل الإشعارات</div>'; }
+}
+async function markAsRead(id) {
+  await api(`${API_BASE}/v1/Notifications/MarkAsRead/${id}`, { method: 'PUT' });
+  loadNotifications();
+  loadUnreadCount();
+}
+async function markAllNotificationsAsRead() {
+  await api(`${API_BASE}/v1/Notifications/MarkAllAsRead`, { method: 'PUT' });
+  loadNotifications();
+  loadUnreadCount();
+}
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.notifications-wrapper')) document.getElementById('notifDropdown').style.display = 'none';
+});
+
+// ================= REPORTS LOGIC =================
+async function loadAllReports() {
+  try {
+    const resP = await api(`${API_BASE}/v1/Reports/Payments`);
+    if(resP.ok) {
+      const data = (await resP.json()).data;
+      document.getElementById('reportTotalRevenue').innerText = `${data.totalRevenue} EGP`;
+      document.getElementById('reportPaymentsByStatus').innerHTML = data.byStatus.map(s => `<li style="padding:4px 0;display:flex;justify-content:space-between;"><span>${s.status}</span> <strong>${s.count} (${s.totalAmount} EGP)</strong></li>`).join('');
+      document.getElementById('reportPaymentsByMethod').innerHTML = data.byMethod.map(s => `<li style="padding:4px 0;display:flex;justify-content:space-between;"><span>${s.method}</span> <strong>${s.count} (${s.totalAmount} EGP)</strong></li>`).join('');
+    }
+    const resC = await api(`${API_BASE}/v1/Reports/Courses`);
+    if(resC.ok) {
+      const data = (await resC.json()).data;
+      document.getElementById('reportTopCourses').innerHTML = data.topEnrolledCourses.map(c => `<li style="padding:4px 0;display:flex;justify-content:space-between;"><span>${c.title}</span> <strong style="color:var(--primary);">${c.count} اشتراك</strong></li>`).join('');
+      document.getElementById('reportTopViewedCourses').innerHTML = data.topViewedCourses.map(c => `<li style="padding:4px 0;display:flex;justify-content:space-between;"><span>${c.title}</span> <strong>${c.count} مشاهدة</strong></li>`).join('');
+    }
+    const resQ = await api(`${API_BASE}/v1/Reports/Quizzes`);
+    if(resQ.ok) {
+      const data = (await resQ.json()).data;
+      document.getElementById('reportPassRate').innerText = `${data.passRate}%`;
+      document.getElementById('reportFailRate').innerText = `${data.failRate}%`;
+      document.getElementById('reportDifficultQuizzes').innerHTML = data.mostDifficultQuizzes.map(q => `<li style="padding:6px 0;display:flex;justify-content:space-between;border-bottom:1px solid var(--border);"><span>${q.title}</span> <span style="font-size:11px;background:#fee2e2;color:#991b1b;padding:2px 6px;border-radius:4px;">نجاح: ${q.passRate}%</span></li>`).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+// ================= ENROLLMENTS LOGIC =================
+async function loadAllEnrollments() {
+  const tbody = document.getElementById('enrollmentsTbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="text-center">جارٍ التحميل...</td></tr>';
+  try {
+    const res = await api(`${API_BASE}/v1/Enrollments/GetAllEnrollments`);
+    const data = await res.json();
+    if (data.succeeded) {
+      const enrs = data.data || [];
+      if (enrs.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">لا توجد اشتراكات</td></tr>'; return; }
+      tbody.innerHTML = enrs.map(e => `
+        <tr>
+          <td><div style="font-weight:700;">${e.studentName}</div></td>
+          <td><div style="font-weight:600;color:var(--primary);">${e.courseTitle}</div></td>
+          <td><span class="badge ${e.status==='Active'?'badge-green':(e.status==='Expired'?'badge-red':'badge-amber')}">${e.status}</span></td>
+          <td style="font-size:12px;">${new Date(e.enrolledAt).toLocaleDateString('ar-EG')}</td>
+          <td style="font-size:12px;">${e.expiresAt ? new Date(e.expiresAt).toLocaleDateString('ar-EG') : '—'}</td>
+        </tr>
+      `).join('');
+    }
+  } catch { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">خطأ في التحميل</td></tr>'; }
+}
+
+// ================= USERS LOGIC =================
+async function handleCreateUser(e) {
+  e.preventDefault();
+  const btn = document.getElementById('cuSubmitBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الإنشاء...';
+  
+  const payload = {
+    firstName: document.getElementById('cuFirstName').value,
+    lastName: document.getElementById('cuLastName').value,
+    email: document.getElementById('cuEmail').value,
+    password: document.getElementById('cuPassword').value,
+    role: parseInt(document.getElementById('cuRole').value)
+  };
+  
+  try {
+    const res = await api(`${API_BASE}/v1/Auth/admin/create-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(res.ok && data.succeeded) {
+      alert('تم إنشاء المستخدم بنجاح!');
+      document.getElementById('createUserForm').reset();
+    } else {
+      alert(data.message || 'حدث خطأ أثناء الإنشاء');
+    }
+  } catch(err) {
+    alert('فشل الاتصال بالخادم');
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-plus"></i> إنشاء المستخدم';
+  }
+}
+
+// Initial load
+loadAdminDashboard();
+loadUnreadCount();
+</script>
+</body>
+</html>

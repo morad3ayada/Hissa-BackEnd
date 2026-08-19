@@ -42,6 +42,10 @@ try
     builder.Services.AddSwaggerServices();
     builder.Services.AddHealthCheckServices(builder.Configuration);
 
+    builder.Services.AddSignalR()
+        .AddJsonProtocol(options =>
+            options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
@@ -72,10 +76,25 @@ try
 
     app.UseHttpsRedirection();
 
+    var contentRoot = app.Environment.ContentRootPath;
+
+    var appDataPath = Path.Combine(contentRoot, "AppData");
+    if (!Directory.Exists(appDataPath))
+        Directory.CreateDirectory(appDataPath);
+
+    var webRoot = Path.Combine(contentRoot, "wwwroot");
+    if (!Directory.Exists(webRoot))
+        Directory.CreateDirectory(webRoot);
+
+    var contentProvider = new PhysicalFileProvider(contentRoot);
+    var webProvider = new PhysicalFileProvider(webRoot);
+
+    app.UseDefaultFiles(new DefaultFilesOptions { FileProvider = contentProvider });
+    app.UseStaticFiles(new StaticFileOptions { FileProvider = contentProvider });
+
     app.UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(app.Environment.ContentRootPath, "AppData")),
+        FileProvider = new PhysicalFileProvider(appDataPath),
         RequestPath = "/uploads"
     });
 
@@ -83,6 +102,8 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+
+    app.MapHub<LearningPlatform.API.Hubs.ChatHub>("/hubs/chat");
 
     app.MapHealthCheckEndpoints();
 

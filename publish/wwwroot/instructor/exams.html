@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | الامتحانات النهائية - المدرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; }
+
+/* ===== BUTTONS ===== */
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { opacity:0.9; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; border:none; font-weight:600; cursor:pointer; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-danger { background:var(--danger); color:#fff; }
+
+.form-control {
+  width:100%; padding:10px 14px; border:1px solid var(--border);
+  border-radius:var(--radius-sm); font-size:14px; font-family:'Cairo',sans-serif;
+  background:#f8fafc; transition:all 0.2s; outline:none;
+}
+.form-control:focus { border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--text); }
+
+/* ===== EXAM ITEM ===== */
+.exam-item {
+  display:flex; align-items:center; gap:16px; padding:16px;
+  border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px;
+  background:#fff; transition:transform 0.2s;
+}
+.exam-item:hover { box-shadow:var(--shadow); }
+.exam-icon {
+  width:50px; height:50px; border-radius:12px; display:flex;align-items:center;justify-content:center;
+  font-size:24px; background:#e0e7ff; color:#2563eb;
+}
+.exam-details { flex:1; }
+.exam-title { font-size:15px; font-weight:800; margin-bottom:4px; }
+.exam-meta { font-size:12px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; }
+.exam-actions { display:flex; gap:8px; flex-wrap:wrap; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.5); z-index:999;
+  display:none; justify-content:center; align-items:center;
+}
+.modal {
+  background:var(--card); border-radius:var(--radius); width:90%; max-width:600px;
+  max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg);
+}
+.modal-header {
+  padding:20px; border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.modal-title { font-size:18px; font-weight:800; }
+.modal-close { background:none; border:none; font-size:24px; color:var(--text-muted); cursor:pointer; }
+.modal-body { padding:20px; }
+.modal-footer { padding:20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:12px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+  .exam-item { flex-direction:column; align-items:flex-start; }
+  .exam-actions { width:100%; justify-content:flex-end; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">لوحة المدرب</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+      <span>كورساتي</span>
+    </a>
+    <a href="sections.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-list"></i></div>
+      <span>الأقسام والدروس</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div>
+      <span>البث المباشر</span>
+    </a>
+    <a href="quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div>
+      <span>الاختبارات</span>
+    </a>
+    <a href="exams.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span>الامتحانات النهائية</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+      <span>الاشتراكات والمحافظ</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>الشهادات والتكريمات</span>
+    </a>
+    <a href="gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+      <span>إدارة التحديات</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div>
+      <span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">مدرب</div>
+        <div class="role">مدرب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title" id="pageTitle">إدارة <span>الامتحانات النهائية</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title" style="margin-bottom:16px;"><i class="fas fa-filter" style="color:var(--primary);"></i> اختيار الكورس</div>
+        <div class="form-group" style="margin-bottom:0; max-width:400px;">
+          <label>اختر الكورس</label>
+          <select id="courseSelect" class="form-control" onchange="onCourseSelected()">
+            <option value="">-- يرجى اختيار الكورس --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" id="examCard" style="display:none;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> الامتحان النهائي للكورس</div>
+          <button class="btn-sm btn-primary" id="btnCreateExam" onclick="openCreateModal()" style="display:none;"><i class="fas fa-plus"></i> إنشاء امتحان نهائي</button>
+        </div>
+        <div id="examContainer">
+          <!-- Exam will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Create Exam -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">إنشاء امتحان نهائي للكورس</div>
+      <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>عنوان الامتحان</label>
+        <input type="text" id="examTitle" class="form-control" placeholder="مثال: الامتحان النهائي الشامل">
+      </div>
+      <div style="display:flex; gap:16px;">
+        <div class="form-group" style="flex:1;">
+          <label>المدة بالدقائق (اختياري)</label>
+          <input type="number" id="examTime" class="form-control" placeholder="مثال: 60">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>درجة النجاح (%)</label>
+          <input type="number" id="examPassing" class="form-control" placeholder="60" value="60">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>عدد المحاولات الأقصى (اختياري)</label>
+          <input type="number" id="examAttempts" class="form-control" placeholder="مثال: 1">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeCreateModal()">إلغاء</button>
+      <button class="btn-sm btn-primary" onclick="submitExam()" id="btnSubmitExam">إنشاء الامتحان</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Questions (multi-question builder) -->
+<div class="modal-overlay" id="questionModal">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-list-check"></i> إضافة أسئلة للامتحان</div>
+      <button class="modal-close" onclick="closeQuestionModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="qExamId">
+      <!-- Questions list being built -->
+      <div id="questionsList" style="display:flex;flex-direction:column;gap:16px;"></div>
+      <!-- Add another question button -->
+      <button class="btn-sm btn-outline" onclick="addQuestionBlock()" style="margin-top:12px;width:100%;padding:10px;border-style:dashed;">
+        <i class="fas fa-plus"></i> إضافة سؤال جديد
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeQuestionModal()">إلغاء</button>
+      <button class="btn-sm btn-primary" onclick="submitQuestions()" id="btnSubmitQuestion">
+        <i class="fas fa-save"></i> حفظ الأسئلة
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() {
+  return { 'Content-Type': 'application/json' };
+}
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() { return { json: async () => ({}), ok: false, status: 0 }; }
+
+// ===== INIT =====
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '../login.html'; }
+const userId = localStorage.getItem('userId');
+document.getElementById('sidebarUserName').innerText = localStorage.getItem('userName') || 'مدرب';
+
+// Dropdown
+async function initCourses() {
+  const select = document.getElementById('courseSelect');
+  try {
+    const res = await api(`${API_BASE}/v1/Courses`);
+    const data = await res.json();
+    let courses = data.data || [];
+    if (userId) courses = courses.filter(c => c.instructorId === userId);
+    
+    courses.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id; opt.textContent = c.title;
+      select.appendChild(opt);
+    });
+  } catch(e) {}
+}
+initCourses();
+
+function onCourseSelected() {
+  const courseId = document.getElementById('courseSelect').value;
+  if (!courseId) {
+    document.getElementById('examCard').style.display = 'none';
+    return;
+  }
+  document.getElementById('examCard').style.display = 'block';
+  loadExam();
+}
+
+// ===== LOAD EXAM =====
+async function loadExam() {
+  const courseId = document.getElementById('courseSelect').value;
+  const container = document.getElementById('examContainer');
+  const btnCreate = document.getElementById('btnCreateExam');
+  container.innerHTML = '<div class="text-center text-muted" style="padding:40px;">جارٍ التحميل...</div>';
+  btnCreate.style.display = 'none';
+  
+  if(!courseId) return;
+
+  try {
+    const res = await api(`${API_BASE}/v1/FinalExam/${courseId}`);
+    if (res.status === 404 || !res.ok) {
+      // No final exam exists yet
+      container.innerHTML = '<div class="text-center text-muted" style="padding:40px;">لا يوجد امتحان نهائي مخصص لهذا الكورس.</div>';
+      btnCreate.style.display = 'inline-flex';
+      return;
+    }
+    const data = await res.json();
+    const q = data.data;
+
+    if (!q) {
+      container.innerHTML = '<div class="text-center text-muted" style="padding:40px;">لا يوجد امتحان نهائي مخصص لهذا الكورس.</div>';
+      btnCreate.style.display = 'inline-flex';
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="exam-item">
+        <div class="exam-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="exam-details">
+          <div class="exam-title">${q.title} ${q.isPublished ? '<span style="font-size:10px;background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;">منشور</span>' : '<span style="font-size:10px;background:#fef3c7;color:#d97706;padding:2px 6px;border-radius:4px;">مسودة</span>'}</div>
+          <div class="exam-meta">
+            <span><i class="far fa-clock"></i> ${q.timeLimitInMinutes ? q.timeLimitInMinutes + ' دقيقة' : 'بدون وقت'}</span>
+            <span><i class="fas fa-check-double"></i> النجاح: ${q.passingScore}%</span>
+            <span><i class="fas fa-list-ol"></i> ${q.questions ? q.questions.length : 0} أسئلة</span>
+          </div>
+        </div>
+        <div class="exam-actions">
+          <button class="btn-sm btn-outline" style="border-color:var(--primary);color:var(--primary);" onclick="openQuestionModal('${q.id}')"><i class="fas fa-plus"></i> إضافة أسئلة</button>
+          ${!q.isPublished ? `<button class="btn-sm btn-success" onclick="publishExam('${q.id}')"><i class="fas fa-bullhorn"></i> نشر</button>` : ''}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = '<div class="text-center text-muted" style="color:var(--danger);padding:40px;">حدث خطأ في التحميل</div>';
+  }
+}
+
+// ===== CREATE EXAM =====
+function openCreateModal() {
+  document.getElementById('examTitle').value = 'الامتحان النهائي';
+  document.getElementById('examTime').value = '60';
+  document.getElementById('examPassing').value = '60';
+  document.getElementById('examAttempts').value = '1';
+  document.getElementById('createModal').style.display = 'flex';
+}
+function closeCreateModal() { document.getElementById('createModal').style.display = 'none'; }
+
+async function submitExam() {
+  const courseId = document.getElementById('courseSelect').value;
+  const title = document.getElementById('examTitle').value.trim();
+  const timeLimit = parseInt(document.getElementById('examTime').value) || null;
+  const passing = parseInt(document.getElementById('examPassing').value) || 60;
+  const maxAttempts = parseInt(document.getElementById('examAttempts').value) || null;
+
+  if (!title) { alert('أدخل عنوان الامتحان'); return; }
+
+  const btn = document.getElementById('btnSubmitExam');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> حفظ...';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/CreateQuiz`, {
+      method: 'POST',
+      body: JSON.stringify({
+        title: title,
+        scope: 3, // 3 = Course (not 1 which is Lesson)
+        courseId: courseId,
+        lessonId: null,
+        isFinalExam: true,
+        timeLimitInMinutes: timeLimit,
+        passingScore: passing,
+        maxAttempts: maxAttempts
+      })
+    });
+    
+    if (res.ok) {
+      closeCreateModal();
+      loadExam();
+    } else {
+      const errData = await res.json();
+      alert('حدث خطأ: ' + (errData.message || JSON.stringify(errData.errors || '')));
+    }
+  } catch (e) {
+    alert('حدث خطأ بالاتصال');
+  }
+  btn.disabled = false; btn.innerText = 'إنشاء الامتحان';
+}
+
+// ===== ADD QUESTIONS (multi-question builder) =====
+let questionBlockCount = 0;
+
+function questionBlockHTML(idx) {
+  return `
+  <div class="question-block" id="qblock-${idx}" style="background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-weight:800;font-size:14px;color:var(--primary);"><i class="fas fa-circle-question"></i> سؤال ${idx + 1}</div>
+      ${idx > 0 ? `<button onclick="removeQuestionBlock(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;"><i class="fas fa-times"></i></button>` : ''}
+    </div>
+    <div class="form-group">
+      <label>نص السؤال *</label>
+      <textarea class="form-control qb-text" rows="2" placeholder="أدخل نص السؤال"></textarea>
+    </div>
+    <div class="form-group">
+      <label>شرح السؤال (اختياري)</label>
+      <input type="text" class="form-control qb-explanation" placeholder="شرح الإجابة الصحيحة...">
+    </div>
+    <div style="display:flex;gap:12px;">
+      <div class="form-group" style="flex:1;">
+        <label>الدرجة</label>
+        <input type="number" class="form-control qb-points" value="1" min="1">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label>نوع السؤال</label>
+        <select class="form-control qb-type">
+          <option value="MultipleChoice">اختيار من متعدد</option>
+          <option value="SingleChoice">اختيار واحد</option>
+          <option value="TrueFalse">صح / خطأ</option>
+        </select>
+      </div>
+    </div>
+    <div style="font-weight:700;font-size:13px;margin-bottom:8px;">الإجابات <span style="color:var(--text-muted);font-weight:400;font-size:11px;">(اختر الصحيحة بالراديو)</span></div>
+    <div class="qb-answers-container">
+      ${[1,2,3,4].map(n => `
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <input type="radio" name="qb-correct-${idx}" value="${n-1}" ${n===1?'checked':''}>
+        <input type="text" class="form-control qb-answer" placeholder="الخيار ${n}">
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function addQuestionBlock() {
+  const list = document.getElementById('questionsList');
+  const div  = document.createElement('div');
+  div.innerHTML = questionBlockHTML(questionBlockCount);
+  list.appendChild(div.firstElementChild);
+  questionBlockCount++;
+}
+
+function removeQuestionBlock(idx) {
+  const el = document.getElementById(`qblock-${idx}`);
+  if (el) el.remove();
+}
+
+function openQuestionModal(examId) {
+  document.getElementById('qExamId').value = examId;
+  document.getElementById('questionsList').innerHTML = '';
+  questionBlockCount = 0;
+  addQuestionBlock();
+  document.getElementById('questionModal').style.display = 'flex';
+}
+function closeQuestionModal() { document.getElementById('questionModal').style.display = 'none'; }
+
+async function submitQuestions() {
+  const examId  = document.getElementById('qExamId').value;
+  const blocks  = document.querySelectorAll('#questionsList .question-block');
+
+  if (blocks.length === 0) { alert('أضف سؤالاً واحداً على الأقل'); return; }
+
+  const questions = [];
+  let valid = true;
+
+  blocks.forEach((block, bi) => {
+    const text        = block.querySelector('.qb-text').value.trim();
+    const explanation = block.querySelector('.qb-explanation').value.trim();
+    const points      = parseInt(block.querySelector('.qb-points').value) || 1;
+    const type        = block.querySelector('.qb-type').value;
+    const answerInputs = block.querySelectorAll('.qb-answer');
+    const correctRadio = block.querySelector(`input[name^="qb-correct"]:checked`);
+    const correctIdx   = correctRadio ? parseInt(correctRadio.value) : 0;
+
+    if (!text) { alert(`سؤال ${bi+1}: أدخل نص السؤال`); valid = false; return; }
+
+    const answers = [];
+    answerInputs.forEach((inp, i) => {
+      const val = inp.value.trim();
+      if (val) answers.push({ text: val, isCorrect: i === correctIdx });
+    });
+
+    if (answers.length < 2) { alert(`سؤال ${bi+1}: أدخل خيارين على الأقل`); valid = false; return; }
+    if (!answers.some(a => a.isCorrect)) { alert(`سؤال ${bi+1}: حدد الإجابة الصحيحة`); valid = false; return; }
+
+    questions.push({ text, explanation: explanation || null, points, type, answers });
+  });
+
+  if (!valid || questions.length === 0) return;
+
+  const btn = document.getElementById('btnSubmitQuestion');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/AddQuestions`, {
+      method: 'POST',
+      body: JSON.stringify({ quizId: examId, questions })
+    });
+
+    if (res.ok) {
+      alert(`تمت إضافة ${questions.length} سؤال/أسئلة بنجاح ✔️`);
+      closeQuestionModal();
+      loadExam();
+    } else {
+      const errData = await res.json();
+      alert('فشل إضافة الأسئلة: ' + (errData.message || ''));
+    }
+  } catch(e) { alert('خطأ في الاتصال'); }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-save"></i> حفظ الأسئلة';
+}
+
+// ===== PUBLISH EXAM =====
+async function publishExam(examId) {
+  if(!confirm('هل أنت متأكد من نشر هذا الامتحان للطلاب؟')) return;
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/PublishQuiz`, {
+      method: 'POST',
+      body: JSON.stringify({ quizId: examId })
+    });
+    if(res.ok) {
+      loadExam();
+    } else {
+      alert('لا يمكن نشر الامتحان الآن. تأكد من إضافة أسئلة له أولاً.');
+    }
+  } catch(e) {}
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = '../index.html';
+});
+</script>
+</body>
+</html>

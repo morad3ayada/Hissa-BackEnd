@@ -29,6 +29,12 @@ public interface IRepository<T> where T : BaseEntity
     Task<T?> GetTrackedAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Change-tracked list lookup, for mutating multiple entities in one round-trip
+    /// (e.g. marking a batch of messages as read) without re-querying per entity.
+    /// </summary>
+    Task<IReadOnlyList<T>> GetTrackedListAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Escape hatch for read-only queries that need Include/projection composed by the
     /// caller (e.g. list endpoints), so they don't pay for N+1 loads through the
     /// simpler Get/Find methods above.

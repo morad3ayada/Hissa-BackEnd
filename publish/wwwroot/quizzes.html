@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | اختبار الدرس</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --success: #10b981;
+  --danger: #ef4444;
+  --accent: #f59e0b;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo { padding: 20px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1e293b; }
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user { padding: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto; }
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+.nav-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer; color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px; text-decoration:none; }
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+.mobile-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99; }
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); flex-shrink:0;
+}
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.back-btn { background:none; border:none; font-size:20px; cursor:pointer; color:var(--text); padding:6px 10px; border-radius:8px; display:flex; align-items:center; gap:4px; }
+.back-btn:hover { background:var(--bg); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn { padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444; font-weight:600; cursor:pointer; font-size:12px; }
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content { flex:1; overflow-y:auto; }
+.content-inner { max-width:820px; width:100%; margin:0 auto; padding:24px; }
+.card { background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); border:1px solid var(--border); margin-bottom:16px; }
+.lesson-title { font-size:20px; font-weight:900; margin-bottom:4px; display:flex; align-items:center; gap:10px; }
+.lesson-sub { font-size:13px; color:var(--text-muted); margin-bottom:20px; }
+
+.btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:10px; border:none; font-weight:700; font-size:13px; cursor:pointer; font-family:'Cairo',sans-serif; transition:0.2s; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:var(--primary-dark); }
+.btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
+.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--text); }
+.btn-outline:hover { background:var(--bg); }
+
+.empty-state { text-align:center; padding:40px 20px; color:var(--text-muted); }
+.empty-state i { font-size:42px; margin-bottom:14px; display:block; }
+.loading { text-align:center; padding:40px; color:var(--text-muted); }
+.loading i { font-size:26px; display:block; margin-bottom:10px; color:var(--primary); }
+
+/* Quiz list */
+.quiz-card { display:flex; align-items:center; gap:16px; padding:16px; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+.quiz-card:last-child { margin-bottom:0; }
+.quiz-card-icon { font-size:30px; flex-shrink:0; }
+.quiz-card-info { flex:1; min-width:0; }
+.quiz-card-info h3 { font-size:15px; font-weight:800; margin-bottom:6px; }
+.quiz-card-meta { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--text-muted); }
+.quiz-card-meta span { display:flex; align-items:center; gap:5px; }
+
+/* Quiz taking */
+.quiz-meta-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+.quiz-meta-bar h2 { font-size:18px; font-weight:800; }
+.quiz-timer { background:var(--primary-light); color:var(--primary-dark); padding:6px 14px; border-radius:20px; font-weight:800; font-size:14px; }
+.quiz-timer.low { background:#fee2e2; color:var(--danger); }
+.q-card { border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:14px; }
+.q-header { font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between; }
+.q-text { font-size:15px; font-weight:700; margin-bottom:14px; }
+.q-options { display:flex; flex-direction:column; gap:8px; }
+.q-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; font-size:14px; transition:0.2s; }
+.q-option:hover { border-color:var(--primary); background:var(--primary-light); }
+.q-option input { width:17px; height:17px; accent-color:var(--primary); cursor:pointer; }
+
+/* Result */
+.result-banner { text-align:center; padding:24px; border-radius:var(--radius); margin-bottom:20px; }
+.result-banner.pass { background:#d1fae5; color:#065f46; }
+.result-banner.fail { background:#fee2e2; color:#991b1b; }
+.result-icon { font-size:48px; margin-bottom:8px; }
+.result-banner h2 { font-size:20px; font-weight:900; margin-bottom:8px; }
+.result-score { font-size:36px; font-weight:900; margin-bottom:6px; }
+.result-sub { font-size:13px; opacity:0.85; }
+.review-item { border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; margin-bottom:10px; }
+.review-item.correct { border-color:#bbf7d0; background:#f0fdf4; }
+.review-item.wrong { border-color:#fecaca; background:#fef2f2; }
+.review-q { font-size:14px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; gap:8px; }
+.review-line { font-size:13px; color:var(--text-muted); margin-bottom:4px; }
+.review-line.correct-line { color:#059669; font-weight:600; }
+.review-explain { font-size:12px; color:#92400e; background:#fef3c7; padding:8px 10px; border-radius:8px; margin-top:8px; }
+
+/* Aggregate "all my quizzes" view */
+.quiz-group { margin-bottom:22px; }
+.quiz-group:last-child { margin-bottom:0; }
+.quiz-group-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:flex; }
+  .content-inner { padding:16px; }
+  .topbar { padding:0 16px; height:60px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">القائمة</div>
+    <a href="student/dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div><span>الرئيسية</span>
+    </a>
+    <a href="student/courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div><span>كورساتي</span>
+    </a>
+    <a href="student/getallcourses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-store"></i></div><span>كل الكورسات</span>
+    </a>
+    <a href="quizzes.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div><span>الاختبارات</span>
+    </a>
+    <a href="final-exam.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div><span>الامتحان النهائي</span>
+    </a>
+    <a href="student/live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div><span>البث المباشر</span>
+    </a>
+    <a href="student/gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-trophy"></i></div><span>الألعاب والتحديات</span>
+    </a>
+    <a href="student/certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>شهاداتي</span>
+    </a>
+    <a href="student/profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div><span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='student/profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">طالب</div>
+        <div class="role">طالب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></button>
+      <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i></button>
+      <div class="topbar-title" id="topbarTitle">الاختبارات</div>
+    </div>
+    <div class="topbar-actions">
+      <div style="position:relative;cursor:pointer;" onclick="showNotifications()">
+        <i class="fas fa-bell" style="font-size:20px;color:var(--text-muted);"></i>
+        <span id="notifBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;display:none;">0</span>
+      </div>
+      <div class="user-avatar" onclick="window.location.href='student/profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+        <span class="uname" id="topbarUserName">طالب</span>
+      </div>
+      <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+    </div>
+  </header>
+
+  <div class="content"><div class="content-inner">
+    <!-- ===== QUIZ LIST ===== -->
+    <div id="quizListSection">
+      <div class="card">
+        <div class="lesson-title" id="lessonTitleHeader"><i class="fas fa-pen" style="color:var(--primary);"></i> اختبارات الدرس</div>
+        <div class="lesson-sub" id="lessonSub">اختر اختبارًا لبدء المحاولة</div>
+        <div id="quizListContainer">
+          <div class="loading"><i class="fas fa-spinner fa-spin"></i> جارٍ تحميل الاختبارات...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== QUIZ TAKING ===== -->
+    <div id="quizTakingSection" class="card" style="display:none;">
+      <div class="quiz-meta-bar">
+        <h2 id="quizTitle"></h2>
+        <span class="quiz-timer" id="quizTimer" style="display:none;"></span>
+      </div>
+      <div id="questionsContainer"></div>
+      <button class="btn btn-primary" id="submitQuizBtn" style="width:100%;justify-content:center;margin-top:8px;"><i class="fas fa-check-circle"></i> إنهاء وتسليم الاختبار</button>
+    </div>
+
+    <!-- ===== RESULT ===== -->
+    <div id="quizResultSection" class="card" style="display:none;">
+      <div id="resultCard"></div>
+    </div>
+  </div></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+const urlParams = new URLSearchParams(window.location.search);
+const lessonId = urlParams.get('lessonId');
+const courseId = urlParams.get('courseId');
+
+function getToken() { return localStorage.getItem('token'); }
+function authHeaders() {
+  return { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' };
+}
+function headers() { return { 'Content-Type': 'application/json' }; }
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = 'login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+if (!getToken()) { window.location.href = 'login.html'; }
+if (localStorage.getItem('userRole') !== 'Student') {
+  alert('هذه الصفحة مخصصة للطلاب فقط');
+  window.location.href = 'index.html';
+}
+
+let activeCourseId = courseId || null;
+
+function goBack() {
+  if (activeCourseId) window.location.href = `watch-courses.html?id=${activeCourseId}`;
+  else if (lessonId) history.back();
+  else window.location.href = 'student/dashboard.html';
+}
+
+function updateUI() {
+  const name = localStorage.getItem('userName') || 'طالب';
+  document.getElementById('topbarUserName').innerText = name.split(' ')[0];
+  document.getElementById('sidebarUserName').innerText = name;
+  const av = localStorage.getItem('avatarUrl');
+  if (av) document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = av);
+}
+updateUI();
+
+async function loadProfileAvatar() {
+  try {
+    const res = await api(`${API_BASE}/v1/Profile`);
+    const data = await res.json();
+    if (data.succeeded && data.data?.profilePictureUrl) {
+      localStorage.setItem('avatarUrl', data.data.profilePictureUrl);
+      document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = data.data.profilePictureUrl);
+    }
+  } catch {}
+}
+loadProfileAvatar();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.getElementById('sidebar').classList.remove('open');
+});
+
+// ============ QUIZ FLOW ============
+let currentQuiz = null;
+let quizStartedAt = null;
+let timerInterval = null;
+
+function showListError(msg) {
+  document.getElementById('quizListContainer').innerHTML = `<div class="empty-state" style="color:var(--danger);"><i class="fas fa-exclamation-triangle"></i><h3>${msg}</h3></div>`;
+}
+
+function loadQuizzesEntry() {
+  if (lessonId) {
+    document.getElementById('topbarTitle').innerText = 'اختبار الدرس';
+    document.getElementById('lessonTitleHeader').innerHTML = '<i class="fas fa-pen" style="color:var(--primary);"></i> اختبارات الدرس';
+    document.getElementById('lessonSub').innerText = 'اختر اختبارًا لبدء المحاولة';
+    loadLessonQuizzes();
+  } else {
+    document.getElementById('topbarTitle').innerText = 'كل اختباراتي';
+    document.getElementById('lessonTitleHeader').innerHTML = '<i class="fas fa-clipboard-list" style="color:var(--primary);"></i> كل اختباراتي';
+    document.getElementById('lessonSub').innerText = 'كل الاختبارات المتاحة في كورساتك المسجَّلة';
+    loadAllMyQuizzes();
+  }
+}
+
+async function loadAllMyQuizzes() {
+  const container = document.getElementById('quizListContainer');
+  container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جارٍ تحميل اختباراتك...</div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/GetLessonQuizzes`);
+    const data = await res.json();
+    if (!res.ok) { showListError(data.message || 'تعذر تحميل الاختبارات'); return; }
+    renderAllQuizzesList(data.data || []);
+  } catch {
+    showListError('تعذر تحميل الاختبارات');
+  }
+}
+
+function renderAllQuizzesList(quizzes) {
+  const container = document.getElementById('quizListContainer');
+  if (!quizzes.length) {
+    container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-question"></i><h3>لا توجد اختبارات متاحة في كورساتك حالياً</h3></div>`;
+    return;
+  }
+  const byCourse = new Map();
+  quizzes.forEach(q => {
+    if (!byCourse.has(q.courseTitle)) byCourse.set(q.courseTitle, []);
+    byCourse.get(q.courseTitle).push(q);
+  });
+
+  container.innerHTML = [...byCourse.entries()].map(([courseTitle, list]) => `
+    <div class="quiz-group">
+      <div class="quiz-group-title"><i class="fas fa-book"></i> ${courseTitle}</div>
+      ${list.map(q => `
+        <div class="quiz-card">
+          <div class="quiz-card-icon">📝</div>
+          <div class="quiz-card-info">
+            <h3>${q.quizTitle}</h3>
+            <div class="quiz-card-meta">
+              <span><i class="fas fa-layer-group"></i> ${q.lessonTitle}</span>
+              <span><i class="fas fa-list-ol"></i> ${q.questionsCount} سؤال</span>
+              ${q.timeLimitInMinutes ? `<span><i class="fas fa-clock"></i> ${q.timeLimitInMinutes} دقيقة</span>` : ''}
+              <span><i class="fas fa-star"></i> نجاح ${q.passingScore}%</span>
+              ${q.maxAttempts ? `<span><i class="fas fa-redo"></i> أقصى ${q.maxAttempts} محاولات</span>` : ''}
+            </div>
+          </div>
+          <button class="btn btn-primary start-quiz-btn" data-quiz-id="${q.quizId}" data-course-id="${q.courseId}"><i class="fas fa-play"></i> ابدأ</button>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.start-quiz-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCourseId = btn.dataset.courseId;
+      startQuiz(btn.dataset.quizId);
+    });
+  });
+}
+
+async function loadLessonQuizzes() {
+  if (!lessonId) { showListError('لم يتم تحديد الدرس'); return; }
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/GetLessonQuizzes/${lessonId}`);
+    const data = await res.json();
+    if (!res.ok) { showListError(data.message || 'تعذر تحميل الاختبارات، تأكد أنك مسجل في هذا الكورس'); return; }
+    renderQuizList(data.data || []);
+  } catch { showListError('حدث خطأ أثناء تحميل الاختبارات'); }
+}
+
+function renderQuizList(quizzes) {
+  const container = document.getElementById('quizListContainer');
+  if (!quizzes.length) {
+    container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-question"></i><h3>لا يوجد اختبار متاح لهذا الدرس بعد</h3></div>`;
+    return;
+  }
+  container.innerHTML = quizzes.map(q => `
+    <div class="quiz-card">
+      <div class="quiz-card-icon">${q.isFinalExam ? '🎓' : '📝'}</div>
+      <div class="quiz-card-info">
+        <h3>${q.title}</h3>
+        <div class="quiz-card-meta">
+          <span><i class="fas fa-list-ol"></i> ${q.questionsCount} سؤال</span>
+          ${q.timeLimitInMinutes ? `<span><i class="fas fa-clock"></i> ${q.timeLimitInMinutes} دقيقة</span>` : ''}
+          <span><i class="fas fa-star"></i> نجاح ${q.passingScore}%</span>
+          ${q.maxAttempts ? `<span><i class="fas fa-redo"></i> أقصى ${q.maxAttempts} محاولات</span>` : ''}
+        </div>
+      </div>
+      <button class="btn btn-primary start-quiz-btn" data-quiz-id="${q.id}"><i class="fas fa-play"></i> ابدأ</button>
+    </div>
+  `).join('');
+  container.querySelectorAll('.start-quiz-btn').forEach(btn => {
+    btn.addEventListener('click', () => startQuiz(btn.dataset.quizId));
+  });
+}
+
+async function startQuiz(quizId) {
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/GetQuiz/${quizId}`);
+    const data = await res.json();
+    if (!res.ok) { alert(data.message || 'تعذر تحميل الاختبار'); return; }
+    currentQuiz = data.data;
+    quizStartedAt = new Date().toISOString();
+    renderQuizTaking();
+  } catch { alert('حدث خطأ أثناء تحميل الاختبار'); }
+}
+
+function renderQuizTaking() {
+  document.getElementById('quizListSection').style.display = 'none';
+  document.getElementById('quizResultSection').style.display = 'none';
+  document.getElementById('quizTakingSection').style.display = '';
+  document.getElementById('quizTitle').innerText = currentQuiz.title;
+
+  document.getElementById('questionsContainer').innerHTML = currentQuiz.questions.map((q, idx) => `
+    <div class="q-card">
+      <div class="q-header"><span>سؤال ${idx + 1} من ${currentQuiz.questions.length}</span><span>${q.points} نقطة</span></div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-options">
+        ${q.answers.map(a => `
+          <label class="q-option">
+            <input type="radio" name="q_${q.id}" value="${a.id}">
+            <span>${a.text}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const timerEl = document.getElementById('quizTimer');
+  if (currentQuiz.timeLimitInMinutes) startTimer(currentQuiz.timeLimitInMinutes * 60);
+  else timerEl.style.display = 'none';
+
+  const submitBtn = document.getElementById('submitQuizBtn');
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إنهاء وتسليم الاختبار';
+}
+
+function startTimer(totalSeconds) {
+  const el = document.getElementById('quizTimer');
+  el.style.display = '';
+  let remaining = totalSeconds;
+  const tick = () => {
+    const m = Math.floor(remaining / 60), s = remaining % 60;
+    el.innerHTML = `<i class="fas fa-clock"></i> ${m}:${String(s).padStart(2, '0')}`;
+    el.classList.toggle('low', remaining <= 60);
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      alert('انتهى الوقت المحدد، سيتم تسليم الاختبار تلقائياً');
+      submitQuiz();
+      return;
+    }
+    remaining--;
+  };
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+async function submitQuiz() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+  const answers = currentQuiz.questions.map(q => {
+    const checked = document.querySelector(`input[name="q_${q.id}"]:checked`);
+    return { questionId: q.id, selectedAnswerId: checked ? checked.value : null };
+  });
+  const unansweredCount = answers.filter(a => !a.selectedAnswerId).length;
+  if (unansweredCount > 0 && !confirm(`لسه في ${unansweredCount} سؤال من غير إجابة، عايز تسلّم الاختبار برضو؟`)) return;
+
+  const submitBtn = document.getElementById('submitQuizBtn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ التسليم...';
+
+  try {
+    const res = await api(`${API_BASE}/v1/Quizzes/${currentQuiz.id}/Submit`, {
+      method: 'POST',
+      body: JSON.stringify({ quizId: currentQuiz.id, startedAt: quizStartedAt, answers })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.message || 'تعذر تسليم الاختبار');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إنهاء وتسليم الاختبار';
+      return;
+    }
+    renderResult(data.data);
+  } catch {
+    alert('حدث خطأ أثناء تسليم الاختبار');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إنهاء وتسليم الاختبار';
+  }
+}
+
+function renderResult(result) {
+  document.getElementById('quizTakingSection').style.display = 'none';
+  document.getElementById('quizResultSection').style.display = '';
+  const passed = result.isPassed;
+  document.getElementById('resultCard').innerHTML = `
+    <div class="result-banner ${passed ? 'pass' : 'fail'}">
+      <div class="result-icon">${passed ? '🎉' : '😕'}</div>
+      <h2>${passed ? 'مبروك! نجحت في الاختبار' : 'للأسف لم تجتز الاختبار'}</h2>
+      <div class="result-score">${result.score}%</div>
+      <div class="result-sub">${result.correctAnswers} من ${result.totalQuestions} إجابة صحيحة • محاولة رقم ${result.attemptNumber}</div>
+    </div>
+    <div class="review-list">
+      ${result.answers.map((a, idx) => `
+        <div class="review-item ${a.isCorrect ? 'correct' : 'wrong'}">
+          <div class="review-q"><span>${idx + 1}. ${a.questionText}</span><span>${a.isCorrect ? '✅' : '❌'}</span></div>
+          <div class="review-line">إجابتك: ${a.studentAnswerText || 'لم تُجب'}</div>
+          ${!a.isCorrect ? `<div class="review-line correct-line">الإجابة الصحيحة: ${a.correctAnswerText || '—'}</div>` : ''}
+          ${a.explanation ? `<div class="review-explain"><i class="fas fa-lightbulb"></i> ${a.explanation}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="goBackToQuizList()"><i class="fas fa-list"></i> اختبارات أخرى</button>
+      <button class="btn btn-primary" onclick="goBack()"><i class="fas fa-arrow-right"></i> رجوع للكورس</button>
+    </div>
+  `;
+}
+
+function goBackToQuizList() {
+  document.getElementById('quizResultSection').style.display = 'none';
+  document.getElementById('quizListSection').style.display = '';
+  loadQuizzesEntry();
+}
+
+document.getElementById('submitQuizBtn').addEventListener('click', submitQuiz);
+document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'index.html'; });
+
+loadQuizzesEntry();
+</script>
+
+<!-- Notifications Modal -->
+<div id="notifModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;">
+  <div style="background:#1e293b;border-radius:16px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto;border:1px solid #334155;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155;position:sticky;top:0;background:#1e293b;z-index:1;">
+      <h3 style="font-size:16px;font-weight:800;color:#fff;"><i class="fas fa-bell" style="color:var(--primary);margin-left:8px;"></i>الإشعارات</h3>
+      <div style="display:flex;gap:8px;">
+        <button onclick="markAllAsRead()" style="padding:4px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif;">قراءة الكل</button>
+        <button onclick="closeNotifModal()" style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+      </div>
+    </div>
+    <div id="notifList" style="padding:16px;">
+      <div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NOTIFICATIONS =====
+async function loadUnreadCount() {
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/UnreadCount`);
+    const data = await res.json();
+    const count = data.data || 0;
+    const badge = document.getElementById('notifBadge');
+    if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; }
+    else { badge.style.display = 'none'; }
+  } catch {}
+}
+
+async function showNotifications() {
+  document.getElementById('notifModal').style.display = 'flex';
+  document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/MyNotifications`);
+    const data = await res.json();
+    const notifs = data.data || data || [];
+    const list = document.getElementById('notifList');
+
+    if (!notifs.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;"><i class="fas fa-bell-slash" style="font-size:40px;display:block;margin-bottom:10px;"></i>لا توجد إشعارات</div>';
+      return;
+    }
+
+    list.innerHTML = notifs.map(n => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #334155;border-radius:10px;margin-bottom:8px;${n.isRead ? 'opacity:0.6;' : 'background:rgba(37,99,235,0.08);border-color:#2563eb;'}"
+           onclick="${n.isRead ? '' : `markAsRead('${n.id}')`}">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:#fff;">${n.title || ''}</div>
+          <div style="font-size:12px;color:#94a3b8;">${n.message || n.body || ''}</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+        </div>
+        <button onclick="event.stopPropagation();deleteNotif('${n.id}')" style="background:none;border:none;color:#ef4444;font-size:14px;cursor:pointer;padding:4px;"><i class="fas fa-trash"></i></button>
+      </div>
+    `).join('');
+  } catch {
+    document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ فشل تحميل الإشعارات</div>';
+  }
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal').style.display = 'none';
+}
+
+async function markAsRead(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAsRead/${id}`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function markAllAsRead() {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAllAsRead`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function deleteNotif(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/Delete/${id}`, { method: 'DELETE' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+document.getElementById('notifModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+
+loadUnreadCount();
+setInterval(loadUnreadCount, 30000);
+</script>
+</body>
+</html>

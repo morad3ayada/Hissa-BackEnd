@@ -2,6 +2,7 @@ using LearningPlatform.Application.Common.Interfaces;
 using LearningPlatform.Application.Features.Authentication.Interfaces;
 using LearningPlatform.Infrastructure.Cache;
 using LearningPlatform.Infrastructure.Certificates;
+using LearningPlatform.Infrastructure.Chat;
 using LearningPlatform.Infrastructure.Email;
 using LearningPlatform.Infrastructure.FileStorage;
 using LearningPlatform.Infrastructure.Services;
@@ -19,6 +20,7 @@ public static class DependencyInjection
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IPresenceTracker, PresenceTracker>();
 
         var cacheSettings = configuration.GetSection(CacheSettings.SectionName).Get<CacheSettings>() ?? new CacheSettings();
         services.Configure<CacheSettings>(configuration.GetSection(CacheSettings.SectionName));
@@ -35,7 +37,10 @@ public static class DependencyInjection
 
         services.AddScoped<ICacheService, CacheService>();
 
-        services.AddScoped<IEmailService, LoggingEmailService>();
+        services.Configure<MailSettings>(configuration.GetSection(MailSettings.SectionName));
+        services.AddScoped<IEmailService, SmtpEmailService>();
+
+        services.AddScoped<IBookingEligibilityService, BookingEligibilityService>();
 
         // NOTE: ISmsService and IPaymentService are defined as contracts in
         // Application.Common.Interfaces. Concrete (vendor-backed) implementations will be

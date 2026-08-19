@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+    <title>تسجيل الدخول | منصة تعليم ذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at 10% 30%, #0a0f2a, #030617);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* animated background particles */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(250, 204, 21, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            animation: subtleMove 20s linear infinite;
+        }
+
+        @keyframes subtleMove {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 40px 40px;
+            }
+        }
+
+        /* main card */
+        .glass-card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            border: 1px solid rgba(250, 204, 21, 0.25);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(250, 204, 21, 0.1);
+            padding: 2rem 1.8rem;
+            transition: transform 0.3s ease, box-shadow 0.4s;
+            animation: floatUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 2;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 35px 55px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(250, 204, 21, 0.4);
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 6vw, 2rem);
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #FFE6A3, #FACC15);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        h2 i {
+            background: none;
+            color: #facc15;
+            font-size: 1.8rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #a0b3d9;
+            font-size: 0.85rem;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px dashed rgba(250, 204, 21, 0.3);
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 6px;
+        }
+
+        /* inputs group */
+        .input-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #facc15;
+            font-size: 1rem;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 1;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px 45px 14px 18px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            background: rgba(10, 20, 35, 0.8);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.2rem;
+            outline: none;
+            color: #fff;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
+
+        .input:focus {
+            border-color: #facc15;
+            background: rgba(10, 20, 35, 0.95);
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+            transform: scale(1.01);
+        }
+
+        .input::placeholder {
+            color: #9aaec7;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        /* modern button */
+        .btn-glow {
+            width: 100%;
+            background: linear-gradient(95deg, #facc15, #ffdf6e);
+            border: none;
+            padding: 14px;
+            border-radius: 2rem;
+            font-weight: 800;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            color: #0a0f2a;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.2);
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #ffe069, #facc15);
+            box-shadow: 0 15px 25px rgba(250, 204, 21, 0.35);
+        }
+
+        .btn-glow:active {
+            transform: translateY(1px);
+        }
+
+        /* modern loader */
+        .loader-modern {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 18px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 60px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .loader-modern span {
+            width: 8px;
+            height: 8px;
+            background: #facc15;
+            border-radius: 50%;
+            display: inline-block;
+            animation: wave 1.2s infinite ease-in-out both;
+        }
+
+        .loader-modern span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loader-modern span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .loader-modern span:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.6);
+                opacity: 0.4;
+            }
+
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .msg-area {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px;
+            border-radius: 40px;
+            transition: all 0.2s;
+            word-break: break-word;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 0.85rem;
+            color: #b9c7e3;
+        }
+
+        .link a {
+            color: #facc15;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.2s;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .link a:hover {
+            border-bottom-color: #facc15;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .glass-card {
+                padding: 1.5rem 1.2rem;
+                border-radius: 1.5rem;
+            }
+
+            .input {
+                padding: 12px 40px 12px 14px;
+                font-size: 0.9rem;
+            }
+
+            .btn-glow {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            h2 i {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .glass-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .input {
+                padding: 11px 38px 11px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass-card">
+        <div style="text-align:left;margin-bottom:8px;">
+            <a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:14px;font-weight:600;transition:0.2s;display:inline-flex;align-items:center;gap:6px;" onmouseover="this.style.color='#facc15'" onmouseout="this.style.color='#94a3b8'">
+                <i class="fas fa-arrow-right"></i> العودة للرئيسية
+            </a>
+        </div>
+        <h2>
+            <i class="fas fa-key"></i>
+            تسجيل الدخول
+        </h2>
+        <div style="text-align: center;">
+            <span class="sub">مرحباً بعودتك! سجل الدخول إلى حسابك</span>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="text" id="loginContact" class="input" placeholder="البريد الإلكتروني أو رقم الهاتف"
+                autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPassword" class="input" placeholder="كلمة المرور" autocomplete="off">
+        </div>
+
+        <button class="btn-glow" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i>
+            دخول
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <div class="loader-modern" id="loaderModern">
+            <span></span><span></span><span></span>
+            <span style="color:#facc15; margin-right:6px;">جاري التحقق...</span>
+        </div>
+        <div class="msg-area" id="msg"></div>
+
+        <div class="link">
+            <i class="fas fa-user-plus"></i> ليس لديك حساب؟
+            <a href="register.html">إنشاء حساب جديد</a>
+        </div>
+    </div>
+
+    <script>
+       (function () {
+    // ========== 1. عناصر الصفحة ==========
+    const contactInput = document.getElementById('loginContact');
+    const passwordInput = document.getElementById('loginPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const loaderDiv = document.getElementById('loaderModern');
+    const msgDiv = document.getElementById('msg');
+
+    const BASE_URL = "https://numeriqan.com/api";
+
+    // Helper: عرض رسالة للمستخدم
+    function showMessage(text, isError = true) {
+        msgDiv.innerHTML = isError
+            ? `<i class="fas fa-exclamation-triangle"></i> ${text}`
+            : `<i class="fas fa-check-circle"></i> ${text}`;
+
+        msgDiv.style.color = isError ? '#ffb347' : '#b9f6ca';
+        msgDiv.style.background = isError
+            ? 'rgba(255,100,50,0.1)'
+            : 'rgba(100,255,100,0.1)';
+
+        msgDiv.style.borderRadius = '40px';
+        msgDiv.style.padding = '8px 12px';
+
+        if (isError) {
+            setTimeout(() => {
+                if (msgDiv.innerHTML.includes(text)) {
+                    msgDiv.style.background = 'transparent';
+                    msgDiv.innerHTML = '';
+                }
+            }, 4000);
+        }
+    }
+
+    function clearMessage() {
+        msgDiv.innerHTML = '';
+        msgDiv.style.background = 'transparent';
+    }
+
+    // ========== 2. LOGIN API ==========
+    async function loginUser() {
+        clearMessage();
+
+        const email = contactInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            showMessage("❌ من فضلك أدخل البريد وكلمة المرور");
+            return;
+        }
+
+        try {
+            // UI loading
+            loaderDiv.style.display = 'flex';
+            loginBtn.disabled = true;
+
+            const response = await fetch(`${BASE_URL}/v1/Auth/Login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "accept": "text/plain"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
+
+            const data = await response.json();
+
+            loaderDiv.style.display = 'none';
+            loginBtn.disabled = false;
+
+            if (!response.ok || !data.succeeded) {
+                showMessage(data.message || "❌ بيانات الدخول غير صحيحة");
+                return;
+            }
+
+            const profile = data.data;
+
+            localStorage.setItem("token", profile.accessToken);
+            localStorage.setItem("refreshToken", profile.refreshToken);
+            localStorage.setItem("userId", profile.userId);
+            localStorage.setItem("fullName", profile.fullName);
+            localStorage.setItem("email", profile.email);
+            localStorage.setItem("role", profile.role);
+            localStorage.setItem("userRole", profile.role);
+
+            const userName = profile.fullName;
+            localStorage.setItem("userName", userName);
+
+            showMessage(`✅ مرحباً ${userName} ! تم تسجيل الدخول بنجاح`, false);
+
+            loginBtn.innerHTML = '<i class="fas fa-check"></i> تم الدخول';
+
+            setTimeout(() => {
+                const role = (profile.role || '').toLowerCase();
+                if (role === 'student') {
+                    window.location.href = "student/dashboard.html";
+                } else if (role === 'instructor') {
+                    window.location.href = "instructor/dashboard.html";
+                } else if (role === 'parent') {
+                    window.location.href = "parent/dashboard.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            }, 800);
+
+        } catch (error) {
+            console.log(error);
+            loaderDiv.style.display = 'none';
+            loginBtn.disabled = false;
+            showMessage("❌ مشكلة في الاتصال بالسيرفر");
+        }
+    }
+
+    // ========== 3. EVENTS ==========
+    loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginUser();
+    });
+
+    const inputs = [contactInput, passwordInput];
+    inputs.forEach(inp => {
+        inp.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                loginUser();
+            }
+        });
+
+        inp.addEventListener('input', () => clearMessage());
+    });
+
+})();
+    </script>
+</body>
+
+</html>

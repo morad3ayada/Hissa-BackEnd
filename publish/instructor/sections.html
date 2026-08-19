@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | الأقسام والدروس - المدرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; }
+
+/* ===== BUTTONS ===== */
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { opacity:0.9; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; border:none; font-weight:600; cursor:pointer; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-danger { background:var(--danger); color:#fff; }
+
+.form-control {
+  width:100%; padding:10px 14px; border:1px solid var(--border);
+  border-radius:var(--radius-sm); font-size:14px; font-family:'Cairo',sans-serif;
+  background:#f8fafc; transition:all 0.2s; outline:none;
+}
+.form-control:focus { border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--text); }
+
+/* ===== SECTIONS ACCORDION ===== */
+.section-item { border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; background:#fff; overflow:hidden; }
+.section-header {
+  padding:16px; background:#f8fafc; display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer; font-weight:800; font-size:15px; border-bottom:1px solid var(--border);
+}
+.section-body { padding:16px; display:none; }
+.section-item.open .section-body { display:block; }
+.section-item.open .section-header { background:#e0e7ff; color:var(--primary-dark); }
+.lesson-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px;
+  background:#f1f5f9;
+}
+.lesson-item:hover { background:#e2e8f0; }
+.lesson-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.5); z-index:999;
+  display:none; justify-content:center; align-items:center;
+}
+.modal {
+  background:var(--card); border-radius:var(--radius); width:90%; max-width:500px;
+  max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg);
+}
+.modal-header {
+  padding:20px; border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.modal-title { font-size:18px; font-weight:800; }
+.modal-close { background:none; border:none; font-size:24px; color:var(--text-muted); cursor:pointer; }
+.modal-body { padding:20px; }
+.modal-footer { padding:20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:12px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">لوحة المدرب</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+      <span>كورساتي</span>
+    </a>
+    <a href="sections.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-list"></i></div>
+      <span>الأقسام والدروس</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div>
+      <span>البث المباشر</span>
+    </a>
+    <a href="quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div>
+      <span>الاختبارات</span>
+    </a>
+    <a href="exams.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span>الامتحانات النهائية</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+      <span>الاشتراكات والمحافظ</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>الشهادات والتكريمات</span>
+    </a>
+    <a href="gamification.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+      <span>إدارة التحديات</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div>
+      <span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">مدرب</div>
+        <div class="role">مدرب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title" id="pageTitle">إدارة <span>الأقسام والدروس</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card" style="margin-bottom:0;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>اختر الكورس</label>
+          <select id="courseSelect" class="form-control" onchange="onCourseSelected()">
+            <option value="">-- يرجى اختيار الكورس --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" id="sectionsCard" style="display:none;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-list-ul" style="color:var(--primary);"></i> أقسام الكورس</div>
+          <button class="btn-sm btn-primary" onclick="openSectionModal()"><i class="fas fa-plus"></i> إضافة قسم</button>
+        </div>
+        <div id="sectionsContainer">
+          <!-- سيتم إدراج الأقسام هنا -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Section -->
+<div class="modal-overlay" id="sectionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">إضافة قسم</div>
+      <button class="modal-close" onclick="closeSectionModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>عنوان القسم</label>
+        <input type="text" id="sectionTitle" class="form-control" placeholder="مثال: مقدمة في البرمجة">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeSectionModal()">إلغاء</button>
+      <button class="btn-sm btn-primary" onclick="submitSection()" id="btnSubmitSection">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Lesson -->
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">إضافة درس</div>
+      <button class="modal-close" onclick="closeLessonModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lessonSectionId">
+      <div class="form-group">
+        <label>عنوان الدرس</label>
+        <input type="text" id="lessonTitle" class="form-control" placeholder="أدخل عنوان الدرس">
+      </div>
+      <div class="form-group">
+        <label>نوع الدرس</label>
+        <select id="lessonType" class="form-control">
+          <option value="1">فيديو</option>
+          <option value="2">مقال/مستند</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>المحتوى (اختياري)</label>
+        <textarea id="lessonContent" class="form-control" rows="3" placeholder="محتوى الدرس إذا كان مقالاً"></textarea>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="lessonPreview"> متاح للمعاينة المجانية
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeLessonModal()">إلغاء</button>
+      <button class="btn-sm btn-primary" onclick="submitLesson()" id="btnSubmitLesson">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Upload Video -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">رفع فيديو للدرس</div>
+      <button class="modal-close" onclick="closeVideoModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="videoSectionId">
+      <input type="hidden" id="videoLessonId">
+      <div class="form-group">
+        <label>اختر ملف الفيديو (MP4)</label>
+        <input type="file" id="videoFile" class="form-control" accept="video/mp4,video/x-m4v,video/*">
+      </div>
+      <div class="form-group">
+        <label>مدة الفيديو بالثواني (اختياري)</label>
+        <input type="number" id="videoDuration" class="form-control" placeholder="مثال: 120">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeVideoModal()">إلغاء</button>
+      <button class="btn-sm btn-success" onclick="submitVideo()" id="btnSubmitVideo">رفع الفيديو</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() {
+  return { 'Content-Type': 'application/json' };
+}
+
+// ===== API HELPERS =====
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  const isFormData = opts.body instanceof FormData;
+  if(!isFormData){
+      opts.headers = { ...authHeaders(), ...opts.headers };
+  } else {
+      opts.headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+  }
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      if(!isFormData) opts.headers = { ...authHeaders(), ...opts.headers };
+      else opts.headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+
+// ===== INIT =====
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '../login.html'; }
+const userId = localStorage.getItem('userId');
+document.getElementById('sidebarUserName').innerText = localStorage.getItem('userName') || 'مدرب';
+
+const urlParams = new URLSearchParams(window.location.search);
+const initialCourseId = urlParams.get('courseId');
+
+async function init() {
+  const select = document.getElementById('courseSelect');
+  try {
+    const res = await api(`${API_BASE}/v1/Courses`);
+    const data = await res.json();
+    let courses = data.data || [];
+    if (userId) courses = courses.filter(c => c.instructorId === userId);
+    
+    courses.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.title;
+      select.appendChild(opt);
+    });
+
+    if (initialCourseId && courses.some(c => c.id === initialCourseId)) {
+      select.value = initialCourseId;
+      onCourseSelected();
+    } else if (courses.length > 0) {
+      select.value = courses[0].id;
+      onCourseSelected();
+    }
+  } catch(e) {}
+}
+init();
+
+let currentCourseId = null;
+
+async function onCourseSelected() {
+  const val = document.getElementById('courseSelect').value;
+  if (!val) {
+    document.getElementById('sectionsCard').style.display = 'none';
+    return;
+  }
+  currentCourseId = val;
+  document.getElementById('sectionsCard').style.display = 'block';
+  loadSections();
+}
+
+// ===== SECTIONS =====
+async function loadSections() {
+  if (!currentCourseId) return;
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = '<div class="text-center text-muted" style="padding:20px;">جاري التحميل...</div>';
+  
+  try {
+    const res = await api(`${API_BASE}/v1/courses/${currentCourseId}/sections`);
+    const data = await res.json();
+    const sections = data.data || [];
+    
+    if (sections.length === 0) {
+      container.innerHTML = '<div class="text-center text-muted" style="padding:20px;">لا توجد أقسام في هذا الكورس.</div>';
+      return;
+    }
+
+    container.innerHTML = sections.map(s => `
+      <div class="section-item" id="sec-${s.id}">
+        <div class="section-header" onclick="toggleSection('${s.id}')">
+          <span><i class="fas fa-folder" style="color:var(--primary);margin-left:8px;"></i> ${s.title}</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:12px;background:#f1f5f9;padding:4px 8px;border-radius:6px;font-weight:600;color:var(--text-muted);">${s.lessonsCount} درس</span>
+            <button class="btn-sm btn-danger" style="padding:4px 8px;" onclick="event.stopPropagation();deleteSection('${s.id}')"><i class="fas fa-trash"></i></button>
+            <i class="fas fa-chevron-down" id="icon-${s.id}" style="transition:transform 0.2s;"></i>
+          </div>
+        </div>
+        <div class="section-body">
+          <div style="margin-bottom:12px;text-align:left;">
+            <button class="btn-sm btn-primary" onclick="openLessonModal('${s.id}')"><i class="fas fa-plus"></i> إضافة درس للقسم</button>
+          </div>
+          <div id="lessons-${s.id}">
+            <div style="text-align:center;color:#94a3b8;font-size:12px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الدروس...</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Load lessons for all sections (in real life you might want to lazy load on toggle)
+    sections.forEach(s => loadLessons(s.id));
+  } catch(e) {
+    container.innerHTML = '<div class="text-center text-muted">فشل تحميل الأقسام</div>';
+  }
+}
+
+function toggleSection(id) {
+  const el = document.getElementById(`sec-${id}`);
+  const icon = document.getElementById(`icon-${id}`);
+  el.classList.toggle('open');
+  icon.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+}
+
+function openSectionModal() {
+  document.getElementById('sectionTitle').value = '';
+  document.getElementById('sectionModal').style.display = 'flex';
+}
+function closeSectionModal() {
+  document.getElementById('sectionModal').style.display = 'none';
+}
+
+async function submitSection() {
+  if (!currentCourseId) return;
+  const title = document.getElementById('sectionTitle').value.trim();
+  if (!title) { alert('الرجاء إدخال العنوان'); return; }
+
+  const btn = document.getElementById('btnSubmitSection');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> حفظ...';
+  try {
+    const res = await api(`${API_BASE}/v1/courses/${currentCourseId}/sections`, {
+      method: 'POST',
+      body: JSON.stringify({ title })
+    });
+    if (res.ok) {
+      closeSectionModal();
+      loadSections();
+    } else {
+      alert('حدث خطأ');
+    }
+  } catch(e) { alert('خطأ في الاتصال'); }
+  btn.disabled = false; btn.innerText = 'حفظ';
+}
+
+async function deleteSection(id) {
+  if (!confirm('سيتم حذف القسم وجميع دروسه، هل أنت متأكد؟')) return;
+  try {
+    const res = await api(`${API_BASE}/v1/courses/${currentCourseId}/sections/${id}`, { method: 'DELETE' });
+    if (res.ok) loadSections();
+    else alert('لا يمكن حذف القسم');
+  } catch(e) { alert('خطأ'); }
+}
+
+// ===== LESSONS =====
+async function loadLessons(sectionId) {
+  const container = document.getElementById(`lessons-${sectionId}`);
+  if (!container) return;
+  try {
+    const res = await api(`${API_BASE}/v1/sections/${sectionId}/lessons`);
+    const data = await res.json();
+    const lessons = data.data || [];
+    if (lessons.length === 0) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--text-muted);text-align:center;">لا توجد دروس بعد</div>';
+      return;
+    }
+    container.innerHTML = lessons.map(l => `
+      <div class="lesson-item">
+        <div class="lesson-title">
+          <i class="${l.type === 'Video' ? 'fas fa-video' : 'fas fa-file-alt'}" style="color:var(--primary);width:16px;text-align:center;"></i>
+          ${l.title}
+          ${l.isFreePreview ? '<span style="font-size:10px;background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;">مجاني</span>' : ''}
+        </div>
+        <div style="display:flex;gap:6px;">
+          ${l.type === 'Video' ? `<button class="btn-sm btn-outline" style="color:#059669;border-color:#059669;" onclick="openVideoModal('${sectionId}', '${l.id}')"><i class="fas fa-upload"></i> رفع فيديو</button>` : ''}
+          <button class="btn-sm btn-danger" onclick="deleteLesson('${sectionId}', '${l.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<div style="color:red;font-size:12px;">خطأ في التحميل</div>';
+  }
+}
+
+function openLessonModal(sectionId) {
+  document.getElementById('lessonSectionId').value = sectionId;
+  document.getElementById('lessonTitle').value = '';
+  document.getElementById('lessonContent').value = '';
+  document.getElementById('lessonPreview').checked = false;
+  document.getElementById('lessonType').value = '1';
+  document.getElementById('lessonModal').style.display = 'flex';
+}
+function closeLessonModal() { document.getElementById('lessonModal').style.display = 'none'; }
+
+async function submitLesson() {
+  const sectionId = document.getElementById('lessonSectionId').value;
+  const title = document.getElementById('lessonTitle').value.trim();
+  const type = parseInt(document.getElementById('lessonType').value) || 1;
+  const content = document.getElementById('lessonContent').value.trim();
+  const isPreview = document.getElementById('lessonPreview').checked;
+
+  if (!title) { alert('ادخل العنوان'); return; }
+
+  const btn = document.getElementById('btnSubmitLesson');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> حفظ...';
+
+  try {
+    const res = await api(`${API_BASE}/v1/sections/${sectionId}/lessons`, {
+      method: 'POST',
+      body: JSON.stringify({
+        title, type, content, isFreePreview: isPreview
+      })
+    });
+    if (res.ok) {
+      closeLessonModal();
+      loadLessons(sectionId);
+    } else { alert('خطأ في الإنشاء'); }
+  } catch(e) { alert('خطأ في الاتصال'); }
+  btn.disabled = false; btn.innerText = 'حفظ';
+}
+
+async function deleteLesson(sectionId, lessonId) {
+  if (!confirm('حذف الدرس؟')) return;
+  try {
+    const res = await api(`${API_BASE}/v1/sections/${sectionId}/lessons/${lessonId}`, { method: 'DELETE' });
+    if (res.ok) loadLessons(sectionId);
+    else alert('فشل الحذف');
+  } catch(e) {}
+}
+
+// ===== VIDEO UPLOAD =====
+function openVideoModal(sectionId, lessonId) {
+  document.getElementById('videoSectionId').value = sectionId;
+  document.getElementById('videoLessonId').value = lessonId;
+  document.getElementById('videoFile').value = '';
+  document.getElementById('videoDuration').value = '';
+  document.getElementById('videoModal').style.display = 'flex';
+}
+function closeVideoModal() { document.getElementById('videoModal').style.display = 'none'; }
+
+async function submitVideo() {
+  const sectionId = document.getElementById('videoSectionId').value;
+  const lessonId = document.getElementById('videoLessonId').value;
+  const fileInput = document.getElementById('videoFile');
+  const dur = document.getElementById('videoDuration').value;
+  
+  if (!fileInput.files || fileInput.files.length === 0) { alert('اختر ملف فيديو'); return; }
+
+  const btn = document.getElementById('btnSubmitVideo');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع... (قد يستغرق وقتاً)';
+
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+  if (dur) formData.append('durationInSeconds', dur);
+
+  try {
+    const res = await api(`${API_BASE}/v1/sections/${sectionId}/lessons/${lessonId}/video`, {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      alert('تم الرفع بنجاح');
+      closeVideoModal();
+    } else {
+      const text = await res.text();
+      alert('فشل الرفع: ' + text);
+    }
+  } catch(e) { alert('خطأ في الاتصال أو حجم الملف كبير جداً'); }
+
+  btn.disabled = false; btn.innerText = 'رفع الفيديو';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = '../index.html';
+});
+</script>
+</body>
+</html>

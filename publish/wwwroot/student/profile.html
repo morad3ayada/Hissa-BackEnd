@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | البروفايل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px;
+}
+
+/* ===== PROFILE ===== */
+.profile-card {
+  background:var(--card); border-radius:var(--radius); padding:32px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+  max-width:540px; margin:0 auto;
+}
+.profile-header {
+  text-align:center; margin-bottom:28px;
+}
+.avatar-wrap {
+  position:relative; width:120px; height:120px;
+  margin:0 auto 12px; cursor:pointer;
+}
+.avatar-wrap img {
+  width:120px; height:120px; border-radius:50%;
+  border:4px solid var(--primary); object-fit:cover;
+}
+.avatar-overlay {
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(0,0,0,0.5);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .2s;
+  font-size:28px; color:#fff;
+}
+.avatar-wrap:hover .avatar-overlay { opacity:1; }
+.profile-name { font-size:26px; font-weight:900; color:var(--text); }
+.profile-role { font-size:14px; color:var(--text-muted); margin-top:4px; }
+
+.field {
+  display:flex; flex-direction:column; padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.field:last-child { border-bottom:none; }
+.field .label { color:var(--text-muted); font-size:13px; margin-bottom:4px; }
+.field .value { color:var(--text); font-weight:600; font-size:15px; }
+.field input, .field textarea {
+  background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:10px 14px; font-family:'Cairo',sans-serif; font-size:15px;
+  color:var(--text); outline:none; transition:border-color .2s;
+}
+.field input:focus, .field textarea:focus { border-color:var(--primary); }
+.field textarea { resize:vertical; min-height:60px; }
+
+.actions {
+  display:flex; gap:12px; margin-top:24px;
+}
+.btn {
+  padding:12px 24px; border-radius:12px;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; border:none; transition:all .2s;
+  text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+  justify-content:center;
+}
+.btn-primary { background:var(--primary); color:#fff; flex:1; }
+.btn-primary:hover { opacity:0.9; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-success:hover { opacity:0.9; }
+.btn-ghost {
+  background:transparent; color:var(--text-muted);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover { background:var(--bg); }
+.loading { text-align:center; padding:60px; color:var(--text-muted); }
+.loading i { font-size:30px; }
+.toast {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%);
+  background:#10b981; color:#fff; padding:12px 24px;
+  border-radius:12px; font-size:14px; font-weight:600;
+  display:none; z-index:999;
+}
+.toast.error { background:#ef4444; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+  .profile-card { padding:20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">القائمة</div>
+    <a href="dashboard.html" class="nav-item" id="navDashboard">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div><span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item" id="navCourses">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div><span>كورساتي</span>
+    </a>
+    <a href="getallcourses.html" class="nav-item" id="navAllCourses">
+      <div class="nav-icon"><i class="fas fa-store"></i></div><span>كل الكورسات</span>
+    </a>
+    <a href="../quizzes.html" class="nav-item" id="navQuizzes">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div><span>الاختبارات</span>
+    </a>
+    <a href="../final-exam.html" class="nav-item" id="navFinalExam">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div><span>الامتحان النهائي</span>
+    </a>
+    <a href="live.html" class="nav-item" id="navLive">
+      <div class="nav-icon"><i class="fas fa-video"></i></div><span>البث المباشر</span>
+    </a>
+    <a href="gamification.html" class="nav-item" id="navGamification">
+      <div class="nav-icon"><i class="fas fa-trophy"></i></div><span>الألعاب والتحديات</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>شهاداتي</span>
+    </a>
+    <a href="profile.html" class="nav-item active" id="navProfile">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div><span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">طالب</div>
+        <div class="role">طالب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title" id="pageTitle">الملف <span>الشخصي</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div style="position:relative;cursor:pointer;" onclick="showNotifications()">
+          <i class="fas fa-bell" style="font-size:20px;color:var(--text-muted);"></i>
+          <span id="notifBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;display:none;">0</span>
+        </div>
+        <div class="user-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+          <span class="uname" id="topbarUserName">طالب</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="toast" id="toast"></div>
+      <div class="profile-card" id="profileCard">
+        <div class="loading" id="loadingState"><i class="fas fa-spinner fa-spin"></i><br>جاري تحميل الملف الشخصي...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+let profileData = null;
+
+function getToken() { return localStorage.getItem('token'); }
+function authHeaders() {
+  return { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' };
+}
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+
+async function api(url, options = {}) {
+  options.headers = { ...authHeaders(), ...options.headers };
+  let res = await fetch(url, options).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    if (await tryRefreshToken()) {
+      options.headers = { ...authHeaders(), ...options.headers };
+      res = await fetch(url, options).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear();
+      window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+if (!localStorage.getItem('token')) { window.location.href = '../login.html'; }
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function updateUserUI() {
+  const name = localStorage.getItem('userName') || 'طالب';
+  document.getElementById('sidebarUserName').innerText = name;
+  document.getElementById('topbarUserName').innerText = name.split(' ')[0];
+  const savedAvatar = localStorage.getItem('avatarUrl');
+  if (savedAvatar) {
+    document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = savedAvatar);
+  }
+  document.getElementById('topbarAvatar').src = document.getElementById('sidebarAvatar').src;
+}
+updateUserUI();
+
+async function loadProfile() {
+  const card = document.getElementById('profileCard');
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile`, { headers: authHeaders() });
+    if (res.status === 401) { window.location.href = '../login.html'; return; }
+    const data = await res.json();
+    if (!data.succeeded) { card.innerHTML = '<div class="loading">❌ فشل تحميل الملف الشخصي</div>'; return; }
+    profileData = data.data;
+    renderView();
+  } catch { card.innerHTML = '<div class="loading">❌ حدث خطأ في الاتصال</div>'; }
+}
+
+function renderView() {
+  const p = profileData;
+  const name = p.fullName || p.firstName + ' ' + p.lastName || localStorage.getItem('userName') || 'مستخدم';
+  const email = p.email || localStorage.getItem('email') || '—';
+  const role = p.role || localStorage.getItem('userRole') || '—';
+  const roleMap = { admin: 'مدير النظام', instructor: 'معلم', student: 'طالب', parent: 'ولي أمر' };
+  const roleText = roleMap[role.toLowerCase()] || role;
+  const avatarUrl = p.profilePictureUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4`;
+
+  document.getElementById('profileCard').innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()">
+        <img src="${avatarUrl}" id="profileAvatar" alt="avatar">
+        <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+      <div class="profile-name">${name}</div>
+      <div class="profile-role">${roleText}</div>
+    </div>
+    <div class="field">
+      <span class="label"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
+      <span class="value">${email}</span>
+    </div>
+    <div class="field">
+      <span class="label"><i class="fas fa-user-tag"></i> الدور</span>
+      <span class="value">${roleText}</span>
+    </div>
+    <div class="field">
+      <span class="label"><i class="fas fa-user"></i> الاسم الأول</span>
+      <span class="value" id="viewFirstName">${p.firstName || '—'}</span>
+    </div>
+    <div class="field">
+      <span class="label"><i class="fas fa-user"></i> اسم العائلة</span>
+      <span class="value" id="viewLastName">${p.lastName || '—'}</span>
+    </div>
+    <div class="field">
+      <span class="label"><i class="fas fa-info-circle"></i> نبذة عني</span>
+      <span class="value" id="viewBio">${p.bio || '—'}</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="enableEdit()"><i class="fas fa-edit"></i> تعديل</button>
+      <button class="btn btn-ghost" onclick="window.location.href='dashboard.html'"><i class="fas fa-arrow-right"></i> العودة</button>
+      <button class="btn btn-ghost" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+    </div>
+  `;
+}
+
+function enableEdit() {
+  const p = profileData;
+  const avatarUrl = p.profilePictureUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.fullName || p.firstName + ' ' + p.lastName)}&backgroundColor=b6e3f4`;
+  document.getElementById('profileCard').innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()">
+        <img src="${avatarUrl}" id="profileAvatar" alt="avatar">
+        <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+      <div class="profile-name">تعديل الملف الشخصي</div>
+    </div>
+    <div class="field">
+      <span class="label">الاسم الأول</span>
+      <input type="text" id="editFirstName" value="${p.firstName || ''}">
+    </div>
+    <div class="field">
+      <span class="label">اسم العائلة</span>
+      <input type="text" id="editLastName" value="${p.lastName || ''}">
+    </div>
+    <div class="field">
+      <span class="label">نبذة عني</span>
+      <textarea id="editBio" rows="3">${p.bio || ''}</textarea>
+    </div>
+    <div class="actions">
+      <button class="btn btn-success" onclick="saveProfile()"><i class="fas fa-check"></i> حفظ</button>
+      <button class="btn btn-ghost" onclick="renderView()"><i class="fas fa-times"></i> إلغاء</button>
+    </div>
+  `;
+}
+
+async function saveProfile() {
+  const firstName = document.getElementById('editFirstName').value.trim();
+  const lastName = document.getElementById('editLastName').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  if (!firstName || !lastName) { showToast('الاسم الأول واسم العائلة مطلوبان', true); return; }
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({ firstName, lastName, bio: bio || null })
+    });
+    const data = await res.json();
+    if (data.succeeded) {
+      profileData = data.data;
+      const fullName = (data.data.firstName + ' ' + data.data.lastName).trim();
+      if (fullName) {
+        localStorage.setItem('userName', fullName);
+        updateUserUI();
+      }
+      showToast('✅ تم حفظ التغييرات');
+      renderView();
+    } else {
+      showToast('❌ ' + (data.message || 'فشل الحفظ'), true);
+    }
+  } catch {
+    showToast('❌ حدث خطأ في الاتصال', true);
+  }
+}
+
+async function uploadAvatar(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile/picture`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${getToken()}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      profileData = data.data;
+      if (data.data.profilePictureUrl) {
+        localStorage.setItem('avatarUrl', data.data.profilePictureUrl);
+        updateUserUI();
+      }
+      showToast('✅ تم تحديث الصورة');
+      renderView();
+    } else {
+      showToast('❌ ' + (data.message || 'فشل رفع الصورة'), true);
+    }
+  } catch {
+    showToast('❌ حدث خطأ في رفع الصورة', true);
+  }
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = '../index.html';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', logout);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').style.display='none'; }
+});
+
+loadProfile();
+</script>
+
+<!-- Notifications Modal -->
+<div id="notifModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;">
+  <div style="background:#1e293b;border-radius:16px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto;border:1px solid #334155;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155;position:sticky;top:0;background:#1e293b;z-index:1;">
+      <h3 style="font-size:16px;font-weight:800;color:#fff;"><i class="fas fa-bell" style="color:var(--primary);margin-left:8px;"></i>الإشعارات</h3>
+      <div style="display:flex;gap:8px;">
+        <button onclick="markAllAsRead()" style="padding:4px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif;">قراءة الكل</button>
+        <button onclick="closeNotifModal()" style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+      </div>
+    </div>
+    <div id="notifList" style="padding:16px;">
+      <div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NOTIFICATIONS =====
+async function loadUnreadCount() {
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/UnreadCount`);
+    const data = await res.json();
+    const count = data.data || 0;
+    const badge = document.getElementById('notifBadge');
+    if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; }
+    else { badge.style.display = 'none'; }
+  } catch {}
+}
+
+async function showNotifications() {
+  document.getElementById('notifModal').style.display = 'flex';
+  document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/MyNotifications`);
+    const data = await res.json();
+    const notifs = data.data || data || [];
+    const list = document.getElementById('notifList');
+
+    if (!notifs.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;"><i class="fas fa-bell-slash" style="font-size:40px;display:block;margin-bottom:10px;"></i>لا توجد إشعارات</div>';
+      return;
+    }
+
+    list.innerHTML = notifs.map(n => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #334155;border-radius:10px;margin-bottom:8px;${n.isRead ? 'opacity:0.6;' : 'background:rgba(37,99,235,0.08);border-color:#2563eb;'}"
+           onclick="${n.isRead ? '' : `markAsRead('${n.id}')`}">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:#fff;">${n.title || ''}</div>
+          <div style="font-size:12px;color:#94a3b8;">${n.message || n.body || ''}</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+        </div>
+        <button onclick="event.stopPropagation();deleteNotif('${n.id}')" style="background:none;border:none;color:#ef4444;font-size:14px;cursor:pointer;padding:4px;"><i class="fas fa-trash"></i></button>
+      </div>
+    `).join('');
+  } catch {
+    document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ فشل تحميل الإشعارات</div>';
+  }
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal').style.display = 'none';
+}
+
+async function markAsRead(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAsRead/${id}`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function markAllAsRead() {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAllAsRead`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function deleteNotif(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/Delete/${id}`, { method: 'DELETE' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+document.getElementById('notifModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+
+loadUnreadCount();
+setInterval(loadUnreadCount, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>تسجيل حساب | منصة تعليم ذكية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 10% 30%, #0a0f2a, #030617);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgba(250, 204, 21, 0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+      animation: subtleMove 20s linear infinite;
+    }
+
+    @keyframes subtleMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 40px; }
+    }
+
+    .glass-card {
+      width: 100%;
+      max-width: 580px;
+      background: rgba(15, 25, 45, 0.7);
+      backdrop-filter: blur(14px);
+      border-radius: 2rem;
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(250, 204, 21, 0.15);
+      padding: 2rem 2rem;
+      transition: transform 0.3s ease, box-shadow 0.4s;
+      animation: floatUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      z-index: 2;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .glass-card:hover {
+      box-shadow: 0 35px 55px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(250, 204, 21, 0.4);
+      transform: translateY(-3px);
+    }
+
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(135deg, #FFE6A3, #FACC15);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    h2 i {
+      background: none;
+      color: #facc15;
+      font-size: 2rem;
+    }
+
+    .sub {
+      text-align: center;
+      color: #a0b3d9;
+      font-size: 0.85rem;
+      margin-bottom: 1.8rem;
+      border-bottom: 1px dashed rgba(250, 204, 21, 0.3);
+      display: inline-block;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 6px;
+    }
+
+    .input-group {
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #facc15;
+      font-size: 1.1rem;
+      pointer-events: none;
+      transition: 0.2s;
+      z-index: 1;
+    }
+
+    .input, .select-role {
+      width: 100%;
+      padding: 14px 45px 14px 18px;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      background: rgba(10, 20, 35, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.2rem;
+      outline: none;
+      color: #fff;
+      transition: all 0.25s ease;
+      font-weight: 500;
+    }
+
+    .select-role {
+      padding: 14px 18px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23facc15' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+      background-repeat: no-repeat;
+      background-position: left 18px center;
+      background-size: 16px;
+    }
+
+    .select-role option {
+      padding: 8px 25px 8px 10px;
+      background: #0f1a2e;
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .input:focus, .select-role:focus {
+      border-color: #facc15;
+      background: rgba(10, 20, 35, 0.95);
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+      transform: scale(1.01);
+    }
+
+    .input::placeholder {
+      color: #9aaec7;
+      font-weight: 400;
+    }
+
+    .dynamic-fields-wrapper {
+      margin: 0.5rem 0 0.8rem;
+    }
+
+    .dynamic-card {
+      background: rgba(250, 204, 21, 0.05);
+      border-radius: 1.2rem;
+      padding: 0.3rem 0;
+      transition: all 0.3s;
+      animation: slideReveal 0.35s ease-out;
+    }
+
+    @keyframes slideReveal {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dynamic-card label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #facc15;
+      margin-right: 8px;
+      margin-bottom: 5px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-glow {
+      width: 100%;
+      background: linear-gradient(95deg, #facc15, #ffdf6e);
+      border: none;
+      padding: 14px;
+      border-radius: 2rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      font-family: 'Cairo', sans-serif;
+      color: #0a0f2a;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+      box-shadow: 0 8px 20px rgba(250, 204, 21, 0.2);
+    }
+
+    .btn-glow:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: linear-gradient(95deg, #ffe069, #facc15);
+      box-shadow: 0 15px 25px rgba(250, 204, 21, 0.4);
+    }
+
+    .btn-glow:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn-glow:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loader-modern {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 16px;
+      border-radius: 60px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .loader-modern span {
+      width: 8px;
+      height: 8px;
+      background: #facc15;
+      border-radius: 50%;
+      display: inline-block;
+      animation: wave 1.2s infinite ease-in-out both;
+    }
+
+    .loader-modern span:nth-child(1) { animation-delay: -0.32s; }
+    .loader-modern span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes wave {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .msg-area {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 40px;
+      transition: all 0.2s;
+      word-break: break-word;
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.85rem;
+      color: #b9c7e3;
+    }
+
+    .link a {
+      color: #facc15;
+      text-decoration: none;
+      font-weight: 700;
+      transition: 0.2s;
+      border-bottom: 1px dashed transparent;
+    }
+
+    .link a:hover {
+      border-bottom-color: #facc15;
+    }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      .glass-card { padding: 1.5rem 1.2rem; max-width: 95%; }
+      h2 { font-size: 1.6rem; gap: 8px; }
+      h2 i { font-size: 1.7rem; }
+      .input, .select-role { padding: 12px 40px 12px 14px; font-size: 0.95rem; }
+      .btn-glow { padding: 12px; font-size: 1rem; }
+      .sub { font-size: 0.8rem; margin-bottom: 1.4rem; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.75rem; }
+      .glass-card { padding: 1.2rem 1rem; border-radius: 1.5rem; }
+      h2 { font-size: 1.4rem; }
+      h2 i { font-size: 1.5rem; }
+      .input-group i { right: 12px; font-size: 0.95rem; }
+      .input, .select-role { padding: 10px 38px 10px 12px; font-size: 0.9rem; border-radius: 1rem; }
+      .select-role { background-position: left 12px center; background-size: 14px; }
+      .btn-glow { padding: 10px; font-size: 0.95rem; gap: 6px; }
+      .dynamic-card label { font-size: 0.75rem; }
+      .msg-area { font-size: 0.8rem; }
+      .link { font-size: 0.75rem; margin-top: 18px; }
+    }
+
+    @media (max-width: 360px) {
+      .glass-card { padding: 1rem 0.9rem; }
+      h2 { font-size: 1.25rem; }
+      .input, .select-role { padding: 9px 35px 9px 10px; }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      body { padding: 0.5rem; }
+      .glass-card { padding: 1rem 1.2rem; }
+      .input-group { margin-bottom: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="glass-card">
+  <h2>
+    <i class="fas fa-graduation-cap"></i> حساب جديد
+  </h2>
+  <div style="text-align: center;">
+    <span class="sub">انضم إلى مجتمع التعلم الذكي</span>
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-user-tag"></i>
+    <select id="roleSelect" class="select-role">
+      <option value="Student">طالب</option>
+      <option value="Instructor">معلم</option>
+      <option value="Parent">ولي أمر</option>
+    </select>
+  </div>
+
+  <div style="display:flex;gap:10px;">
+    <div class="input-group" style="flex:1;">
+      <i class="fas fa-user"></i>
+      <input type="text" id="firstName" class="input" placeholder="الاسم الأول" autocomplete="off">
+    </div>
+    <div class="input-group" style="flex:1;">
+      <i class="fas fa-user"></i>
+      <input type="text" id="lastName" class="input" placeholder="الاسم الثاني" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-envelope"></i>
+    <input type="text" id="contactField" class="input" placeholder="البريد الإلكتروني أو رقم الهاتف" autocomplete="off">
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-lock"></i>
+    <input type="password" id="password" class="input" placeholder="كلمة المرور (6 أحرف على الأقل)" autocomplete="off">
+  </div>
+
+  <div id="extraFieldsContainer" class="dynamic-fields-wrapper"></div>
+
+  <button class="btn-glow" id="registerBtn">
+    <i class="fas fa-arrow-left"></i> إنشاء الحساب <i class="fas fa-sparkles"></i>
+  </button>
+
+  <div class="loader-modern" id="loaderModern">
+    <span></span><span></span><span></span>
+    <span style="color:#facc15; margin-right:6px;">جاري التسجيل...</span>
+  </div>
+  <div class="msg-area" id="msg"></div>
+  <div class="link">
+    <i class="fas fa-sign-in-alt"></i> لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+  </div>
+</div>
+
+<script>
+ (function () {
+
+    const API_BASE = "https://numeriqan.com/api";
+
+    // DOM elements
+    const roleSelect = document.getElementById('roleSelect');
+    const extraContainer = document.getElementById('extraFieldsContainer');
+    const contactInput = document.getElementById('contactField');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const passwordInput = document.getElementById('password');
+    const loaderDiv = document.getElementById('loaderModern');
+    const msgDiv = document.getElementById('msg');
+    const registerBtn = document.getElementById('registerBtn');
+
+    function showMessage(text, isError = true) {
+        msgDiv.innerHTML = isError
+            ? `<i class="fas fa-exclamation-triangle"></i> ${text}`
+            : `<i class="fas fa-check-circle"></i> ${text}`;
+
+        msgDiv.style.color = isError ? '#ffcf9a' : '#c8f0d1';
+        msgDiv.style.background = isError
+            ? 'rgba(255, 100, 70, 0.12)'
+            : 'rgba(100, 255, 140, 0.12)';
+
+        msgDiv.style.border = isError
+            ? '1px solid rgba(255,180,70,0.3)'
+            : '1px solid rgba(100,255,140,0.3)';
+    }
+
+    function clearMessage() {
+        msgDiv.innerHTML = '';
+        msgDiv.style.background = 'transparent';
+        msgDiv.style.border = 'none';
+    }
+
+    function isValidContact(contact) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(contact) || contact.length >= 6;
+    }
+
+    async function registerUser() {
+
+        clearMessage();
+
+        const firstName = firstNameInput.value.trim();
+        const lastName = lastNameInput.value.trim();
+        const email = contactInput.value.trim();
+        const password = passwordInput.value;
+        const selectedRole = roleSelect.value;
+
+        if (!firstName || !lastName || !email || !password) {
+            showMessage("❌ كل الحقول مطلوبة");
+            return;
+        }
+
+        if (password.length < 6) {
+            showMessage("❌ كلمة المرور لازم 6 أحرف على الأقل");
+            return;
+        }
+
+        if (!isValidContact(email)) {
+            showMessage("❌ بريد أو رقم غير صحيح");
+            return;
+        }
+
+        const payload = {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            role: selectedRole
+        };
+
+        try {
+
+            loaderDiv.style.display = "flex";
+            registerBtn.disabled = true;
+
+            const response = await fetch(`${API_BASE}/v1/Auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "accept": "text/plain"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            loaderDiv.style.display = "none";
+            registerBtn.disabled = false;
+
+            if (!response.ok || !data.success) {
+                showMessage(data.message || "❌ فشل التسجيل");
+                return;
+            }
+
+            showMessage("✅ تم إنشاء الحساب بنجاح", false);
+
+            if (data.data?.accessToken) {
+                localStorage.setItem("token", data.data.accessToken);
+                localStorage.setItem("refreshToken", data.data.refreshToken);
+                localStorage.setItem("userId", data.data.userId);
+                const fullName = data.data.fullName || firstName + ' ' + lastName;
+                localStorage.setItem("fullName", fullName);
+                localStorage.setItem("userName", fullName);
+                localStorage.setItem("email", data.data.email);
+                localStorage.setItem("role", data.data.role);
+            }
+
+            setTimeout(() => {
+                const role = (data.data?.role || '').toLowerCase();
+                if (role === 'student') {
+                    window.location.href = "./student-dashboard.html";
+                } else if (role === 'instructor') {
+                    window.location.href = "./instructor-dashboard.html";
+                } else if (role === 'parent') {
+                    window.location.href = "./parent-dashboard.html";
+                } else {
+                    window.location.href = "./dashboard.html";
+                }
+            }, 1200);
+
+        } catch (error) {
+            loaderDiv.style.display = "none";
+            registerBtn.disabled = false;
+            console.error(error);
+            showMessage("❌ خطأ في الاتصال بالسيرفر");
+        }
+    }
+
+    registerBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerUser();
+    });
+
+    const inputs = [firstNameInput, lastNameInput, contactInput, passwordInput];
+    inputs.forEach(i => i.addEventListener("input", clearMessage));
+
+})();
+</script>
+</body>
+</html>

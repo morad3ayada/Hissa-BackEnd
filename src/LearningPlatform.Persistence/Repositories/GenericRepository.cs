@@ -53,6 +53,11 @@ public class GenericRepository<T>(ApplicationDbContext dbContext) : IRepository<
     public async Task<T?> GetTrackedAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default) =>
         await DbSet.FirstOrDefaultAsync(predicate, cancellationToken);
 
+    public async Task<IReadOnlyList<T>> GetTrackedListAsync(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken = default) =>
+        await DbSet.Where(predicate).ToListAsync(cancellationToken);
+
     public async Task AddAsync(T entity, CancellationToken cancellationToken = default) =>
         await DbSet.AddAsync(entity, cancellationToken);
 

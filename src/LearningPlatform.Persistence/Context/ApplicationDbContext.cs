@@ -50,6 +50,29 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     // Reports
     public DbSet<StudentReport> StudentReports => Set<StudentReport>();
 
+    // Chat
+    public DbSet<Conversation> Conversations => Set<Conversation>();
+    public DbSet<ConversationParticipant> ConversationParticipants => Set<ConversationParticipant>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<MessageAttachment> MessageAttachments => Set<MessageAttachment>();
+    public DbSet<BlockedUser> BlockedUsers => Set<BlockedUser>();
+
+    // Wallet
+    public DbSet<Wallet> Wallets => Set<Wallet>();
+    public DbSet<WalletTransaction> WalletTransactions => Set<WalletTransaction>();
+    public DbSet<WalletRequest> WalletRequests => Set<WalletRequest>();
+
+    // Teacher Profile
+    public DbSet<TeacherProfile> TeacherProfiles => Set<TeacherProfile>();
+    public DbSet<TeacherVerificationHistory> TeacherVerificationHistories => Set<TeacherVerificationHistory>();
+
+    // Subscriptions
+    public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
+    public DbSet<InstructorSubscription> InstructorSubscriptions => Set<InstructorSubscription>();
+
+    // OTP
+    public DbSet<EmailOtp> EmailOtps => Set<EmailOtp>();
+
     // Platform / account meta
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();

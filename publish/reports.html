@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير | Corexion Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Cairo',sans-serif; background:#f1f5f9; color:#1e293b; min-height:100vh; }
+        :root {
+            --primary:#2563eb; --primary-light:#dbeafe; --primary-dark:#1e40af;
+            --accent:#f59e0b; --accent-light:#fef3c7;
+            --success:#10b981; --danger:#ef4444; --purple:#8b5cf6;
+            --bg:#f1f5f9; --card:#ffffff; --text:#1e293b; --text-muted:#64748b;
+            --border:#e2e8f0; --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.05);
+            --radius:16px; --radius-sm:10px;
+        }
+        .navbar {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:12px 28px; background:white; border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100; gap:12px; flex-wrap:wrap;
+        }
+        .logo { display:flex; align-items:center; gap:8px; font-size:18px; font-weight:800; color:var(--text); }
+        .logo i { color:var(--primary); }
+        .logo span { color:var(--accent); }
+        .user-info { display:flex; align-items:center; gap:12px; }
+        .user-info .uname { font-weight:600; font-size:14px; color:var(--text-muted); }
+        .logout-btn {
+            background:var(--danger); color:white; border:none; padding:5px 12px; border-radius:20px;
+            font-weight:600; cursor:pointer; font-size:12px; font-family:'Cairo',sans-serif;
+            transition:0.2s; display:flex; align-items:center; gap:6px;
+        }
+        .logout-btn:hover { background:#dc2626; transform:scale(1.02); }
+        .back-link {
+            color:var(--primary); text-decoration:none; font-weight:600; font-size:14px;
+            display:flex; align-items:center; gap:6px; transition:0.2s;
+        }
+        .back-link:hover { color:var(--primary-dark); }
+        .main { max-width:1000px; margin:0 auto; padding:28px; }
+        .card {
+            background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+            padding:24px; border:1px solid var(--border);
+        }
+        .child-card {
+            background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+            border:1px solid var(--border); overflow:hidden; margin-bottom:20px;
+        }
+        .child-header {
+            display:flex; align-items:center; gap:12px;
+            padding:16px 20px; background:linear-gradient(135deg,#f8fafc,#f1f5f9);
+            border-bottom:1px solid var(--border);
+        }
+        .child-header .icon {
+            width:40px; height:40px; border-radius:10px;
+            background:var(--primary-light); color:var(--primary);
+            display:flex; align-items:center; justify-content:center; font-size:18px;
+        }
+        .child-header h3 { font-size:16px; font-weight:700; }
+        .child-header .count { font-size:12px; color:var(--text-muted); }
+        .report-item {
+            padding:16px 20px; border-bottom:1px solid #f1f5f9;
+            transition:0.2s;
+        }
+        .report-item:last-child { border-bottom:none; }
+        .report-item:hover { background:#f8fafc; }
+        .report-item .rhead {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:6px; flex-wrap:wrap; gap:8px;
+        }
+        .report-item .rhead .rtitle { font-weight:600; font-size:14px; }
+        .report-item .rhead .rmeta { font-size:12px; color:var(--text-muted); }
+        .report-item .rbody { font-size:14px; color:var(--text); line-height:1.6; }
+        .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; }
+        .badge-blue { background:var(--primary-light); color:var(--primary-dark); }
+        .empty-state { text-align:center; padding:30px; color:var(--text-muted); }
+        .empty-state i { font-size:40px; display:block; margin-bottom:10px; color:var(--border); }
+        .loading { text-align:center; padding:40px; color:var(--text-muted); }
+        .loading i { font-size:32px; display:block; margin-bottom:12px; color:var(--primary); }
+        .section-title { font-size:22px; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+        @media(max-width:768px) {
+            .navbar { padding:12px 16px; }
+            .main { padding:16px; }
+            .child-header { padding:12px 16px; }
+            .report-item { padding:12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div style="display:flex;align-items:center;gap:20px;">
+        <div class="logo"><i class="fas fa-graduation-cap"></i> Corexion <span>Academy</span></div>
+        <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة</a>
+    </div>
+    <div class="user-info" id="userInfoArea"></div>
+</nav>
+
+<div class="main">
+    <div class="section-title"><i class="fas fa-file-alt" style="color:var(--primary);"></i> تقارير الأبناء</div>
+    <div id="reportsContainer">
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري تحميل التقارير...</div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'https://numeriqan.com/api';
+
+    if (!localStorage.getItem('token')) { alert('يرجى تسجيل الدخول أولاً'); window.location.href='login.html'; }
+
+    function authHeaders() {
+        const t = localStorage.getItem('token');
+        return { 'Authorization':`Bearer ${t}`, 'Content-Type':'application/json' };
+    }
+
+    async function tryRefreshToken() {
+      const rt = localStorage.getItem('refreshToken');
+      if (!rt) return false;
+      try {
+        const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ refreshToken: rt })
+        });
+        if (!res.ok) return false;
+        const data = await res.json();
+        if (data.succeeded && data.data) {
+          localStorage.setItem('token', data.data.accessToken);
+          localStorage.setItem('refreshToken', data.data.refreshToken);
+          return true;
+        }
+        return false;
+      } catch { return false; }
+    }
+    async function api(url, options = {}) {
+      options.headers = { ...authHeaders(), ...options.headers };
+      let res = await fetch(url, options).catch(() => null);
+      if (!res) return makeEmptyRes();
+      if (res.status === 401) {
+        if (await tryRefreshToken()) {
+          options.headers = { ...authHeaders(), ...options.headers };
+          res = await fetch(url, options).catch(() => null);
+          if (!res) return makeEmptyRes();
+        } else {
+          localStorage.clear(); window.location.href = 'login.html';
+          throw new Error('Session expired');
+        }
+      }
+      const origJson = res.json.bind(res);
+      res.json = async () => { try { return await origJson(); } catch { return {}; } };
+      return res;
+    }
+    function makeEmptyRes() {
+      return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+    }
+    window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+    setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+    async function loadReports() {
+        const container = document.getElementById('reportsContainer');
+
+        try {
+            const childrenRes = await fetch(`${API_BASE}/v1/Parents/MyChildren`, { headers: authHeaders() });
+            const childrenData = await childrenRes.json();
+            const children = childrenData.data || childrenData || [];
+
+            if (!children.length) {
+                container.innerHTML = '<div class="card"><div class="empty-state"><i class="fas fa-users"></i> لم تقم بربط أي أبناء بعد. اذهب إلى لوحة التحكم وأضف أبناءك.</div></div>';
+                return;
+            }
+
+            let html = '';
+            let hasAnyReports = false;
+
+            for (const child of children) {
+                try {
+                    const reportsRes = await fetch(`${API_BASE}/v1/StudentReports/ByStudent/${child.id}`, { headers: authHeaders() });
+                    const reportsData = await reportsRes.json();
+                    const reports = reportsData.data || reportsData || [];
+
+                    const childName = child.fullName || child.name || child.email || 'الابن';
+
+                    if (reports.length) {
+                        hasAnyReports = true;
+                        html += `
+                            <div class="child-card">
+                                <div class="child-header">
+                                    <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                                    <h3>${childName}</h3>
+                                    <span class="count">(${reports.length} تقارير)</span>
+                                </div>
+                                ${reports.map(r => `
+                                    <div class="report-item">
+                                        <div class="rhead">
+                                            <div class="rtitle"><i class="fas fa-file-signature" style="color:var(--primary);margin-left:6px;"></i>${r.title}</div>
+                                            <div class="rmeta">
+                                                <span><i class="fas fa-chalkboard-teacher"></i> ${r.instructorName || 'مدرس'}</span>
+                                                <span style="margin-right:10px;"><i class="far fa-calendar-alt"></i> ${r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-EG') : ''}</span>
+                                            </div>
+                                        </div>
+                                        <div class="rbody">${r.content}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="child-card">
+                                <div class="child-header">
+                                    <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                                    <h3>${childName}</h3>
+                                    <span class="count">(0 تقارير)</span>
+                                </div>
+                                <div class="empty-state" style="padding:20px;"><i class="fas fa-file-alt" style="font-size:28px;"></i> لا توجد تقارير بعد</div>
+                            </div>
+                        `;
+                    }
+                } catch (err) {
+                    console.error('Error loading reports for child:', child, err);
+                }
+            }
+
+            container.innerHTML = html;
+            if (!hasAnyReports && children.length) {
+                // At least one child without reports - show a message
+                // (each child already shows "لا توجد تقارير بعد" above)
+            }
+        } catch (err) {
+            container.innerHTML = `<div class="card"><div class="empty-state" style="color:var(--danger);"><i class="fas fa-exclamation-circle"></i> فشل تحميل التقارير: ${err.message}</div></div>`;
+        }
+    }
+
+    // Navbar auth
+    const div = document.getElementById('userInfoArea');
+    if (localStorage.getItem('token')) {
+        div.innerHTML = `
+            <span class="uname"><i class="fas fa-user" style="color:var(--primary);"></i> ${localStorage.getItem('userName') || 'مستخدم'}</span>
+            <button class="logout-btn" onclick="localStorage.clear();window.location.href='login.html'"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        `;
+    }
+
+    loadReports();
+</script>
+</body>
+</html>

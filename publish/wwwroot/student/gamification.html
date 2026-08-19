@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | الألعاب والتحديات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+/* ===== MAIN ===== */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content {
+  flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; }
+
+/* ===== GAMIFICATION ===== */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+@media(max-width:900px){ .grid-3 { grid-template-columns:1fr 1fr; } .grid-4 { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .grid-2, .grid-3, .grid-4 { grid-template-columns:1fr; } }
+
+.profile-level-card {
+  background:linear-gradient(135deg,#1e293b,#0f172a); border-radius:var(--radius); padding:24px;
+  color:#fff; border:none;
+}
+
+.rank-badge {
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;
+  font-size:12px;font-weight:700;
+}
+.rank-1 { background:#fbbf24;color:#78350f; }
+.rank-2 { background:#e2e8f0;color:#334155; }
+.rank-3 { background:#d97706;color:#fffbeb; }
+.rank-default { background:#334155;color:#94a3b8; }
+
+.leaderboard-item {
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  border-radius:10px;margin-bottom:6px;transition:background 0.2s;
+}
+.leaderboard-item:hover { background:var(--bg); }
+.leaderboard-item.me { background:var(--primary-light);border:1px solid var(--primary); }
+
+.achievement-badge {
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:16px;border-radius:12px;background:var(--bg);text-align:center;
+  border:1px solid var(--border);transition:transform 0.2s;
+}
+.achievement-badge:hover { transform:translateY(-2px); }
+.achievement-badge.locked { opacity:0.4;filter:grayscale(1); }
+
+.avatar-item {
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:16px;border-radius:12px;background:var(--bg);
+  border:2px solid var(--border);text-align:center;transition:all 0.2s;cursor:pointer;
+}
+.avatar-item:hover { border-color:var(--primary); }
+.avatar-item.owned { border-color:var(--success);background:#d1fae5; }
+.avatar-item.equipped { border-color:var(--primary);background:var(--primary-light); }
+
+.challenge-card {
+  background:var(--card);border-radius:var(--radius);padding:16px;
+  border:1px solid var(--border);box-shadow:var(--shadow);
+}
+.challenge-status { font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px; }
+
+.points-display {
+  display:flex;align-items:center;gap:6px;
+  font-size:24px;font-weight:900;
+}
+
+.level-progress {
+  height:8px;background:rgba(255,255,255,0.2);border-radius:10px;overflow:hidden;
+}
+.level-progress-fill { height:100%;background:var(--accent);border-radius:10px;transition:width 0.5s; }
+
+.tab-bar {
+  display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+}
+.tab-btn {
+  padding:8px 16px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;font-weight:700;font-size:12px;
+  font-family:'Cairo',sans-serif;transition:all 0.2s;
+}
+.tab-btn:hover { border-color:var(--primary);color:var(--primary); }
+.tab-btn.active { background:var(--primary);color:#fff;border-color:var(--primary); }
+
+.empty-state {
+  text-align:center;padding:40px;color:var(--text-muted);
+}
+
+.btn {
+  padding:8px 16px;border-radius:8px;border:none;font-weight:700;font-size:12px;
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s;
+}
+.btn-primary { background:var(--primary);color:#fff; }
+.btn-primary:hover { opacity:0.9; }
+.btn-success { background:var(--success);color:#fff; }
+.btn-success:hover { opacity:0.9; }
+.btn-outline { background:transparent;border:1px solid var(--border);color:var(--text); }
+.btn-sm { padding:6px 12px;font-size:11px; }
+.btn-xs { padding:4px 10px;font-size:10px; }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;letter-spacing:1px;">القائمة</div>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+      <span>كورساتي</span>
+    </a>
+    <a href="getallcourses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-store"></i></div>
+      <span>كل الكورسات</span>
+    </a>
+    <a href="../quizzes.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-clipboard-question"></i></div>
+      <span>الاختبارات</span>
+    </a>
+    <a href="../final-exam.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span>الامتحان النهائي</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div>
+      <span>البث المباشر</span>
+    </a>
+    <a href="gamification.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+      <span>الألعاب والتحديات</span>
+    </a>
+    <a href="certificates.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-certificate"></i></div>
+      <span>شهاداتي</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div>
+      <span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">طالب</div>
+        <div class="role">طالب</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title">الألعاب <span>والتحديات</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div style="position:relative;cursor:pointer;" onclick="showNotifications()">
+          <i class="fas fa-bell" style="font-size:20px;color:var(--text-muted);"></i>
+          <span id="notifBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;display:none;">0</span>
+        </div>
+        <div class="user-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+          <span class="uname" id="topbarUserName">طالب</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Gamification Main Content -->
+      <div id="gamificationContent">
+        <div class="empty-state"><i class="fas fa-spinner fa-spin" style="font-size:30px;"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div id="notifModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;">
+  <div style="background:#1e293b;border-radius:16px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto;border:1px solid #334155;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155;position:sticky;top:0;background:#1e293b;z-index:1;">
+      <h3 style="font-size:16px;font-weight:800;color:#fff;"><i class="fas fa-bell" style="color:var(--primary);margin-left:8px;"></i>الإشعارات</h3>
+      <div style="display:flex;gap:8px;">
+        <button onclick="markAllAsRead()" style="padding:4px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif;">قراءة الكل</button>
+        <button onclick="closeNotifModal()" style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+      </div>
+    </div>
+    <div id="notifList" style="padding:16px;">
+      <div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+const API_HOST = "https://learning-platform.runasp.net";
+
+// Mapping relative avatar paths to imgbb hosted URLs (seed data paths)
+const AVATAR_IMG_MAP = {
+  "/avatars/base/boy.png": "https://i.ibb.co/s9MYjpp8/image.png",
+  "/avatars/base/girl.png": "https://i.ibb.co/mV5hyVVP/image.png",
+  "/avatars/hair/short.png": "https://i.ibb.co/7dXKTqvn/image.png",
+  "/avatars/hair/long.png": "https://i.ibb.co/93YVcFhc/image.png",
+  "/avatars/hair/curly.png": "https://i.ibb.co/fd7MBrjZ/image.png",
+  "/avatars/clothes/tshirt.png": "https://i.ibb.co/chJTNqW2/image.png",
+  "/avatars/clothes/hoodie.png": "https://i.ibb.co/hGBqw7S/image.png",
+  "/avatars/clothes/suit.png": "https://i.ibb.co/cKwbQGjw/image.png",
+  "/avatars/glasses/round.png": "https://i.ibb.co/5XtVbtTc/image.png",
+  "/avatars/glasses/sun.png": "https://i.ibb.co/TDnmsf06/image.png",
+  "/avatars/hats/cap.png": "https://i.ibb.co/DgDg4P0M/image.png",
+  "/avatars/hats/wizard.png": "https://i.ibb.co/Hf03zhMf/image.png",
+  "/avatars/accessories/necklace.png": "https://i.ibb.co/Pz5kYSy2/image.png",
+  "/avatars/accessories/watch.png": "https://i.ibb.co/7x7fBJt3/image.png",
+};
+function resolveAvatarUrl(path) { return AVATAR_IMG_MAP[path] || `${API_HOST}${path}`; }
+
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() {
+  return { 'Content-Type': 'application/json' };
+}
+
+// ===== TOKEN REFRESH =====
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method: 'POST', headers: headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else {
+      localStorage.clear(); window.location.href = '../login.html';
+      throw new Error('Session expired');
+    }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+// ===== INIT =====
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '../login.html'; }
+
+let currentUserRole = localStorage.getItem('userRole') || 'student';
+let currentUserName = localStorage.getItem('userName') || 'طالب';
+
+if (currentUserRole !== 'Student') {
+  if (currentUserRole === 'Instructor' || currentUserRole === 'Admin') {
+    window.location.href = '../dashboard.html';
+  } else if (currentUserRole === 'Parent') {
+    window.location.href = '../parent/dashboard.html';
+  }
+}
+
+function updateUI() {
+  document.getElementById('sidebarUserName').innerText = currentUserName;
+  document.getElementById('topbarUserName').innerText = currentUserName.split(' ')[0];
+  const savedAvatar = localStorage.getItem('avatarUrl');
+  if (savedAvatar) {
+    document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = savedAvatar);
+  }
+}
+updateUI();
+
+async function loadProfileAvatar() {
+  try {
+    const res = await api(`${API_BASE}/v1/Profile`);
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      const url = data.data.profilePictureUrl;
+      if (url) {
+        localStorage.setItem('avatarUrl', url);
+        document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = url);
+      }
+    }
+  } catch {}
+}
+loadProfileAvatar();
+
+// ===== JWT DECODE =====
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) { return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch { return {}; }
+}
+const jwtPayload = parseJwt(token);
+const currentStudentId = jwtPayload.sub || jwtPayload.nameid || null;
+
+// ===== GAMIFICATION DATA =====
+async function loadGamificationProfile() {
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/Profile`);
+    const d = await res.json();
+    return d.succeeded ? d.data : null;
+  } catch { return null; }
+}
+
+async function loadLeaderboard() {
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/Leaderboard?PageNumber=1&PageSize=50`);
+    const d = await res.json();
+    return d.succeeded ? d.data : [];
+  } catch { return []; }
+}
+
+async function loadAchievements() {
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/MyAchievements`);
+    const d = await res.json();
+    return d.succeeded ? d.data : [];
+  } catch { return []; }
+}
+
+async function loadAvatarStore() {
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/AvatarStore`);
+    const d = await res.json();
+    return d.succeeded ? d.data : [];
+  } catch { return []; }
+}
+
+// ===== RENDER =====
+function getRankClass(rank) {
+  if (rank === 1) return 'rank-1';
+  if (rank === 2) return 'rank-2';
+  if (rank === 3) return 'rank-3';
+  return 'rank-default';
+}
+
+function renderAll() {
+  const container = document.getElementById('gamificationContent');
+  container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin" style="font-size:30px;"></i></div>';
+
+  Promise.all([loadGamificationProfile(), loadLeaderboard(), loadAchievements(), loadAvatarStore()])
+    .then(([profile, leaderboard, achievements, avatarStore]) => {
+      let html = '';
+
+      // === PROFILE CARD ===
+      if (profile) {
+        const totalReq = profile.totalPoints + (profile.pointsToNextLevel || 0);
+        const pct = totalReq > 0 ? Math.min(100, Math.round((profile.totalPoints / totalReq) * 100)) : 100;
+        html += `
+          <div class="profile-level-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:28px;"><i class="fas fa-trophy"></i></div>
+                <div>
+                  <div style="font-size:20px;font-weight:900;">المستوى ${profile.currentLevel}</div>
+                  <div style="font-size:13px;color:#94a3b8;">${profile.levelTitle || ''}</div>
+                </div>
+              </div>
+              <div style="text-align:left;">
+                <div class="points-display"><i class="fas fa-star" style="color:var(--accent);"></i> ${profile.totalPoints.toLocaleString()}</div>
+                <div style="font-size:12px;color:#94a3b8;">نقطة إجمالية</div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:4px;">
+                <span>الترتيب: #${profile.rank || '-'}</span>
+                <span>${profile.pointsToNextLevel ? `${profile.pointsToNextLevel} نقطة للمستوى التالي` : 'المستوى الأقصى'}</span>
+              </div>
+              <div class="level-progress"><div class="level-progress-fill" style="width:${pct}%"></div></div>
+            </div>
+          </div>`;
+      } else {
+        html += `
+          <div class="card" style="text-align:center;padding:40px;">
+            <i class="fas fa-trophy" style="font-size:40px;color:var(--accent);"></i>
+            <h3 style="margin:12px 0 4px;">نظام التحديات والمكافآت</h3>
+            <p style="color:var(--text-muted);font-size:13px;">ابدأ بتسجيل الدخول واكسب النقاط من خلال إكمال الكورسات والاختبارات!</p>
+          </div>`;
+      }
+
+      // === TABS ===
+      html += `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="tab-btn active" data-tab="leaderboard" onclick="switchTab('leaderboard')"><i class="fas fa-list-ol"></i> لوحة المتصدرين</button>
+          <button class="tab-btn" data-tab="achievements" onclick="switchTab('achievements')"><i class="fas fa-medal"></i> الإنجازات</button>
+          <button class="tab-btn" data-tab="avatar" onclick="switchTab('avatar')"><i class="fas fa-tshirt"></i> متجر الأفاتار</button>
+          <button class="tab-btn" data-tab="rewards" onclick="switchTab('rewards')"><i class="fas fa-gift"></i> المكافآت</button>
+          <button class="tab-btn" data-tab="challenges" onclick="switchTab('challenges')"><i class="fas fa-crosshairs"></i> التحديات</button>
+        </div>
+
+        <div id="tabContent_leaderboard" class="tab-content"></div>
+        <div id="tabContent_achievements" class="tab-content" style="display:none;"></div>
+        <div id="tabContent_avatar" class="tab-content" style="display:none;"></div>
+        <div id="tabContent_rewards" class="tab-content" style="display:none;"></div>
+        <div id="tabContent_challenges" class="tab-content" style="display:none;"></div>`;
+
+      container.innerHTML = html;
+
+      renderLeaderboard(leaderboard);
+      renderAchievements(achievements);
+      renderAvatarStore(avatarStore);
+      renderRewards();
+      renderChallenges();
+    })
+    .catch(() => {
+      container.innerHTML = '<div class="empty-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i><h3>حدث خطأ</h3><p>تعذر تحميل بيانات الألعاب.</p></div>';
+    });
+}
+
+function renderLeaderboard(entries) {
+  const container = document.getElementById('tabContent_leaderboard');
+  if (!container) return;
+  if (!entries || entries.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty-state">لا يوجد متصدرين بعد.</div></div>';
+    return;
+  }
+  let html = '<div class="card" style="padding:12px 0;"><div style="padding:0 16px 10px;font-size:13px;font-weight:700;color:var(--text-muted);display:flex;justify-content:space-between;"><span>الطالب</span><span>النقاط</span></div>';
+  entries.forEach(e => {
+    const isMe = currentStudentId && e.studentId && e.studentId.toLowerCase() === currentStudentId.toLowerCase();
+    html += `
+      <div class="leaderboard-item${isMe ? ' me' : ''}">
+        <span class="rank-badge ${getRankClass(e.rank)}">${e.rank}</span>
+        <img src="${e.profilePictureUrl || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23334155%22/%3E%3C/svg%3E'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">${e.studentName}${isMe ? ' (أنت)' : ''}</div>
+          <div style="font-size:11px;color:var(--text-muted);">مستوى ${e.currentLevel} • ${e.completedCoursesCount} كورسات • ${e.passedQuizzesCount} اختبارات</div>
+        </div>
+        <div style="font-weight:800;color:var(--accent);">${e.totalPoints.toLocaleString()} ⭐</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderAchievements(items) {
+  const container = document.getElementById('tabContent_achievements');
+  if (!container) return;
+  if (!items || items.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty-state">لم تحصل على أي إنجاز بعد. واصل التعلم لكسب الشارات!</div></div>';
+    return;
+  }
+  let html = '<div class="grid-3">';
+  items.forEach(a => {
+    html += `
+      <div class="achievement-badge">
+        <div style="font-size:36px;">${a.iconUrl || '🏅'}</div>
+        <div style="font-size:13px;font-weight:700;">${a.rewardName}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${a.rewardDescription || ''}</div>
+        <div style="font-size:10px;color:var(--accent);font-weight:700;">+${a.pointsValue} نقطة</div>
+        <div style="font-size:10px;color:var(--text-muted);">${a.earnedAt ? new Date(a.earnedAt).toLocaleDateString('ar-EG') : ''}</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderAvatarStore(items) {
+  const container = document.getElementById('tabContent_avatar');
+  if (!container) return;
+  if (!items || items.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty-state">متجر الأفاتار قيد الإعداد.</div></div>';
+    return;
+  }
+  const cats = {};
+  items.forEach(i => {
+    const cat = i.category || 'أخرى';
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push(i);
+  });
+
+  let html = '';
+  for (const [cat, catItems] of Object.entries(cats)) {
+    html += `<div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="margin-bottom:12px;font-size:14px;">${cat}</div>
+      <div class="grid-4">`;
+    catItems.forEach(i => {
+      const cls = i.equipped ? 'avatar-item equipped' : (i.owned ? 'avatar-item owned' : 'avatar-item');
+      const icon = i.imageUrl ? `<img src="${resolveAvatarUrl(i.imageUrl)}" alt="${i.name}" style="width:48px;height:48px;object-fit:contain;">` : '👕';
+      html += `
+        <div class="${cls}">
+          <div style="font-size:32px;">${icon}</div>
+          <div style="font-size:12px;font-weight:700;">${i.name}</div>
+          <div style="font-size:10px;color:var(--text-muted);">${i.owned ? (i.equipped ? '✅ مستخدم' : '🟢 مملوك') : `${i.priceInPoints} 🪙`}</div>
+          ${!i.owned ? `<button class="btn btn-primary btn-xs" onclick="buyAvatarItem('${i.id}')">شراء</button>` : ''}
+        </div>`;
+    });
+    html += `</div></div>`;
+  }
+  container.innerHTML = html;
+}
+
+async function renderRewards() {
+  const container = document.getElementById('tabContent_rewards');
+  if (!container) return;
+  container.innerHTML = '<div class="card"><div style="text-align:center;padding:20px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></div></div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/MyRewards`);
+    const d = await res.json();
+    const items = d.succeeded ? d.data : [];
+    if (!items.length) {
+      container.innerHTML = '<div class="card"><div class="empty-state">لا توجد مكافآت مكتسبة بعد.</div></div>';
+      return;
+    }
+    let html = '<div class="grid-3">';
+    items.forEach(r => {
+      html += `
+        <div class="achievement-badge">
+          <div style="font-size:36px;">${r.iconUrl || '🎁'}</div>
+          <div style="font-size:13px;font-weight:700;">${r.rewardName}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${r.rewardDescription || ''}</div>
+          <div style="font-size:10px;color:var(--accent);font-weight:700;">+${r.pointsValue} نقطة</div>
+          <div style="font-size:10px;color:var(--text-muted);">${r.earnedAt ? new Date(r.earnedAt).toLocaleDateString('ar-EG') : ''}</div>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  } catch {
+    container.innerHTML = '<div class="card"><div class="empty-state">فشل تحميل المكافآت.</div></div>';
+  }
+}
+
+function renderChallenges() {
+  const container = document.getElementById('tabContent_challenges');
+  if (!container) return;
+  container.innerHTML = `<div class="card">
+    <div class="empty-state">
+      <i class="fas fa-crosshairs" style="font-size:40px;color:var(--primary);"></i>
+      <h3 style="margin:12px 0 4px;">التحديات قريباً</h3>
+      <p style="color:var(--text-muted);font-size:13px;">ميزة التحديات المباشرة مع الزملاء قادمة قريباً! تحدي زملائك واربح النقاط.</p>
+    </div>
+  </div>`;
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById(`tabContent_${name}`);
+  if (tab) tab.style.display = '';
+  const btn = document.querySelector(`.tab-btn[data-tab="${name}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+// ===== BUY AVATAR ITEM =====
+async function buyAvatarItem(itemId) {
+  try {
+    const res = await api(`${API_BASE}/v1/Gamification/BuyAvatarItem`, {
+      method: 'POST',
+      body: JSON.stringify({ avatarItemId: itemId })
+    });
+    const d = await res.json();
+    if (d.succeeded) {
+      renderAll();
+    } else {
+      alert(d.message || 'فشل الشراء');
+    }
+  } catch {
+    alert('حدث خطأ أثناء الشراء');
+  }
+}
+
+// ===== LOGOUT =====
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = '../index.html';
+});
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').style.display='none'; }
+});
+
+// ===== INIT =====
+renderAll();
+
+// ===== NOTIFICATIONS =====
+async function loadUnreadCount() {
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/UnreadCount`);
+    const data = await res.json();
+    const count = data.data || 0;
+    const badge = document.getElementById('notifBadge');
+    if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; }
+    else { badge.style.display = 'none'; }
+  } catch {}
+}
+
+async function showNotifications() {
+  document.getElementById('notifModal').style.display = 'flex';
+  document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>';
+  try {
+    const res = await api(`${API_BASE}/v1/Notifications/MyNotifications`);
+    const data = await res.json();
+    const notifs = data.data || data || [];
+    const list = document.getElementById('notifList');
+
+    if (!notifs.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;"><i class="fas fa-bell-slash" style="font-size:40px;display:block;margin-bottom:10px;"></i>لا توجد إشعارات</div>';
+      return;
+    }
+
+    list.innerHTML = notifs.map(n => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #334155;border-radius:10px;margin-bottom:8px;${n.isRead ? 'opacity:0.6;' : 'background:rgba(37,99,235,0.08);border-color:#2563eb;'}"
+           onclick="${n.isRead ? '' : `markAsRead('${n.id}')`}">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:#fff;">${n.title || ''}</div>
+          <div style="font-size:12px;color:#94a3b8;">${n.message || n.body || ''}</div>
+          <div style="font-size:10px;color:#64748b;margin-top:4px;">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+        </div>
+        <button onclick="event.stopPropagation();deleteNotif('${n.id}')" style="background:none;border:none;color:#ef4444;font-size:14px;cursor:pointer;padding:4px;"><i class="fas fa-trash"></i></button>
+      </div>
+    `).join('');
+  } catch {
+    document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ فشل تحميل الإشعارات</div>';
+  }
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal').style.display = 'none';
+}
+
+async function markAsRead(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAsRead/${id}`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function markAllAsRead() {
+  try {
+    await api(`${API_BASE}/v1/Notifications/MarkAllAsRead`, { method: 'PUT' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+async function deleteNotif(id) {
+  try {
+    await api(`${API_BASE}/v1/Notifications/Delete/${id}`, { method: 'DELETE' });
+    loadUnreadCount();
+    showNotifications();
+  } catch {}
+}
+
+document.getElementById('notifModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+
+loadUnreadCount();
+setInterval(loadUnreadCount, 30000);
+</script>
+</body>
+</html>

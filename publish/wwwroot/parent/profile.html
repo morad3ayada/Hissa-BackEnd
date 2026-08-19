@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الملف الشخصي | Corexion Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+.content { flex:1; overflow-y:auto; padding:24px; }
+
+.profile-card {
+  background:var(--card); border-radius:var(--radius); padding:32px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+  max-width:540px; margin:0 auto;
+}
+.profile-header { text-align:center; margin-bottom:28px; }
+.avatar-wrap {
+  position:relative; width:120px; height:120px;
+  margin:0 auto 12px; cursor:pointer;
+}
+.avatar-wrap img { width:120px; height:120px; border-radius:50%; border:4px solid var(--primary); object-fit:cover; }
+.avatar-overlay {
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .2s; font-size:28px; color:#fff;
+}
+.avatar-wrap:hover .avatar-overlay { opacity:1; }
+.profile-name { font-size:24px; font-weight:900; }
+.profile-role { font-size:14px; color:var(--text-muted); }
+.field {
+  display:flex; flex-direction:column; padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.field:last-child { border-bottom:none; }
+.field .label { color:var(--text-muted); font-size:13px; margin-bottom:4px; }
+.field .value { font-weight:600; font-size:15px; }
+.field input, .field textarea {
+  background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:10px 14px; font-family:'Cairo',sans-serif; font-size:15px;
+  color:var(--text); outline:none;
+}
+.field input:focus, .field textarea:focus { border-color:var(--primary); }
+.field textarea { resize:vertical; min-height:60px; }
+.actions { display:flex; gap:12px; margin-top:24px; }
+.btn {
+  padding:12px 24px; border-radius:12px; font-family:'Cairo',sans-serif;
+  font-size:14px; font-weight:700; cursor:pointer; border:none;
+  text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary { background:var(--primary); color:#fff; flex:1; }
+.btn-primary:hover { opacity:0.9; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-ghost { background:transparent; color:var(--text-muted); border:1px solid var(--border); }
+.loading { text-align:center; padding:60px; color:var(--text-muted); }
+.loading i { font-size:30px; }
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:#10b981; color:#fff; padding:12px 24px; border-radius:12px;
+  font-size:14px; font-weight:600; display:none; z-index:999;
+}
+.toast.error { background:#ef4444; }
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+  .profile-card { padding:20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon"><i class="fas fa-graduation-cap"></i></div><div class="logo-text">Corexion <span>Academy</span></div></div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;">القائمة</div>
+    <a href="dashboard.html" class="nav-item"><div class="nav-icon"><i class="fas fa-chart-pie"></i></div><span>الرئيسية</span></a>
+    <a href="courses.html" class="nav-item"><div class="nav-icon"><i class="fas fa-book-open"></i></div><span>كورسات الأبناء</span></a>
+    <a href="live.html" class="nav-item"><div class="nav-icon"><i class="fas fa-video"></i></div><span>البث المباشر</span></a>
+    <a href="profile.html" class="nav-item active"><div class="nav-icon"><i class="fas fa-user-cog"></i></div><span>البروفايل</span></a>
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info"><div class="name" id="sidebarUserName">ولي أمر</div><div class="role">ولي أمر</div></div>
+    </div>
+  </aside>
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;"></div>
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title">الملف <span>الشخصي</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div class="user-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+          <span class="uname" id="topbarUserName">ولي أمر</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+    <div class="content">
+      <div class="toast" id="toast"></div>
+      <div class="profile-card" id="profileCard">
+        <div class="loading" id="loadingState"><i class="fas fa-spinner fa-spin"></i><br>جاري التحميل...</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const API_BASE = "https://numeriqan.com/api";
+let profileData = null;
+function getToken() { return localStorage.getItem('token'); }
+function authHeaders() { return { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' }; }
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try { const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ refreshToken: rt }) }); if (!res.ok) return false; const data = await res.json(); if (data.succeeded && data.data) { localStorage.setItem('token', data.data.accessToken); localStorage.setItem('refreshToken', data.data.refreshToken); return true; } return false; } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) { if (await tryRefreshToken()) { opts.headers = { ...authHeaders(), ...opts.headers }; res = await fetch(url, opts).catch(() => null); if (!res) return makeEmptyRes(); } else { localStorage.clear(); window.location.href = '../login.html'; throw new Error('Session expired'); } }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+if (!localStorage.getItem('token')) { window.location.href = '../login.html'; }
+
+const userName = localStorage.getItem('userName') || 'ولي أمر';
+function updateUI() {
+  document.getElementById('sidebarUserName').innerText = userName;
+  document.getElementById('topbarUserName').innerText = userName.split(' ')[0];
+  const av = localStorage.getItem('avatarUrl');
+  if (av) document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = av);
+  document.getElementById('topbarAvatar').src = document.getElementById('sidebarAvatar').src;
+}
+updateUI();
+
+function showToast(msg, isError) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast' + (isError ? ' error' : ''); t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
+
+async function loadProfile() {
+  const card = document.getElementById('profileCard');
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile`, { headers: authHeaders() });
+    if (res.status === 401) { window.location.href = '../login.html'; return; }
+    const data = await res.json();
+    if (!data.succeeded) { card.innerHTML = '<div class="loading">❌ فشل التحميل</div>'; return; }
+    profileData = data.data;
+    renderView();
+  } catch { card.innerHTML = '<div class="loading">❌ خطأ في الاتصال</div>'; }
+}
+
+function renderView() {
+  const p = profileData;
+  const name = p.fullName || p.firstName + ' ' + p.lastName || localStorage.getItem('userName') || 'مستخدم';
+  const email = p.email || localStorage.getItem('email') || '—';
+  const role = p.role || localStorage.getItem('userRole') || '—';
+  const roleMap = { admin: 'مدير النظام', instructor: 'معلم', student: 'طالب', parent: 'ولي أمر' };
+  const roleText = roleMap[role.toLowerCase()] || role;
+  const avatarUrl = p.profilePictureUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4`;
+  document.getElementById('profileCard').innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()">
+        <img src="${avatarUrl}" id="profileAvatar">
+        <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+      <div class="profile-name">${name}</div>
+      <div class="profile-role">${roleText}</div>
+    </div>
+    <div class="field"><span class="label"><i class="fas fa-envelope"></i> البريد</span><span class="value">${email}</span></div>
+    <div class="field"><span class="label"><i class="fas fa-user-tag"></i> الدور</span><span class="value">${roleText}</span></div>
+    <div class="field"><span class="label"><i class="fas fa-user"></i> الاسم الأول</span><span class="value">${p.firstName || '—'}</span></div>
+    <div class="field"><span class="label"><i class="fas fa-user"></i> اسم العائلة</span><span class="value">${p.lastName || '—'}</span></div>
+    <div class="field"><span class="label"><i class="fas fa-info-circle"></i> نبذة</span><span class="value">${p.bio || '—'}</span></div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="enableEdit()"><i class="fas fa-edit"></i> تعديل</button>
+      <button class="btn btn-ghost" onclick="window.location.href='dashboard.html'"><i class="fas fa-arrow-right"></i> العودة</button>
+      <button class="btn btn-ghost" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+    </div>`;
+}
+
+function enableEdit() {
+  const p = profileData;
+  const avatarUrl = p.profilePictureUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.fullName || p.firstName + ' ' + p.lastName)}&backgroundColor=b6e3f4`;
+  document.getElementById('profileCard').innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()">
+        <img src="${avatarUrl}" id="profileAvatar"><div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+      <div class="profile-name">تعديل الملف</div>
+    </div>
+    <div class="field"><span class="label">الاسم الأول</span><input type="text" id="editFirstName" value="${p.firstName || ''}"></div>
+    <div class="field"><span class="label">اسم العائلة</span><input type="text" id="editLastName" value="${p.lastName || ''}"></div>
+    <div class="field"><span class="label">نبذة</span><textarea id="editBio" rows="3">${p.bio || ''}</textarea></div>
+    <div class="actions">
+      <button class="btn btn-success" onclick="saveProfile()"><i class="fas fa-check"></i> حفظ</button>
+      <button class="btn btn-ghost" onclick="renderView()"><i class="fas fa-times"></i> إلغاء</button>
+    </div>`;
+}
+
+async function saveProfile() {
+  const firstName = document.getElementById('editFirstName').value.trim();
+  const lastName = document.getElementById('editLastName').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  if (!firstName || !lastName) { showToast('الاسم الأول واسم العائلة مطلوبان', true); return; }
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ firstName, lastName, bio: bio || null }) });
+    const data = await res.json();
+    if (data.succeeded) {
+      profileData = data.data;
+      const fullName = (data.data.firstName + ' ' + data.data.lastName).trim();
+      if (fullName) localStorage.setItem('userName', fullName);
+      updateUI(); showToast('✅ تم الحفظ'); renderView();
+    } else { showToast('❌ ' + (data.message || 'فشل الحفظ'), true); }
+  } catch { showToast('❌ خطأ في الاتصال', true); }
+}
+
+async function uploadAvatar(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const formData = new FormData(); formData.append('file', file);
+  try {
+    const res = await fetch(`${API_BASE}/v1/Profile/picture`, { method: 'POST', headers: { 'Authorization': `Bearer ${getToken()}` }, body: formData });
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      profileData = data.data;
+      if (data.data.profilePictureUrl) { localStorage.setItem('avatarUrl', data.data.profilePictureUrl); updateUI(); }
+      showToast('✅ تم تحديث الصورة'); renderView();
+    } else { showToast('❌ ' + (data.message || 'فشل'), true); }
+  } catch { showToast('❌ خطأ', true); }
+}
+
+function logout() { localStorage.clear(); window.location.href = '../index.html'; }
+document.getElementById('logoutBtn').addEventListener('click', logout);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').style.display='none'; } });
+loadProfile();
+</script>
+</body>
+</html>

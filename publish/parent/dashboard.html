@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corexion Academy | لوحة ولي الأمر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #2563eb;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow:hidden; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100vh;
+  transition: margin-right 0.3s; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff; }
+.logo-text { font-size:18px; font-weight:800; color:#fff; }
+.logo-text span { color:var(--primary); }
+.sidebar-user {
+  padding: 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #1e293b; cursor:pointer; margin-top:auto;
+}
+.sidebar-user:hover { background:var(--sidebar-hover); }
+.sidebar-user img { width:38px; height:38px; border-radius:50%; object-fit:cover; }
+.sidebar-user-info .name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.sidebar-user-info .role { font-size:11px; color:#64748b; }
+.nav-item {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor:pointer;
+  color: var(--sidebar-text); transition: all 0.2s; margin: 2px 8px; border-radius: 10px;
+  text-decoration: none;
+}
+.nav-item:hover { background:var(--sidebar-hover); color:#fff; }
+.nav-item.active { background:var(--sidebar-active); color:#fff; }
+.nav-icon { width: 20px; text-align: center; font-size: 15px; }
+
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--card); border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow); z-index:50;
+}
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { font-size:18px; font-weight:800; }
+.topbar-title span { color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; cursor:pointer; object-fit:cover; }
+.uname { font-weight:700; font-size:13px; }
+.logout-btn {
+  padding:8px 14px; border:none; border-radius:10px; background:#fee2e2; color:#ef4444;
+  font-weight:600; cursor:pointer; font-size:12px; transition:all 0.2s;
+}
+.logout-btn:hover { background:#ef4444; color:#fff; }
+
+.content { flex:1; overflow-y:auto; padding:24px; }
+
+/* Cards */
+.card {
+  background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+}
+.card-title { font-size:16px; font-weight:800; display:flex;align-items:center;gap:8px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:900px){ .grid-3 { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .grid-2, .grid-3 { grid-template-columns:1fr; } }
+
+.stat-card {
+  background:var(--card); border-radius:var(--radius); padding:18px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+  display:flex; align-items:center; gap:14px;
+}
+.stat-icon {
+  width:48px; height:48px; border-radius:12px; display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.stat-icon.purple { background:#ede9fe; color:#7c3aed; }
+.stat-icon.red { background:#fee2e2; color:#ef4444; }
+.stat-icon.green { background:#d1fae5; color:#059669; }
+.stat-icon.blue { background:#dbeafe; color:#2563eb; }
+.stat-num { font-size:24px; font-weight:900; }
+.stat-label { font-size:12px; color:var(--text-muted); }
+
+.child-card {
+  border:1px solid var(--border); border-radius:var(--radius); padding:18px;
+  margin-bottom:14px; background:var(--card);
+}
+.child-card h4 { font-size:15px; font-weight:800; margin-bottom:4px; }
+
+.btn {
+  padding:10px 20px; border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;
+  text-decoration:none; display:inline-flex;align-items:center;gap:6px; transition:opacity 0.2s;
+}
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { opacity:0.9; }
+.btn-success { background:#10b981; color:#fff; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; }
+.btn-ghost { background:transparent; color:var(--text-muted); border:1px solid var(--border); }
+.w-full { width:100%; }
+.text-xs { font-size:12px; }
+.text-sm { font-size:13px; }
+.text-muted { color:var(--text-muted); }
+.font-bold { font-weight:800; }
+.mb-2 { margin-bottom:8px; }
+.mb-3 { margin-bottom:12px; }
+.mb-4 { margin-bottom:16px; }
+.mt-2 { margin-top:8px; }
+.mt-3 { margin-top:12px; }
+.mt-4 { margin-top:16px; }
+.flex { display:flex; }
+.justify-between { justify-content:space-between; }
+.items-center { align-items:center; }
+.gap-2 { gap:8px; }
+.gap-3 { gap:12px; }
+
+.progress-bar { height:8px; background:#e2e8f0; border-radius:10px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:10px; transition:width 0.5s; }
+.progress-fill.amber { background:#f59e0b; }
+.progress-fill.blue { background:var(--primary); }
+
+.modal-overlay {
+  display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;
+}
+.modal-overlay.active { display:flex; }
+.modal-box {
+  background:#1e293b; border-radius:16px; padding:28px; width:90%; max-width:420px;
+  border:1px solid #334155;
+}
+.modal-box h3 { font-size:18px; font-weight:800; color:#fff; margin-bottom:16px; }
+.modal-box .input {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155;
+  background:#0f172a; color:#fff; font-family:'Cairo',sans-serif; font-size:14px;
+  outline:none; margin-bottom:12px;
+}
+.modal-box .input:focus { border-color:var(--primary); }
+.modal-box label { font-size:13px; color:#94a3b8; margin-bottom:4px; display:block; }
+.modal-box select.input { cursor:pointer; }
+
+.empty-state { text-align:center; padding:40px; color:var(--text-muted); }
+.empty-state i { font-size:40px; display:block; margin-bottom:12px; }
+
+@media(max-width:768px){
+  .sidebar { position:fixed; right:-260px; top:0; bottom:0; }
+  .sidebar.open { right:0; }
+  .hamburger { display:block; }
+  .content { padding:16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">Corexion <span>Academy</span></div>
+    </div>
+    <div style="padding:12px 16px 4px;font-size:11px;color:#475569;font-weight:600;">القائمة</div>
+    <a href="dashboard.html" class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div><span>الرئيسية</span>
+    </a>
+    <a href="courses.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-book-open"></i></div><span>كورسات الأبناء</span>
+    </a>
+    <a href="live.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-video"></i></div><span>البث المباشر</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user-cog"></i></div><span>البروفايل</span>
+    </a>
+
+    <div class="sidebar-user" onclick="window.location.href='profile.html'">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" id="sidebarAvatar">
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebarUserName">ولي أمر</div>
+        <div class="role">ولي أمر</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').style.display='block'"><i class="fas fa-bars"></i></div>
+        <div class="topbar-title">لوحة <span>ولي الأمر</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div class="user-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='36' height='36' fill='%23334155'/%3E%3C/svg%3E" alt="user" class="avatar" id="topbarAvatar">
+          <span class="uname" id="topbarUserName">ولي أمر</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Welcome -->
+      <div class="card" style="background:linear-gradient(135deg,#1e293b,#0f172a);color:#fff;border:none;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:26px;">👋</div>
+          <div style="flex:1;">
+            <div style="font-size:20px;font-weight:900;" id="welcomeName">مرحباً!</div>
+            <div style="font-size:13px;color:#94a3b8;">تابع تقدم أبناءك وإنجازاتهم من هنا</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showAddChildModal()"><i class="fas fa-plus"></i> إضافة ابن</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid-2" id="statsGrid" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-users"></i></div><div><div class="stat-num" id="statChildren">0</div><div class="stat-label">الأبناء</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-chart-line"></i></div><div><div class="stat-num" id="statProgress">0%</div><div class="stat-label">متوسط التقدم</div></div></div>
+      </div>
+
+      <!-- Children list -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👨‍👩‍👦 أطفالي</div>
+          <button class="btn btn-primary btn-sm" onclick="showAddChildModal()"><i class="fas fa-plus"></i> إضافة</button>
+        </div>
+        <div id="childrenContainer">
+          <div class="empty-state"><i class="fas fa-spinner fa-spin"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Child Modal -->
+<div class="modal-overlay" id="addChildModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3>➕ إضافة ابن</h3>
+      <button onclick="hideAddChildModal()" style="background:none;border:none;color:#94a3b8;font-size:24px;cursor:pointer;">&times;</button>
+    </div>
+    <label>البريد الإلكتروني للطالب</label>
+    <input type="email" id="childEmailInput" class="input" placeholder="student@example.com">
+    <label>صلة القرابة</label>
+    <select id="childRelationInput" class="input">
+      <option value="PARENT">أب</option>
+      <option value="MOTHER">أم</option>
+      <option value="GUARDIAN">وصي</option>
+    </select>
+    <div id="addChildMsg" style="font-size:14px;margin-bottom:8px;"></div>
+    <button class="btn btn-primary w-full" id="addChildBtn" onclick="linkChild()"><i class="fas fa-link"></i> ربط الابن</button>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://numeriqan.com/api";
+function authHeaders() {
+  const token = localStorage.getItem('token');
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+function headers() { return { 'Content-Type': 'application/json' }; }
+
+async function tryRefreshToken() {
+  const rt = localStorage.getItem('refreshToken');
+  if (!rt) return false;
+  try {
+    const res = await fetch(`${API_BASE}/v1/Auth/Refresh`, {
+      method:'POST', headers:headers(),
+      body: JSON.stringify({ refreshToken: rt })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+async function api(url, opts = {}) {
+  opts.headers = { ...authHeaders(), ...opts.headers };
+  let res = await fetch(url, opts).catch(() => null);
+  if (!res) return makeEmptyRes();
+  if (res.status === 401) {
+    if (await tryRefreshToken()) {
+      opts.headers = { ...authHeaders(), ...opts.headers };
+      res = await fetch(url, opts).catch(() => null);
+      if (!res) return makeEmptyRes();
+    } else { localStorage.clear(); window.location.href = '../login.html'; throw new Error('Session expired'); }
+  }
+  const origJson = res.json.bind(res);
+  res.json = async () => { try { return await origJson(); } catch { return {}; } };
+  return res;
+}
+function makeEmptyRes() {
+  return { json: async () => ({}), ok: false, status: 0, clone: () => makeEmptyRes(), text: async () => '', blob: async () => new Blob() };
+}
+window.addEventListener('unhandledrejection', e => { if (e.reason?.message?.includes('Unexpected end of JSON input')) e.preventDefault(); });
+setInterval(async () => { await tryRefreshToken(); }, 10 * 60 * 1000);
+
+if (!localStorage.getItem('token')) { window.location.href = '../login.html'; }
+
+const currentUserName = localStorage.getItem('userName') || 'ولي أمر';
+const currentUserRole = localStorage.getItem('userRole') || 'Parent';
+if (currentUserRole !== 'Parent') {
+  if (currentUserRole === 'Student') window.location.href = '../student/dashboard.html';
+  else window.location.href = '../dashboard.html';
+}
+
+function updateUI() {
+  document.getElementById('sidebarUserName').innerText = currentUserName;
+  document.getElementById('topbarUserName').innerText = currentUserName.split(' ')[0];
+  document.getElementById('welcomeName').innerHTML = `مرحباً ${currentUserName} 👋`;
+  const av = localStorage.getItem('avatarUrl');
+  if (av) document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = av);
+  document.getElementById('topbarAvatar').src = document.getElementById('sidebarAvatar').src;
+}
+updateUI();
+
+async function loadProfileAvatar() {
+  try {
+    const res = await api(`${API_BASE}/v1/Profile`);
+    const data = await res.json();
+    if (data.succeeded && data.data) {
+      const url = data.data.profilePictureUrl;
+      if (url) { localStorage.setItem('avatarUrl', url); document.querySelectorAll('#sidebarAvatar, #topbarAvatar').forEach(el => el.src = url); }
+    }
+  } catch {}
+}
+loadProfileAvatar();
+
+// ===== PARENT DASHBOARD DATA =====
+async function loadParentDashboard() {
+  const container = document.getElementById('childrenContainer');
+  try {
+    const res = await api(`${API_BASE}/v1/Dashboard/Parent`);
+    const data = await res.json();
+    if (!res.ok || !data.succeeded) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>لا يوجد أبناء مضافون بعد</h3><button class="btn btn-primary btn-sm mt-3" onclick="showAddChildModal()"><i class="fas fa-plus"></i> إضافة ابن</button></div>';
+      return;
+    }
+    const children = data.data?.children || [];
+    if (!children.length) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>لا يوجد أبناء مضافون بعد</h3><button class="btn btn-primary btn-sm mt-3" onclick="showAddChildModal()"><i class="fas fa-plus"></i> إضافة ابن</button></div>';
+      return;
+    }
+
+    document.getElementById('statChildren').innerText = children.length;
+    const avgProgress = Math.round(children.reduce((s, c) => s + (c.overallProgressPercentage || 0), 0) / children.length);
+    document.getElementById('statProgress').innerText = avgProgress + '%';
+
+    const colors = ['#8b5cf6','#f59e0b','#10b981','#ef4444','#3b82f6','#ec4899'];
+    container.innerHTML = children.map((child, i) => {
+      const seed = child.studentId || i;
+      const isBoy = parseInt(seed.toString().charCodeAt(0) || i) % 2 === 0;
+      const avatar = isBoy
+        ? `https://api.dicebear.com/7.x/adventurer/svg?seed=boy${seed}&backgroundColor=b6e3f4`
+        : `https://api.dicebear.com/7.x/adventurer/svg?seed=girl${seed}&backgroundColor=ffd5dc`;
+      const color = colors[i % colors.length];
+      const progress = Math.round(child.overallProgressPercentage || 0);
+      const lastActive = child.lastActivityAt ? new Date(child.lastActivityAt).toLocaleDateString('ar-EG') : '—';
+      return `
+        <div class="child-card">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+            <img src="${avatar}" style="width:50px;height:50px;border-radius:50%;border:3px solid ${color};">
+            <div style="flex:1;">
+              <h4>${child.studentName}</h4>
+              <div class="text-xs text-muted">آخر نشاط: ${lastActive} | ${Math.round(child.studyHours || 0)} ساعة</div>
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;">
+              <span>📈 التقدم</span><span>${progress}%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill amber" style="width:${progress}%"></div></div>
+          </div>
+          <div class="grid-3" style="gap:8px;margin-bottom:12px;">
+            <div style="background:rgba(139,92,246,0.1);padding:10px;border-radius:10px;text-align:center;">
+              <div style="font-size:20px;font-weight:800;color:#8b5cf6;">${child.errorsCount || 0}</div>
+              <div class="text-xs text-muted">أخطاء</div>
+            </div>
+            <div style="background:rgba(16,185,129,0.1);padding:10px;border-radius:10px;text-align:center;">
+              <div style="font-size:20px;font-weight:800;color:#10b981;">${Math.round(child.studyHours || 0)}</div>
+              <div class="text-xs text-muted">ساعات</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.1);padding:10px;border-radius:10px;text-align:center;">
+              <div style="font-size:20px;font-weight:800;color:#f59e0b;">${(child.quizScores || []).length}</div>
+              <div class="text-xs text-muted">اختبارات</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <a href="parent-courses.html?studentId=${child.studentId}" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;"><i class="fas fa-book-open"></i> كورساته</a>
+            <button class="btn btn-outline btn-sm" style="flex:1;justify-content:center;" onclick="window.location.href='parent-live.html?studentId=${child.studentId}'"><i class="fas fa-video"></i> بث مباشر</button>
+          </div>
+        </div>`;
+    }).join('');
+  } catch {
+    container.innerHTML = '<div class="empty-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i><h3>فشل تحميل البيانات</h3></div>';
+  }
+}
+loadParentDashboard();
+
+// ===== ADD CHILD =====
+function showAddChildModal() {
+  document.getElementById('addChildModal').classList.add('active');
+  document.getElementById('childEmailInput').value = '';
+  document.getElementById('childRelationInput').value = 'PARENT';
+  document.getElementById('addChildMsg').innerHTML = '';
+}
+function hideAddChildModal() {
+  document.getElementById('addChildModal').classList.remove('active');
+}
+async function linkChild() {
+  const email = document.getElementById('childEmailInput').value.trim();
+  const relation = document.getElementById('childRelationInput').value;
+  const btn = document.getElementById('addChildBtn');
+  const msg = document.getElementById('addChildMsg');
+  if (!email) { msg.innerHTML = '<span style="color:#f87171;">❌ أدخل البريد الإلكتروني</span>'; return; }
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+  try {
+    const res = await fetch(`${API_BASE}/v1/Parents/LinkMyStudent`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ studentEmail: email, relation: relation })
+    });
+    const data = await res.json();
+    if (data.succeeded) {
+      msg.innerHTML = '<span style="color:#4ade80;">✅ تم ربط الابن بنجاح</span>';
+      hideAddChildModal();
+      loadParentDashboard();
+    } else {
+      msg.innerHTML = '<span style="color:#f87171;">❌ ' + (data.message || 'فشل الربط') + '</span>';
+    }
+  } catch { msg.innerHTML = '<span style="color:#f87171;">❌ خطأ في الاتصال</span>'; }
+  btn.disabled = false; btn.innerHTML = '<i class="fas fa-link"></i> ربط الابن';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = '../index.html'; });
+document.getElementById('addChildModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) hideAddChildModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').style.display='none'; hideAddChildModal(); } });
+</script>
+</body>
+</html>

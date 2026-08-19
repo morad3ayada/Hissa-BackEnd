@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>منصة Corexion التعليمية | تعلم ذكي متكامل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #facc15;
+            --gold-dark: #d4a017;
+            --gold-light: #fde68a;
+            --dark: #0f172a;
+            --dark2: #0a0f1f;
+            --dark3: #1e293b;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #ffffff;
+            color: #0f172a;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor {
+            width: 18px; height: 18px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: multiply;
+        }
+        .cursor-follower {
+            width: 40px; height: 40px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: all 0.15s ease;
+            opacity: 0.5;
+        }
+        body:hover .cursor { opacity: 1; }
+
+        /* ===== PARTICLE CANVAS ===== */
+        #particleCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== FLOATING ICONS (More + Better) ===== */
+        .floating-icons {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+        .float-item {
+            position: absolute;
+            pointer-events: none;
+        }
+        .float-item i {
+            color: rgba(250, 204, 21, 0.13);
+            display: block;
+            filter: drop-shadow(0 0 6px rgba(250,204,21,0.3));
+        }
+
+        @keyframes floatA {
+            0%   { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25%  { transform: translateY(-30px) translateX(15px) rotate(8deg); }
+            50%  { transform: translateY(-15px) translateX(30px) rotate(-5deg); }
+            75%  { transform: translateY(-40px) translateX(10px) rotate(12deg); }
+            100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+        }
+        @keyframes floatB {
+            0%   { transform: translateY(0px) rotate(0deg) scale(1); }
+            33%  { transform: translateY(-25px) rotate(-10deg) scale(1.1); }
+            66%  { transform: translateY(-45px) rotate(15deg) scale(0.9); }
+            100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
+        @keyframes floatC {
+            0%   { transform: translateX(0px) translateY(0px); }
+            50%  { transform: translateX(-25px) translateY(-35px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+        @keyframes spinFloat {
+            0%   { transform: rotate(0deg) translateY(0px); }
+            50%  { transform: rotate(180deg) translateY(-20px); }
+            100% { transform: rotate(360deg) translateY(0px); }
+        }
+        @keyframes pulseFloat {
+            0%,100% { transform: scale(1) translateY(0); opacity: 0.13; }
+            50%      { transform: scale(1.3) translateY(-20px); opacity: 0.22; }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gold);
+            box-shadow: 0 5px 30px rgba(250,204,21,0.1);
+            gap: 15px;
+            animation: navSlideDown 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes navSlideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
+        }
+        .logo {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .logo i {
+            font-size: 2rem; color: var(--gold);
+            animation: logoBounce 2s infinite cubic-bezier(0.36,0.07,0.19,0.97);
+        }
+        @keyframes logoBounce {
+            0%,100% { transform: rotate(0deg) scale(1); }
+            20%     { transform: rotate(-15deg) scale(1.1); }
+            40%     { transform: rotate(15deg) scale(1.15); }
+            60%     { transform: rotate(-8deg) scale(1.1); }
+            80%     { transform: rotate(8deg) scale(1.05); }
+        }
+        .logo h2 {
+            font-size: 1.3rem; font-weight: 800;
+            background: linear-gradient(135deg, #fff, #facc15, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: shimmerText 3s linear infinite;
+        }
+        @keyframes shimmerText {
+            0%   { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        .menu-icon {
+            display: none; font-size: 2rem; color: var(--gold); cursor: pointer;
+            width: 45px; height: 45px; align-items: center; justify-content: center;
+            border-radius: 50%; transition: 0.3s;
+            background: rgba(250,204,21,0.1);
+            border: 1px solid rgba(250,204,21,0.3);
+        }
+        .menu-icon:hover { background: rgba(250,204,21,0.25); transform: rotate(90deg); }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a {
+            color: #f1f5f9; text-decoration: none; font-weight: 600;
+            padding: 8px 14px; border-radius: 40px; transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            position: relative; overflow: hidden;
+        }
+        .nav-links a::before {
+            content: '';
+            position: absolute; bottom: 0; left: 50%; right: 50%;
+            height: 2px; background: var(--gold);
+            transition: all 0.3s ease;
+        }
+        .nav-links a:hover::before { left: 0; right: 0; }
+        .nav-links a i { color: var(--gold); transition: transform 0.3s; }
+        .nav-links a:hover { background: rgba(250,204,21,0.15); transform: translateY(-3px); }
+        .nav-links a:hover i { transform: rotate(20deg) scale(1.2); }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: radial-gradient(ellipse at 20% 20%, #1a2744 0%, #0a0f1f 60%);
+            padding: 120px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        /* Hero animated grid background */
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(250,204,21,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(250,204,21,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0%   { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
+        }
+        /* Hero glow orbs */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+        .orb1 {
+            width: 500px; height: 500px;
+            background: rgba(250,204,21,0.08);
+            top: -100px; left: -100px;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        .orb2 {
+            width: 400px; height: 400px;
+            background: rgba(99,102,241,0.06);
+            bottom: -100px; right: -100px;
+            animation: orbFloat 10s ease-in-out infinite reverse;
+        }
+        .orb3 {
+            width: 300px; height: 300px;
+            background: rgba(250,204,21,0.05);
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            animation: orbPulse 5s ease-in-out infinite;
+        }
+        @keyframes orbFloat {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50%      { transform: translate(40px,-40px) scale(1.1); }
+        }
+        @keyframes orbPulse {
+            0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
+            50%      { transform: translate(-50%,-50%) scale(1.5); opacity: 0.8; }
+        }
+        .hero-content { position: relative; z-index: 5; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(250,204,21,0.15); border: 1px solid rgba(250,204,21,0.4);
+            color: var(--gold); padding: 6px 18px; border-radius: 100px;
+            font-size: 0.9rem; font-weight: 700; margin-bottom: 24px;
+            animation: badgeEntrance 1s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes badgeEntrance {
+            from { opacity: 0; transform: translateY(20px) scale(0.8); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .hero-badge i { animation: spinFloat 3s linear infinite; }
+        .hero h1 {
+            font-size: 3rem; font-weight: 900; color: white; line-height: 1.3;
+            margin-bottom: 24px;
+            animation: heroTitleIn 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes heroTitleIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1 .highlight {
+            position: relative; display: inline-block;
+            background: linear-gradient(135deg, #facc15, #fde68a, #facc15);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: shimmerText 2s linear infinite;
+        }
+        .hero p {
+            font-size: 1.15rem; color: #94a3b8; max-width: 700px; margin: 0 auto 40px;
+            animation: heroTitleIn 1s 0.6s both;
+        }
+        .hero-buttons {
+            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+            animation: heroTitleIn 1s 0.8s both;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #facc15, #d4a017);
+            color: #0f172a; padding: 14px 36px; border-radius: 50px;
+            font-weight: 900; border: none; cursor: pointer; font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-gold::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+        .btn-gold:hover::before { transform: translateX(100%); }
+        .btn-gold:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 40px rgba(250,204,21,0.4); }
+        .btn-gold:active { transform: scale(0.97); }
+        .btn-gold i { transition: transform 0.3s; }
+        .btn-gold:hover i { transform: rotate(20deg) scale(1.2); }
+        .btn-outline {
+            background: transparent; border: 2px solid var(--gold); color: var(--gold);
+            padding: 14px 36px; border-radius: 50px; font-weight: 900; cursor: pointer;
+            font-size: 1rem; font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+            display: inline-flex; align-items: center; gap: 10px;
+            position: relative; overflow: hidden;
+        }
+        .btn-outline::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: var(--gold);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: -1;
+        }
+        .btn-outline:hover::before { transform: scaleX(1); }
+        .btn-outline:hover { color: #0f172a; transform: translateY(-4px); box-shadow: 0 15px 30px rgba(250,204,21,0.3); }
+        .btn-outline:hover i { transform: translateX(-5px); }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            text-align: center; margin-bottom: 50px;
+        }
+        .section-tag {
+            display: inline-block;
+            background: rgba(250,204,21,0.1);
+            border: 1px solid rgba(250,204,21,0.3);
+            color: var(--gold); padding: 4px 16px;
+            border-radius: 100px; font-size: 0.85rem; font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 2.2rem; font-weight: 900;
+            line-height: 1.2;
+        }
+        .section-title .accent { color: var(--gold); }
+
+        /* ===== WHY US ===== */
+        .why-us {
+            padding: 80px 20px;
+            background: linear-gradient(145deg, #fff, #fef9e6);
+            position: relative; z-index: 3; overflow: hidden;
+        }
+        .why-us::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, transparent, #facc15, transparent);
+        }
+        .why-grid {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 25px; max-width: 1200px; margin: 0 auto;
+        }
+        .why-card {
+            background: white;
+            width: 190px; padding: 30px 20px;
+            border-radius: 24px; text-align: center;
+            border: 2px solid rgba(250,204,21,0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(40px);
+        }
+        .why-card.animate-in { opacity: 1; transform: translateY(0); }
+        .why-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(250,204,21,0.1), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .why-card:hover::before { opacity: 1; }
+        .why-card:hover {
+            transform: translateY(-18px) rotate(2deg) scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 30px 50px rgba(250,204,21,0.25);
+        }
+        .why-card .card-icon {
+            width: 60px; height: 60px; border-radius: 18px;
+            background: linear-gradient(135deg, #facc15, #d4a017);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.4rem; color: #0f172a;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .why-card:hover .card-icon { transform: rotate(360deg) scale(1.1); }
+        .why-card h3 { font-size: 1rem; font-weight: 700; color: #1e293b; }
+
+        /* ===== COURSES ===== */
+        .courses-section {
+            padding: 80px 20px;
+            background: var(--dark);
+            position: relative; z-index: 3; overflow: hidden;
+        }
+        .courses-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(250,204,21,0.02) 40px,
+                rgba(250,204,21,0.02) 41px
+            );
+        }
+        .courses-slider {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 28px; max-width: 1200px; margin: 0 auto;
+        }
+        .course-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            width: 260px; padding: 36px 24px;
+            border-radius: 28px; text-align: center;
+            border: 1px solid rgba(250,204,21,0.25);
+            transition: all 0.4s ease;
+            position: relative; overflow: hidden;
+            opacity: 0; transform: scale(0.85) translateY(30px);
+        }
+        .course-card.animate-in { opacity: 1; transform: scale(1) translateY(0); }
+        .course-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, #facc15, transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .course-card:hover::before { transform: scaleX(1); }
+        .course-card::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at center, rgba(250,204,21,0.12) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .course-card:hover::after { opacity: 1; }
+        .course-card:hover {
+            transform: translateY(-14px) scale(1.03);
+            border-color: rgba(250,204,21,0.7);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 30px rgba(250,204,21,0.15);
+        }
+        .course-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.05));
+            border: 1px solid rgba(250,204,21,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: var(--gold);
+            transition: all 0.4s;
+        }
+        .course-card:hover .course-icon {
+            background: var(--gold); color: #0f172a;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 20px rgba(250,204,21,0.5);
+        }
+        .course-card h3 { color: white; font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+        .course-card p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+        .course-btn {
+            background: linear-gradient(135deg, #facc15, #d4a017);
+            border: none; padding: 10px 24px; border-radius: 60px;
+            font-weight: 800; font-size: 0.9rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #0f172a; font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .course-btn::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+        .course-btn:hover::before { transform: translateX(100%); }
+        .course-btn:hover { transform: scale(1.08); box-shadow: 0 8px 20px rgba(250,204,21,0.5); }
+        .course-btn i { transition: transform 0.3s; }
+        .course-btn:hover i { transform: translateX(-5px); }
+
+        /* ===== STUDENT EXP ===== */
+        .student-exp {
+            padding: 80px 20px;
+            background: linear-gradient(120deg, #fff, #f8fafc);
+            position: relative; z-index: 3;
+        }
+        .exp-static-grid {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 16px; max-width: 1100px; margin: 0 auto;
+        }
+        .exp-item {
+            background: white; padding: 14px 24px; border-radius: 60px;
+            display: inline-flex; align-items: center; gap: 12px;
+            font-weight: 700; font-size: 1rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+            border-right: 4px solid var(--gold);
+            cursor: default;
+            transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            opacity: 0; transform: translateY(30px);
+        }
+        .exp-item.animate-in { opacity: 1; transform: translateY(0); }
+        .exp-item i {
+            color: var(--gold); font-size: 1.2rem;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .exp-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: #fef9e6;
+            box-shadow: 0 20px 35px rgba(250,204,21,0.3);
+            border-right-width: 6px;
+        }
+        .exp-item:hover i { transform: rotate(360deg) scale(1.3); }
+
+        /* ===== INSTRUCTOR ===== */
+        .instructor-section {
+            padding: 80px 20px;
+            background: #fefcf5;
+            position: relative; z-index: 3;
+        }
+
+        /* ===== PAYMENT ===== */
+        .payment-section {
+            padding: 80px 20px;
+            background: white;
+            position: relative; z-index: 3;
+        }
+        .payment-methods {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+            max-width: 800px; margin: 0 auto 30px;
+        }
+        .pay-card {
+            background: var(--dark);
+            color: white; padding: 20px 36px;
+            border-radius: 70px 20px 70px 20px;
+            display: flex; align-items: center; gap: 15px;
+            font-size: 1.1rem; font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            cursor: pointer; border: 2px solid transparent;
+            opacity: 0; transform: translateX(40px);
+        }
+        .pay-card.animate-in { opacity: 1; transform: translateX(0); }
+        .pay-card i { color: var(--gold); font-size: 1.5rem; transition: transform 0.4s; }
+        .pay-card:hover {
+            transform: scale(1.07) rotate(-2deg) translateY(-5px);
+            background: var(--gold); color: #0f172a;
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(250,204,21,0.35);
+        }
+        .pay-card:hover i { color: #0f172a; transform: rotate(360deg) scale(1.3); }
+
+        /* ===== PROGRESS ===== */
+        .progress-section {
+            padding: 80px 20px;
+            background: rgba(15,23,42,0.95);
+            position: relative; z-index: 3;
+        }
+        .progress-grid {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 24px; max-width: 1100px; margin: 0 auto;
+        }
+        .progress-card {
+            background: rgba(255,255,255,0.95); width: 240px; padding: 30px 20px;
+            border-radius: 24px; text-align: center;
+            border-top: 6px solid var(--gold);
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(40px);
+        }
+        .progress-card.animate-in { opacity: 1; transform: translateY(0); }
+        .progress-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(250,204,21,0.1), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .progress-card:hover::before { opacity: 1; }
+        .progress-card:hover {
+            transform: translateY(-14px) scale(1.04);
+            box-shadow: 0 25px 50px rgba(250,204,21,0.3);
+        }
+        .progress-card i {
+            font-size: 2rem; color: var(--gold); display: block; margin-bottom: 14px;
+            transition: transform 0.4s;
+        }
+        .progress-card:hover i { transform: rotateY(360deg) scale(1.2); }
+        .progress-card h3 { font-size: 1rem; font-weight: 700; color: var(--dark); }
+
+        /* ===== DARK CARDS (parent) ===== */
+        .dark-card {
+            background: rgba(30,41,59,0.9) !important;
+            color: white !important;
+        }
+        .dark-card h3, .dark-card i { color: var(--gold) !important; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--dark); color: #cbd5e1;
+            padding: 60px 20px 30px;
+            border-radius: 40px 40px 0 0;
+            position: relative; z-index: 3;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 35px; margin-bottom: 35px;
+        }
+        .footer-col h4 {
+            color: var(--gold); margin-bottom: 15px; font-size: 1.1rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .footer-social { display: flex; gap: 15px; margin-top: 16px; }
+        .footer-social a {
+            color: var(--gold); font-size: 1.6rem;
+            transition: all 0.3s;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .footer-social a:hover {
+            background: var(--gold); color: #0f172a;
+            transform: translateY(-5px) rotate(8deg);
+            box-shadow: 0 10px 20px rgba(250,204,21,0.3);
+        }
+        .contact-row { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .contact-row a {
+            color: var(--gold); text-decoration: none; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.3s; padding: 4px 0;
+        }
+        .contact-row a:hover { color: white; transform: translateX(-5px); }
+        .footer-bottom {
+            border-top: 1px solid rgba(250,204,21,0.2);
+            padding-top: 20px; text-align: center; font-size: 0.85rem;
+        }
+
+        /* ===== FLOATING BUTTONS ===== */
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 60px;
+            background: var(--dark); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--gold);
+            cursor: pointer; z-index: 9998;
+            animation: wabounce 2.5s infinite ease-in-out;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        @keyframes wabounce {
+            0%,100% { transform: translateY(0) rotate(0deg); box-shadow: 0 8px 20px rgba(250,204,21,0.2); }
+            50%      { transform: translateY(-12px) rotate(-10deg); box-shadow: 0 20px 40px rgba(250,204,21,0.4); }
+        }
+        .whatsapp-float i { font-size: 2rem; color: var(--gold); }
+        .whatsapp-float:hover {
+            animation: none;
+            transform: scale(1.15) rotate(15deg);
+            background: var(--gold);
+            box-shadow: 0 0 30px rgba(250,204,21,0.6);
+        }
+        .whatsapp-float:hover i { color: #0f172a; }
+        .scroll-top {
+            position: fixed; bottom: 100px; right: 30px;
+            background: var(--gold); width: 46px; height: 46px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; transition: all 0.4s;
+            z-index: 9998; color: #0f172a; font-size: 1.1rem;
+            box-shadow: 0 8px 20px rgba(250,204,21,0.4);
+            transform: translateY(20px);
+        }
+        .scroll-top.show { opacity: 1; transform: translateY(0); }
+        .scroll-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 15px 30px rgba(250,204,21,0.5); }
+
+        /* ===== SECTION DIVIDERS ===== */
+        .wave-divider { overflow: hidden; line-height: 0; }
+        .wave-divider svg { display: block; }
+
+        /* ===== HIGHLIGHT TITLE ===== */
+        .highlight-title {
+            background: linear-gradient(135deg, #FFE6A3, #FACC15, #FFE6A3);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmerText 3s linear infinite;
+        }
+
+        /* ===== COUNTER ANIMATION ===== */
+        .stats-bar {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 40px; padding: 50px 20px;
+            background: var(--dark); position: relative; z-index: 3;
+        }
+        .stat-item { text-align: center; }
+        .stat-num {
+            font-size: 2.5rem; font-weight: 900; color: var(--gold);
+            display: block;
+        }
+        .stat-label { font-size: 0.9rem; color: #94a3b8; }
+
+        /* ===== NEWSLETTER INPUT ===== */
+        .newsletter-input {
+            padding: 12px 16px; border-radius: 40px; border: 2px solid rgba(250,204,21,0.3);
+            width: 65%; font-family: 'Cairo', sans-serif; font-size: 0.95rem;
+            outline: none; transition: border-color 0.3s;
+            background: rgba(255,255,255,0.05); color: white;
+        }
+        .newsletter-input:focus { border-color: var(--gold); }
+        .newsletter-btn {
+            background: var(--gold); border-radius: 40px; padding: 10px 20px;
+            border: none; font-weight: 800; cursor: pointer;
+            font-family: 'Cairo', sans-serif; transition: all 0.3s; color: #0f172a;
+        }
+        .newsletter-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(250,204,21,0.5); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .menu-icon { display: flex; }
+            .nav-links {
+                display: none; flex-direction: column; width: 100%;
+                background: rgba(15,23,42,0.97); backdrop-filter: blur(20px);
+                padding: 20px; border-radius: 24px; margin-top: 10px;
+                border: 1px solid rgba(250,204,21,0.3); gap: 10px;
+            }
+            .nav-links.active { display: flex; }
+            .hero h1 { font-size: 2rem; }
+            .hero { padding: 80px 20px; }
+            .why-card { width: 160px; }
+            .course-card { width: 240px; }
+            .cursor, .cursor-follower { display: none; }
+            body { cursor: auto; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.6rem; }
+            .section-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Floating Icons Layer -->
+    <div class="floating-icons" id="floatingIcons"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-brain"></i>
+            <h2>معنا يصبح التعلم متعة |Corexion Academy</h2>
+        </div>
+        <div class="menu-icon" id="mobileMenuIcon">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#home"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="courses.html"><i class="fas fa-book"></i> الكورسات</a>
+            <a href="./login.html"><i class="fas fa-sign-in-alt"></i> دخول</a>
+            <a href="./register.html"><i class="fas fa-user-plus"></i> تسجيل</a>
+            <!-- تم إضافة id للتحكم في إخفاء الرابط للطلاب -->
+            <a href="#" id="dashboardLink" onclick="handleDashboardClick(event)"><i class="fas fa-gauge"></i> لوحة التحكم</a>
+            <div id="authArea"></div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-orb orb1"></div>
+        <div class="hero-orb orb2"></div>
+        <div class="hero-orb orb3"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                موقع تعليمي ذكي متكامل
+            </div>
+            <h1>
+ <span class="highlight">منصه متخصصه في ماده الرياضيات</span><br>
+            </h1>
+            <p>منصة تعليمية متكاملة مصممة للطلاب في جميع المراحل، تقدم تجربة تعلم تفاعلية تشمل فيديوهات، اختبارات، متابعة التقدم، ونظام تقييم ذكي.</p>
+            <div class="hero-buttons">
+                <button class="btn-gold" onclick="window.location.href='courses.html'">
+                    <i class="fas fa-graduation-cap"></i> تصفح الكورسات
+                </button>
+                <button class="btn-outline" onclick="window.location.href='courses.html'">
+                    <i class="fas fa-play"></i> ابدأ الآن
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    
+
+    <!-- WHY US -->
+    <section class="why-us">
+        <div class="section-header">
+            <div class="section-tag">⭐ لماذا نحن؟</div>
+            <h2 class="section-title">ليه تختار <span class="accent">Learnix</span>؟</h2>
+        </div>
+        <div class="why-grid">
+            <div class="why-card"><div class="card-icon"><i class="fas fa-child"></i></div><h3>تعلم سهل</h3></div>
+            <div class="why-card"><div class="card-icon"><i class="fas fa-video"></i></div><h3>فيديوهات احترافية</h3></div>
+            <div class="why-card"><div class="card-icon"><i class="fas fa-chart-line"></i></div><h3>متابعة دقيقة</h3></div>
+            <div class="why-card"><div class="card-icon"><i class="fas fa-tasks"></i></div><h3>اختبارات تفاعلية</h3></div>
+            <div class="why-card"><div class="card-icon"><i class="fas fa-gamepad"></i></div><h3>تعليم ممتع</h3></div>
+            <div class="why-card"><div class="card-icon"><i class="fas fa-certificate"></i></div><h3>شهادات معتمدة</h3></div>
+        </div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="courses-section" id="courses">
+        <div class="section-header">
+            <div class="section-tag" style="background:rgba(250,204,21,0.15); color:var(--gold);"> كورساتنا</div>
+            <h2 class="section-title" style="color:white;">كورساتنا <span class="accent">المميزة</span></h2>
+        </div>
+        <div class="courses-slider">
+            <div class="course-card">
+                <div class="course-icon"><i class="fas fa-seedling"></i></div>
+                <h3>الأساسيات</h3>
+                <p>انطلق من الصفر   </p>
+                <button class="course-btn" onclick="window.location.href='courses.html'">عرض الكورس <i class="fas fa-arrow-left"></i></button>
+            </div>
+            <div class="course-card">
+                <div class="course-icon"><i class="fas fa-rocket"></i></div>
+                <h3>تطوير المهارات</h3>
+                <p>عزز مهاراتك  </p>
+                <button class="course-btn" onclick="window.location.href='courses.html'">عرض الكورس <i class="fas fa-arrow-left"></i></button>
+            </div>
+            <div class="course-card">
+                <div class="course-icon"><i class="fas fa-fire"></i></div>
+                <h3>متقدمة</h3>
+                <p>للمتميزين  </p>
+                <button class="course-btn" onclick="window.location.href='courses.html'">عرض الكورس <i class="fas fa-arrow-left"></i></button>
+            </div>
+            <div class="course-card">
+                <div class="course-icon"><i class="fas fa-puzzle-piece"></i></div>
+                <h3>للأطفال</h3>
+                <p>تعلم باللعب والمتعة</p>
+                <button class="course-btn" onclick="window.location.href='courses.html'">عرض الكورس <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDENT EXP -->
+    <section class="student-exp">
+        <div class="section-header">
+            <h2 class="section-title">تجربة <span class="accent">الطالب</span></h2>
+        </div>
+        <div class="exp-static-grid">
+            <div class="exp-item"><i class="fas fa-user-plus"></i> تسجيل / دخول</div>
+            <div class="exp-item"><i class="fas fa-book-open"></i> مشاهدة الكورسات المجانية</div>
+            <div class="exp-item"><i class="fas fa-play-circle"></i> مشاهدة الفيديوهات</div>
+            <div class="exp-item"><i class="fas fa-credit-card"></i> الاشتراك في الكورسات</div>
+            <div class="exp-item"><i class="fas fa-chart-line"></i> متابعة التقدم</div>
+            <div class="exp-item"><i class="fas fa-trophy"></i> مسابقات جماعية</div>
+            <div class="exp-item"><i class="fas fa-certificate"></i> شهادات الإنجاز</div>
+            <div class="exp-item"><i class="fas fa-robot"></i> المرشد الذكي</div>
+            <div class="exp-item"><i class="fas fa-gift"></i> متجر الهدايا</div>
+            <div class="exp-item"><i class="fas fa-comments"></i> غرف نقاش</div>
+            <div class="exp-item"><i class="fas fa-clipboard-check"></i>حل اختبارات تفاعلية</div>
+        </div>
+    </section>
+    <section style="padding:80px 20px; background:var(--dark); position:relative; z-index:3;">
+        <div class="section-header">
+            <h2 class="section-title highlight-title">نظام ولي الأمر</h2>
+        </div>
+        <div class="progress-grid">
+            <div class="progress-card dark-card"><i class="fas fa-chart-line"></i><h3>متابعة التقدم</h3></div>
+            <div class="progress-card dark-card"><i class="fas fa-star"></i><h3>مشاهدة درجات الطالب</h3></div>
+            <div class="progress-card dark-card"><i class="fas fa-palette"></i><h3>اختبارات من بنك الأسئلة</h3></div>
+        </div>
+    </section>
+    <!-- INSTRUCTOR -->
+    <section class="instructor-section">
+        <div class="section-header">
+            <h2 class="section-title">تجربة <span class="accent">المدرّس</span></h2>
+        </div>
+        <div class="exp-static-grid">
+            <div class="exp-item"><i class="fas fa-plus-circle"></i> إنشاء كورسات</div>
+            <div class="exp-item"><i class="fas fa-upload"></i> رفع الدروس</div>
+            <div class="exp-item"><i class="fas fa-tag"></i> تحديد السعر</div>
+            <div class="exp-item"><i class="fas fa-chart-line"></i> تحليل أداء الطلاب</div>
+            <div class="exp-item"><i class="fas fa-certificate"></i> إصدار شهادات</div>
+            <div class="exp-item"><i class="fas fa-comments"></i> تفاعل مع الطلاب</div>
+            <div class="exp-item"><i class="fas fa-chalkboard"></i> حصص مباشرة</div>
+        </div>
+    </section>
+
+    <!-- PAYMENT -->
+    <section class="payment-section">
+        <div class="section-header">
+            <div class="section-tag">💳 الدفع الآمن</div>
+            <h2 class="section-title">نظام دفع <span class="accent">آمن وسريع</span></h2>
+        </div>
+        <div class="payment-methods">
+            <div class="pay-card"><i class="fas fa-money-bill-wave"></i> Vodafone Cash</div>
+            <div class="pay-card"><i class="fas fa-receipt"></i> انستا باي</div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+            <div class="pay-card" style="background:#1e293b; animation-delay:0.2s;"><i class="fas fa-clock"></i> Pending</div>
+            <div class="pay-card" style="background:#166534; animation-delay:0.4s;"><i class="fas fa-check-circle"></i> Paid</div>
+        </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="progress-section">
+        <div class="section-header">
+            <div class="section-tag" style="background:rgba(250,204,21,0.15); color:var(--gold);">📊 التتبع</div>
+            <h2 class="section-title highlight-title">نظام تتبع ذكي</h2>
+        </div>
+        <div class="progress-grid">
+            <div class="progress-card"><i class="fas fa-chart-pie"></i><h3>نسبة مشاهدة الفيديو</h3></div>
+            <div class="progress-card"><i class="fas fa-chalkboard"></i><h3>تقدم كل كورس</h3></div>
+            <div class="progress-card"><i class="fas fa-user-check"></i><h3>متابعة أداء الطالب</h3></div>
+        </div>
+    </section>
+
+    <!-- LEARNING SYSTEM -->
+    <section style="padding:80px 20px; background:#f8fafc; position:relative; z-index:3;">
+        <div class="section-header">
+            <div class="section-tag">🧪 التعلم المتقدم</div>
+            <h2 class="section-title">نظام التعلم <span class="accent">المتقدم</span></h2>
+        </div>
+        <div class="progress-grid">
+            <div class="progress-card"><i class="fas fa-question-circle"></i><h3>أسئلة على الوحدات</h3></div>
+            <div class="progress-card"><i class="fas fa-file-alt"></i><h3>امتحانات نهائية</h3></div>
+            <div class="progress-card"><i class="fas fa-exclamation-triangle"></i><h3>متابعة الأخطاء</h3></div>
+            <div class="progress-card"><i class="fas fa-sliders-h"></i><h3>أنظمة التعلم</h3></div>
+        </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section style="padding:80px 20px; background:#fefcf5; position:relative; z-index:3;">
+        <div class="section-header">
+            <h2 class="section-title">الإشعارات والحصص <span class="accent">المباشرة</span></h2>
+        </div>
+        <div class="progress-grid">
+            <div class="progress-card"><i class="fas fa-bell"></i><h3>إشعارات فورية</h3></div>
+            <div class="progress-card"><i class="fas fa-trophy"></i><h3>نظام نقاط وترتيب</h3></div>
+            <div class="progress-card"><i class="fas fa-chalkboard"></i><h3>حصص مباشرة</h3></div>
+            <div class="progress-card"><i class="fas fa-user-friends"></i><h3>غرف مذاكرة</h3></div>
+        </div>
+    </section>
+
+    <!-- PARENT SECTION -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4><i class="fas fa-brain"></i> Corexion Academy</h4>
+                <p>تعلم بلا حدود مع أحدث الأنظمة الذكية.</p>
+                <p style="margin-top:8px; font-size:0.85rem; color:#64748b;">أحد مشاريع مجموعة كوريكسيون العالمية</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="contact-row">
+                    <a href="mailto:Corexion.academy@gmail.com"><i class="fas fa-envelope"></i> Corexion.academy@gmail.com</a>
+                    <a href="https://wa.me/201557854833" target="_blank"><i class="fab fa-whatsapp"></i> 01557854833 واتساب</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4><i class="fas fa-link"></i> روابط سريعة</h4>
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+                    <li><a href="#" style="color:#94a3b8; text-decoration:none; transition:color 0.3s; display:flex; align-items:center; gap:8px;" onmouseover="this.style.color='#facc15'" onmouseout="this.style.color='#94a3b8'"><i class="fas fa-chevron-left" style="color:#facc15; font-size:0.8rem;"></i> الرئيسية</a></li>
+                    <li><a href="courses.html" style="color:#94a3b8; text-decoration:none; transition:color 0.3s; display:flex; align-items:center; gap:8px;" onmouseover="this.style.color='#facc15'" onmouseout="this.style.color='#94a3b8'"><i class="fas fa-chevron-left" style="color:#facc15; font-size:0.8rem;"></i> الكورسات</a></li>
+                    <li><a href="#" style="color:#94a3b8; text-decoration:none; transition:color 0.3s; display:flex; align-items:center; gap:8px;" onmouseover="this.style.color='#facc15'" onmouseout="this.style.color='#94a3b8'"><i class="fas fa-chevron-left" style="color:#facc15; font-size:0.8rem;"></i> اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4><i class="fas fa-envelope-open"></i> النشرة البريدية</h4>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="بريدك الإلكتروني">
+                    <button id="newsletterSendBtn" class="newsletter-btn">إرسال</button>
+                </div>
+                <p style="font-size:12px; margin-top:10px; color:#64748b;">اشترك لتصلك أحدث الكورسات والعروض</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 منصة Corexion التعليمية الذكية - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <div class="whatsapp-float" id="whatsappBtn"><i class="fab fa-whatsapp"></i></div>
+    <div class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></div>
+
+    <script>
+    // ===== دالة إظهار/إخفاء زر لوحة التحكم حسب دور المستخدم =====
+    function toggleDashboardLink() {
+        const dashboardLink = document.getElementById('dashboardLink');
+        if (!dashboardLink) return;
+        const loggedUser = localStorage.getItem('currentLoggedUser');
+        if (loggedUser) {
+            try {
+                const user = JSON.parse(loggedUser);
+                // إخفاء الرابط إذا كان المستخدم طالباً
+                if (user.role === 'student') {
+                    dashboardLink.style.display = 'none';
+                } else {
+                    dashboardLink.style.display = 'flex';
+                }
+            } catch(e) {
+                dashboardLink.style.display = 'flex';
+            }
+        } else {
+            // إذا لم يكن هناك مستخدم مسجل، نظهر الرابط (سيتم توجيهه لتسجيل الدخول)
+            dashboardLink.style.display = 'flex';
+        }
+    }
+
+    // ===== دالة التحقق من تسجيل الدخول قبل الدخول إلى لوحة التحكم =====
+    window.handleDashboardClick = function(event) {
+        event.preventDefault();
+        const loggedUser = localStorage.getItem("currentLoggedUser");
+        if (!loggedUser) {
+            // توجيه إلى صفحة تسجيل الدخول مع حفظ مسار العودة
+            sessionStorage.setItem("redirectAfterLogin", "dashboard.html");
+            window.location.href = "login.html";
+        } else {
+            // المستخدم مسجل الدخول، نوجهه إلى لوحة التحكم
+            window.location.href = "dashboard.html";
+        }
+    };
+
+    // ===== باقي الكود الأصلي (الماوس، الجسيمات، الأيقونات العائمة، إلخ) =====
+    // ===== CUSTOM CURSOR =====
+    const cursor = document.getElementById('cursor');
+    const cursorFollower = document.getElementById('cursorFollower');
+    let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+    });
+    function animateCursor() {
+        followerX += (mouseX - followerX) * 0.12;
+        followerY += (mouseY - followerY) * 0.12;
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    document.querySelectorAll('a, button, .why-card, .course-card, .exp-item, .pay-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.width = '30px'; cursor.style.height = '30px';
+            cursorFollower.style.width = '60px'; cursorFollower.style.height = '60px';
+            cursorFollower.style.opacity = '0.3';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.width = '18px'; cursor.style.height = '18px';
+            cursorFollower.style.width = '40px'; cursorFollower.style.height = '40px';
+            cursorFollower.style.opacity = '0.5';
+        });
+    });
+
+    // ===== PARTICLE SYSTEM =====
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+    const particles = [];
+    const PARTICLE_COUNT = 60;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 2 + 0.5,
+            dx: (Math.random() - 0.5) * 0.4,
+            dy: (Math.random() - 0.5) * 0.4,
+            alpha: Math.random() * 0.4 + 0.1,
+            pulse: Math.random() * Math.PI * 2
+        });
+    }
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.pulse += 0.02;
+            p.alpha = 0.1 + Math.sin(p.pulse) * 0.15;
+            p.x += p.dx; p.y += p.dy;
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(250,204,21,${p.alpha})`;
+            ctx.fill();
+        });
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(250,204,21,${0.06 * (1 - dist/100)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // ===== FLOATING ICONS GENERATOR =====
+    const iconsList = [
+        'fa-brain', 'fa-graduation-cap', 'fa-chalkboard-user', 'fa-star',
+        'fa-rocket', 'fa-book-open', 'fa-microchip', 'fa-crown',
+        'fa-atom', 'fa-magic', 'fa-calculator', 'fa-flask',
+        'fa-infinity', 'fa-lightbulb', 'fa-pencil-alt', 'fa-trophy',
+        'fa-award', 'fa-fire', 'fa-gem', 'fa-chart-bar',
+        'fa-globe', 'fa-compass', 'fa-puzzle-piece', 'fa-cog'
+    ];
+    const animations = ['floatA', 'floatB', 'floatC', 'spinFloat', 'pulseFloat'];
+    const container = document.getElementById('floatingIcons');
+    for (let i = 0; i < 28; i++) {
+        const item = document.createElement('div');
+        item.className = 'float-item';
+        const icon = iconsList[Math.floor(Math.random() * iconsList.length)];
+        const size = (Math.random() * 3 + 1.5).toFixed(1);
+        const anim = animations[Math.floor(Math.random() * animations.length)];
+        const dur = (Math.random() * 14 + 10).toFixed(1);
+        const delay = (Math.random() * 6).toFixed(1);
+        const top = Math.random() * 95;
+        const left = Math.random() * 95;
+        item.style.cssText = `top:${top}%;left:${left}%;animation:${anim} ${dur}s ${delay}s infinite ease-in-out;`;
+        item.innerHTML = `<i class="fas ${icon}" style="font-size:${size}rem;"></i>`;
+        container.appendChild(item);
+    }
+
+    // ===== SCROLL REVEAL =====
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, idx) => {
+            if (entry.isIntersecting) {
+                const delay = entry.target.dataset.delay || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('animate-in');
+                }, delay);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    function setupStaggeredReveal(selector) {
+        document.querySelectorAll(selector).forEach((el, idx) => {
+            el.dataset.delay = idx * 80;
+            revealObserver.observe(el);
+        });
+    }
+    setupStaggeredReveal('.why-card');
+    setupStaggeredReveal('.course-card');
+    setupStaggeredReveal('.exp-item');
+    setupStaggeredReveal('.pay-card');
+    setupStaggeredReveal('.progress-card');
+
+    // ===== COUNTER ANIMATION =====
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.target);
+                let current = 0;
+                const step = target / 60;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { current = target; clearInterval(timer); }
+                    el.textContent = Math.floor(current);
+                }, 30);
+                counterObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => counterObserver.observe(el));
+
+    // ===== NAVBAR AUTH =====
+    function renderNavbarAuth() {
+        const authArea = document.getElementById('authArea');
+        if (!authArea) return;
+        const user = JSON.parse(localStorage.getItem('currentLoggedUser') || 'null');
+        if (user) {
+            authArea.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="color:#facc15;font-weight:700;">👋 ${user.fullName || user.name}</span><button onclick="logout()" style="padding:6px 16px;border:none;border-radius:20px;background:#ef4444;color:#fff;cursor:pointer;font-weight:700;font-family:Cairo,sans-serif;">خروج</button></div>`;
+        } else {
+            authArea.innerHTML = '';
+        }
+        // تحديث ظهور رابط الداشبورد بعد تغيير حالة تسجيل الدخول
+        toggleDashboardLink();
+    }
+    window.logout = function() { localStorage.removeItem('currentLoggedUser'); window.location.href = './index.html'; };
+    renderNavbarAuth();
+
+    // ===== MOBILE MENU =====
+    const menuIcon = document.getElementById('mobileMenuIcon');
+    const navLinks = document.getElementById('navLinks');
+    if (menuIcon) {
+        menuIcon.addEventListener('click', e => { e.stopPropagation(); navLinks.classList.toggle('active'); });
+        document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('active')));
+        document.addEventListener('click', e => { if (!navLinks.contains(e.target) && !menuIcon.contains(e.target)) navLinks.classList.remove('active'); });
+    }
+
+    // ===== WHATSAPP =====
+    document.getElementById('whatsappBtn').onclick = () =>
+        window.open('https://wa.me/201557854833?text=مرحباً أرغب في الاستفسار عن منصة Corexion التعليمية', '_blank');
+
+    // ===== SCROLL TOP =====
+    const scrollBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+        scrollBtn.classList.toggle('show', window.scrollY > 400);
+    });
+    scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // ===== NEWSLETTER =====
+    document.getElementById('newsletterSendBtn').addEventListener('click', function() {
+        const email = document.getElementById('newsletterEmail').value.trim();
+        if (!email) { alert('الرجاء إدخال بريدك الإلكتروني'); return; }
+        const subject = encodeURIComponent('اشتراك في النشرة البريدية - Corexion Academy');
+        const body = encodeURIComponent(`السلام عليكم،\nأرغب في الاشتراك في النشرة البريدية.\nبريدي: ${email}`);
+        window.location.href = `mailto:Corexion.academy@gmail.com?subject=${subject}&body=${body}`;
+        alert('سيتم فتح بريدك الإلكتروني. شكراً!');
+        document.getElementById('newsletterEmail').value = '';
+    });
+
+    // ===== RIPPLE EFFECT ON BUTTONS =====
+    document.querySelectorAll('.btn-gold, .btn-outline, .course-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            ripple.style.cssText = `
+                position:absolute; border-radius:50%; background:rgba(255,255,255,0.4);
+                width:1px; height:1px; animation:rippleAnim 0.6s ease-out forwards;
+                left:${e.clientX - rect.left}px; top:${e.clientY - rect.top}px;
+                pointer-events:none;
+            `;
+            this.style.position = 'relative'; this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+        });
+    });
+
+    // Add ripple keyframes dynamically
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        @keyframes rippleAnim {
+            from { transform: scale(0); opacity: 1; width:1px; height:1px; }
+            to   { transform: scale(300); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
