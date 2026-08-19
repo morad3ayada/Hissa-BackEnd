@@ -23,6 +23,10 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public ICollection<Course> InstructorCourses { get; set; } = [];
     public ICollection<LiveSession> LiveSessionsHosted { get; set; } = [];
     public ICollection<InstructorSubscription> InstructorSubscriptions { get; set; } = [];
+    public ICollection<TeacherAvailability> TeacherAvailabilities { get; set; } = [];
+    public ICollection<TeacherUnavailableSlot> TeacherUnavailableSlots { get; set; } = [];
+    public ICollection<Booking> TeacherBookings { get; set; } = [];
+    public ICollection<TeacherStudentNote> TeacherNotes { get; set; } = [];
 
     // As Student
     public ICollection<LiveSessionAttendance> LiveSessionAttendances { get; set; } = [];
@@ -39,6 +43,8 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public ICollection<PointsTransaction> PointsTransactions { get; set; } = [];
     public GamificationProfile? GamificationProfile { get; set; }
     public ICollection<Certificate> Certificates { get; set; } = [];
+    public ICollection<Booking> StudentBookings { get; set; } = [];
+    public ICollection<TeacherStudentNote> StudentNotes { get; set; } = [];
 
     // As Parent
     public ICollection<ParentStudent> ChildLinks { get; set; } = [];

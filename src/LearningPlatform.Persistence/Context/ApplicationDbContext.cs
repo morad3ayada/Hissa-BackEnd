@@ -66,6 +66,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<TeacherProfile> TeacherProfiles => Set<TeacherProfile>();
     public DbSet<TeacherVerificationHistory> TeacherVerificationHistories => Set<TeacherVerificationHistory>();
 
+    // Teacher Availability & Bookings
+    public DbSet<TeacherAvailability> TeacherAvailabilities => Set<TeacherAvailability>();
+    public DbSet<TeacherUnavailableSlot> TeacherUnavailableSlots => Set<TeacherUnavailableSlot>();
+    public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<TeacherStudentNote> TeacherStudentNotes => Set<TeacherStudentNote>();
+
     // Subscriptions
     public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
     public DbSet<InstructorSubscription> InstructorSubscriptions => Set<InstructorSubscription>();
